@@ -23,17 +23,17 @@
         var m=this.itembottom;
         switch(m){
           case 'signup':
-            return 0;
+            return 16;
           case 'trends':
-            return 88;
+            return 104;
           case 'collect':
-            return 176;
+            return 192;
           case 'historyview':
-            return 264;
+            return 286;
           case 'historyattend':
-            return 352;
+            return 379;
           case 'stumsg':
-            return 440;
+            return 472;
         }
       }
     },
@@ -60,7 +60,7 @@
   .bottom-icon{
     position:absolute;
     height: 4px;
-    width: 88px;
+    width: 56px;
     background: #E03636;
     top: 60px;
     left: 0;

@@ -3,7 +3,8 @@
     <p class="text-md-center text-lg-center text-xl-center mt-4 title font-weight-bold mb-0">排行榜</p>
     <v-list>
       <template v-for="(item, index) in items">
-        <v-list-tile :key="index" avatar>
+        <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
+        <v-list-tile avatar>
           <span>{{item.rank}}-</span>
           <v-list-tile-avatar>
             <img :src="item.imgsrc">
@@ -15,6 +16,7 @@
             <v-icon color="primary" standard>star</v-icon>
           </span>
         </v-list-tile>
+        </router-link>
         <v-divider v-if="index + 1 < items.length" :key="item.rank+5"></v-divider>
       </template>
     </v-list>
@@ -82,5 +84,10 @@
   .v-list>>>.v-list__tile:hover{
     background:#dddddd;
   }
-
+  .v-list>>>.v-list__tile__title{
+    color: black;
+  }
+  span{
+    color: black;
+  }
 </style>

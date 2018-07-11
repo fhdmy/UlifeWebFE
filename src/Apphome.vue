@@ -3,7 +3,8 @@
       <div class="elevation-1 white home-toolbar-wrapper">
         <!-- <Toolbar v-if="user.type=='none'"></Toolbar> -->
         <!-- <Stutoolbar v-if="user.type=='stu'"></Stutoolbar> -->
-        <Stutoolbar></Stutoolbar>
+        <!-- <Stutoolbar></Stutoolbar> -->
+        <Orgtoolbar></Orgtoolbar>
         <!-- <Orgtoolbar v-if="user.type=='org'"></Orgtoolbar> -->
         <!-- <Admintoolbar v-if="user.type=='admin'"></Admintoolbar> -->
       </div>

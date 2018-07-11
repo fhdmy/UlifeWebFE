@@ -2,12 +2,16 @@
   <div class="orgrcmd-wrapper">
     <p class="text-md-center text-lg-center text-xl-center mt-4 title font-weight-bold mb-4">每 周 · 组 织 推 荐</p>
     <div style="width:54px;margin:0 auto;">
-    <v-avatar color="grey lighten-4" size="54">
-      <img :src="orgimgpath" :alt="orgname">
-    </v-avatar>
+    <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
+      <v-avatar color="grey lighten-4" size="54">
+        <img :src="orgimgpath" :alt="orgname">
+      </v-avatar>
+    </router-link>
     </div>
     <p class="mx-3 mt-2 mb-1">简介:</p>
-    <p class="mx-3 org-content mb-0">{{orgcontent}}</p>
+    <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
+      <p class="mx-3 org-content mb-0">{{orgcontent}}</p>
+    </router-link>
     <v-btn depressed class="bt-1 ml-3">查看历史推荐</v-btn>
     <v-btn depressed class="bt-2">了解推荐规则</v-btn>
   </div>
@@ -43,6 +47,8 @@
   word-break:break-all;
   height: 37%;
   cursor: pointer;
+  color:  #333;
+  opacity: 0.7;
 }
 span{
   color:#333;

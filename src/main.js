@@ -38,6 +38,16 @@ import Appact from './Appact.vue'
 import Acttoolbar from './act/Acttoolbar.vue'
 import Related from './act/Related.vue'
 import Show from './act/Show.vue'
+import Studisplay from './Studisplay.vue'
+import Studisplaytoolbar from './own/Studisplaytoolbar.vue'
+import Orgdisplay from './Orgdisplay.vue'
+import Inform from './own/Inform.vue'
+import Orginform from './own/Orginform.vue'
+import Orgdisplaytoolbar from './own/Orgdisplaytoolbar.vue'
+import Orgtoolbar from './home/Orgtoolbar.vue'
+import Orgowntoolbar from './own/Orgowntoolbar.vue'
+import Apporgown from './Apporgown.vue'
+import Orgmsg from './own/Orgmsg.vue'
 import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify, {
   theme: {  
@@ -85,6 +95,17 @@ Vue.component("Appact",Appact)
 Vue.component("Acttoolbar",Acttoolbar)
 Vue.component("Related",Related)
 Vue.component("Show",Show)
+Vue.component("Stuisplay",Studisplay)
+Vue.component("Studisplaytoolbar",Studisplaytoolbar)
+Vue.component("Orgdisplay",Orgdisplay)
+Vue.component("Inform",Inform)
+Vue.component("Orginform",Orginform)
+Vue.component("Orgdisplaytoolbar",Orgdisplaytoolbar)
+Vue.component("Orgtoolbar",Orgtoolbar)
+Vue.component("Orgowntoolbar",Orgowntoolbar)
+Vue.component("Apporgown",Apporgown)
+Vue.component("Orgmsg",Orgmsg)
+
 const routes = [
   { path: '/', component: Apphome},
   { path: '/Login', component: Login },
@@ -99,6 +120,9 @@ const routes = [
   { path: '/Changeaccount', component: Changeaccount },
   { path: '/Appstuown/:opt', component: Appstuown,name:'stuown',props: true},
   { path: '/Appact', component: Appact },
+  { path: '/Studisplay/:opt', component: Studisplay,name:'studisplay',props: true},
+  { path: '/Orgdisplay/:opt', component: Orgdisplay,name:'orgdisplay',props: true},
+  { path: '/Apporgown/:opt', component: Apporgown,name:'orgown',props: true},
 ]
 const router = new VueRouter({
   mode: 'history',

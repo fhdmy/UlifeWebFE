@@ -1,7 +1,8 @@
 <template>
   <div class="signup-wrapper">
     <v-icon color="primary" class="mr-2 today-icon">inbox</v-icon>
-    <span class="title">我的收藏</span>
+    <span class="title" v-if="!mine">TA的收藏</span>
+    <span class="title" v-if="mine">我的收藏</span>
     <div class="Homemaincontent-mainwrapper">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <div class="act-cardd-media">
@@ -14,9 +15,11 @@
               <v-icon class="mr-1">schedule</v-icon>{{act.acttime}}
               <v-icon class="ml-2 mr-1">place</v-icon>{{act.actplace}}</div>
           </router-link>
+          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <v-avatar color="grey lighten-4 ml-3" size="60">
             <img :src="act.orgimgpath" :alt="act.orgname">
           </v-avatar>
+          </router-link>
         </v-card-title>
       </v-card>
       <div style="clear:both;"></div>
@@ -26,6 +29,7 @@
 
 <script>
   export default {
+    props:['mine'],
     data: () => ({
        acts: [{
           actname: 'ISHARE真人图书馆',

@@ -7,19 +7,17 @@
         <p class="bottom-text">关注</p>
       </div>
       <div class="second-inner text-md-center text-lg-center text-xl-center">
-        <p class="top-number">{{rollin}}</p>
-        <p class="bottom-text">参与</p>
+        <p class="top-number">{{stars}}</p>
+        <p class="bottom-text">评星</p>
       </div>
       <div class="third-inner text-md-center text-lg-center text-xl-center">
-        <p class="top-number">{{trust}}%</p>
-        <p class="bottom-text">信誉</p>
+        <p class="top-number">{{acts}}</p>
+        <p class="bottom-text">活动</p>
       </div>
       <div style="clear:both;"></div>
     </div>
-    <v-btn flat class="fill-inform" v-if="mine">填写个人信息</v-btn>
-    <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的关注</p>
-    <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的关注</p>
-    <Attention :items="items"></Attention>
+    <v-btn flat class="fill-inform" v-if="mine">填写组织信息</v-btn>
+    <v-btn flat class="fill-inform" v-if="!mine">关注</v-btn>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的访客</p>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的访客</p>
     <Attention :items="items"></Attention>
@@ -28,7 +26,7 @@
 
 <script>
   export default {
-    props:['name','attention','rollin','trust','items','mine'],
+    props:['name','attention','stars','acts','items','mine'],
     data: () => ({
 
     })
@@ -39,7 +37,7 @@
 <style scoped>
   .inform-wrapper {
     width: 266.41px;
-    height: 840px;
+    height:520px;
     background: white;
     float:left;
     margin-top: 1px;

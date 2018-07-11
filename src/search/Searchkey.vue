@@ -15,9 +15,11 @@
               <v-icon class="mr-1">schedule</v-icon>{{act.acttime}}
               <v-icon class="ml-2 mr-1">place</v-icon>{{act.actplace}}</div>
           </router-link>
+          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
           <v-avatar color="grey lighten-4 ml-3" size="60">
             <img :src="act.orgimgpath" :alt="act.orgname">
           </v-avatar>
+          </router-link>
         </v-card-title>
       </v-card>
       <div style="clear:both;"></div>

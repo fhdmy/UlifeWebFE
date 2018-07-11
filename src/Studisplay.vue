@@ -6,7 +6,7 @@
     <v-parallax :src="parallaxpath" height="600"></v-parallax>
     <div class="elevation-1 white" :class="{'isfixed':fixed}">
       <div class="middle-wrapper">
-        <Stuowntoolbar :itembottom="item"></Stuowntoolbar>
+        <Studisplaytoolbar :itembottom="item"></Studisplaytoolbar>
         <v-avatar size="100">
           <img :src="img" :alt="name">
         </v-avatar>
@@ -16,12 +16,8 @@
     <div class="stuown-mainwrapper">
       <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="attention" :rollin="rollin" :trust="trust" :items="items" :mine="mine"></Stuinform>
       <div class="asinform" v-if="fixed"></div>
-      <Signup v-if="item=='signup'"></Signup>
-      <Trends v-if="item=='trends'"></Trends>
       <Collect v-if="item=='collect'"></Collect>
-      <Historyview v-if="item=='historyview'"></Historyview>
       <Historyattend v-if="item=='historyattend'"></Historyattend>
-      <Stumsg v-if="item=='stumsg'"></Stumsg>
       <div style="clear:both;"></div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
@@ -43,7 +39,7 @@
       attention: 10,
       rollin: 15,
       trust: 70,
-      mine:true,
+      mine:false,
       items: [{
           number: 0,
           imgsrc: '/src/assets/suselogo.jpg',
@@ -98,20 +94,11 @@
     }),
     created: function () {
       switch (this.opt) {
-        case 'signup':
-          this.item = 'signup';
-          break;
-        case 'trends':
-          this.item = 'trends';
-          break;
         case 'collect':
           this.item = 'collect';
           break;
-        case 'historyview':
-          this.item = 'historyview';
-          break;
-        case 'stumsg':
-          this.item = 'stumsg';
+        case 'historyattend':
+          this.item = 'historyattend';
           break;
       }
     },
@@ -150,23 +137,11 @@
     methods: {
       chooseitem: function (e) {
         switch (e) {
-          case 'signup':
-            this.item = 'signup';
-            break;
-          case 'trends':
-            this.item = 'trends';
-            break;
           case 'collect':
             this.item = 'collect';
             break;
-          case 'historyview':
-            this.item = 'historyview';
-            break;
           case 'historyattend':
             this.item = 'historyattend';
-            break;
-          case 'stumsg':
-            this.item = 'stumsg';
             break;
         }
       },

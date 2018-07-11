@@ -19,9 +19,11 @@
     <div class="comment-wrapper">
       <div class="comment-inner" v-for="(c,i) in customlists" :key="i">
         <div class="comment-top">
-          <v-avatar>
-          <img :src="c.img" />
-        </v-avatar>
+          <router-link :to="{name:'studisplay',params:{opt:'collect'}}">
+            <v-avatar>
+              <img :src="c.img" />
+            </v-avatar>
+          </router-link>
           <p class="top-name mr-3 ml-3">{{c.name}}</p>
           <p class="top-date">评论于{{c.date}}</p>
         </div>

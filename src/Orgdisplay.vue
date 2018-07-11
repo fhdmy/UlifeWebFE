@@ -1,40 +1,96 @@
 <template>
-    <v-content style="background: #f3f4f5;" v-scroll="onScroll">
-      <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
-        <Toolbar></Toolbar>
+  <v-content style="background: #f3f4f5;" v-scroll="onScroll">
+    <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
+      <Stutoolbar></Stutoolbar>
+    </div>
+    <v-parallax :src="parallaxpath" height="600"></v-parallax>
+    <div class="elevation-1 white" :class="{'isfixed':fixed}">
+      <div class="middle-wrapper">
+        <Orgdisplaytoolbar :itembottom="item" :mine="mine"></Orgdisplaytoolbar>
+        <v-avatar size="100">
+          <img :src="img" :alt="name">
+        </v-avatar>
       </div>
-      <v-parallax :src="parallaxpath" height="600"></v-parallax>
-      <div class="elevation-1 white" :class="{'isfixed':fixed}">
-        <div class="middle-wrapper">
-          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}"><v-avatar size="120" v-if="!fixed"><img :src="img" :alt="org"></v-avatar></router-link>
-          <p class="act-title display-1" v-if="!fixed">{{title}}</p>
-          <Acttoolbar :org="org" :launchdate="launchdate" :isfinished="isfinished" :stars="stars" :fixed="fixed" :title="title"></Acttoolbar>
-        </div>
-      </div>
-      <div v-if="fixed" style="height:70px;"></div>
-      <div class="main-wrapper">
-         <Show :introduction="introduction" :date="date" :time="time" :place="place" :type="type" :interest="interest" :lists="lists" :customlists="customlists"></Show>
-         <Related></Related>
-         <div style="clear:both;"></div>
-      </div>
-      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
-        <v-icon>keyboard_arrow_up</v-icon>
-      </v-btn>
-      <Footer></Footer>
-    </v-content>
+    </div>
+    <div v-if="fixed" style="height:64px;"></div>
+    <div class="stuown-mainwrapper">
+      <Orginform :class="{'informfixed':fixed}" :name="name" :attention="attention" :stars="stars" :acts="acts" :items="items" :mine="mine"></Orginform>
+      <div class="asinform" v-if="fixed"></div>
+      <Inform v-if="item=='inform'" :mine="mine" :lists="lists"></Inform>
+      <Trends v-if="item=='trends'"></Trends>
+      <div style="clear:both;"></div>
+    </div>
+    <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
+      <v-icon>keyboard_arrow_up</v-icon>
+    </v-btn>
+    <Footer></Footer>
+  </v-content>
 </template>
 
 <script>
   export default {
-    data:()=>({
-      parallaxpath:'/src/assets/stuownbg.jpg',
-      img:'/src/assets/suselogo.jpg',
-      title:'ISHARE',
-      org:'经济学院学生会',
-      launchdate:'2018-02-13',
-      isfinished:true,
-      stars:4.5,
-      introduction:'这是一个非常棒的活动，帮助大家学习，提升。在活动中认识很多很多朋友，所以一定要参加我们活动哟。ISHARE这是一个非常棒的活动，帮助大家学习，提升。在活动中认识很多很多朋友，所以一定要参加我们活动哟。',
+    props: ['opt'],
+    data: () => ({
+      parallaxpath: '/src/assets/stuownbg.jpg',
+      img: '/src/assets/suselogo.jpg',
+      name: '经济学院学生会',
+      item: 'inform',
+      offsetTop: 0,
+      attention: 10,
+      stars: 4.5,
+      acts: 16,
+      mine:false,
+      items: [{
+          number: 0,
+          imgsrc: '/src/assets/suselogo.jpg',
+          name: '经济学院学生会'
+        },
+        {
+          number: 1,
+          imgsrc: '/src/assets/xnick.jpg',
+          name: 'Xnick'
+        },
+        {
+          number: 2,
+          imgsrc: '/src/assets/suselogo.jpg',
+          name: '经济学院学生会'
+        },
+        {
+          number: 3,
+          imgsrc: '/src/assets/xnick.jpg',
+          name: 'Xnick'
+        },
+        {
+          number: 4,
+          imgsrc: '/src/assets/xnick.jpg',
+          name: 'Xnick'
+        },
+        {
+          number: 5,
+          imgsrc: '/src/assets/suselogo.jpg',
+          name: '经济学院学生会'
+        },
+        {
+          number: 6,
+          imgsrc: '/src/assets/xnick.jpg',
+          name: 'Xnick'
+        },
+        {
+          number: 7,
+          imgsrc: '/src/assets/suselogo.jpg',
+          name: '经济学院学生会'
+        },
+        {
+          number: 8,
+          imgsrc: '/src/assets/xnick.jpg',
+          name: 'Xnick'
+        },
+        {
+          number: 9,
+          imgsrc: '/src/assets/xnick.jpg',
+          name: 'Xnick'
+        }
+      ],
       date:'2018-02-19',
       time:'15:00',
       place:'东区大楼',
@@ -134,36 +190,61 @@
           content:'从主岛去P岛可以选择坐船或者是小飞机。因为船票和机票价格差不多，加上很多人说坐船会吐到怀疑人生，所以我们订的内飞往返1166/人。 塞舌尔 航空官网和各大线上平台都可以购票。有人说便宜的时候可以订到400多一张的机票，确实有这样的价格，但是时间都是不好的，要么很早要么很晚，黄金时间的票价不会这么便宜。'
         }
       ],
-      offsetTop:0
     }),
-    computed:{
-      toolbaropacity:function(){
-        var k=this.offsetTop;
-        if(k<320){
+    created: function () {
+      switch (this.opt) {
+        case 'inform':
+          this.item = 'inform';
+          break;
+        case 'trends':
+          this.item = 'trends';
+          break;
+      }
+    },
+    watch: {
+      '$route' (to, from) {
+        this.item = to.params.opt;
+      }
+    },
+    computed: {
+      toolbaropacity: function () {
+        var k = this.offsetTop;
+        if (k < 350) {
           return 1;
-        }
-        else{
-          k=2.4-k/220;
+        } else {
+          k = 2.4 - k / 250;
           return k;
         }
       },
-      fixed:function(){
-        var k=this.offsetTop;
-        if(k>=600){
+      fixed: function () {
+        var k = this.offsetTop;
+        if (k >=664) {
           return true;
         }
+        else
+          return false;
       },
       display:function(){
         var k = this.offsetTop;
-        if(k<520){
+        if(k<589){
           return 'block';
         }
         else
           return 'none';
       }
     },
-    methods:{
-      onScroll (e) {
+    methods: {
+      chooseitem: function (e) {
+        switch (e) {
+          case 'inform':
+            this.item = 'inform';
+            break;
+          case 'trends':
+            this.item = 'trends';
+            break;
+        }
+      },
+      onScroll(e) {
         this.offsetTop = window.pageYOffset || document.documentElement.scrollTop;
       }
     }
@@ -172,42 +253,55 @@
 </script>
 
 <style scoped>
-  .isfixed{
+  .isfixed {
     position: fixed;
     z-index: 7;
     top: 0;
     width: 100%;
   }
+
+  .informfixed {
+    position: fixed;
+    z-index: 6;
+    top: 64px;
+    width: 266.41px;
+  }
+
+  .asinform {
+    width: 266.41px;
+    height: 520;
+    background: white;
+    float: left;
+    margin-top: 1px;
+  }
+
   .home-toolbar-wrapper {
     width: 100%;
     position: fixed;
     z-index: 5;
   }
-  .middle-wrapper{
-    width:1063px;
+
+  .v-parallax {
+    margin-top: 64px;
+  }
+
+  .middle-wrapper {
+    width: 1063px;
     margin: 0 auto;
     position: relative;
   }
-  .v-avatar{
+
+  .v-avatar {
     position: absolute;
-    top:0;
-    left:0;
-    margin-top: -80px;
-    z-index: 4;
+    top: 10px;
+    left: 85px;
+    z-index: 100;
   }
-  .act-title{
-    position: absolute;
-    top:0;
-    left:170px;
-    margin-top: -70px;
-    color: white;
-    font-weight: bold;
-    z-index: 4;
-  }
-  .main-wrapper{
+
+  .stuown-mainwrapper {
     width: 1063px;
-    margin: 0 auto;
     height: auto;
+    margin: 0 auto 150px auto;
     position: relative;
   }
 </style>
