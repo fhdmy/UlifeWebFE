@@ -48,6 +48,15 @@ import Orgtoolbar from './home/Orgtoolbar.vue'
 import Orgowntoolbar from './own/Orgowntoolbar.vue'
 import Apporgown from './Apporgown.vue'
 import Orgmsg from './own/Orgmsg.vue'
+import Stuedit from './own/Stuedit.vue'
+import Editmenu from './own/Editmenu.vue'
+import Stueditinform from './own/Stueditinform.vue'
+import Stueditimg from './own/Stueditimg.vue'
+import Stueditacc from './own/Stueditacc.vue'
+import Stueditsecret from './own/Stueditsecret.vue'
+import Stueditbg from './own/Stueditbg.vue'
+import Draft from './own/Draft.vue'
+import Orgmyact from './own/Orgmyact.vue'
 import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify, {
   theme: {  
@@ -105,6 +114,15 @@ Vue.component("Orgtoolbar",Orgtoolbar)
 Vue.component("Orgowntoolbar",Orgowntoolbar)
 Vue.component("Apporgown",Apporgown)
 Vue.component("Orgmsg",Orgmsg)
+Vue.component("Stuedit",Stuedit)
+Vue.component("Editmenu",Editmenu)
+Vue.component("Stueditinform",Stueditinform)
+Vue.component("Stueditimg",Stueditimg)
+Vue.component("Stueditacc",Stueditacc)
+Vue.component("Stueditsecret",Stueditsecret)
+Vue.component("Stueditbg",Stueditbg)
+Vue.component("Draft",Draft)
+Vue.component("Orgmyact",Orgmyact)
 
 const routes = [
   { path: '/', component: Apphome},
@@ -123,6 +141,7 @@ const routes = [
   { path: '/Studisplay/:opt', component: Studisplay,name:'studisplay',props: true},
   { path: '/Orgdisplay/:opt', component: Orgdisplay,name:'orgdisplay',props: true},
   { path: '/Apporgown/:opt', component: Apporgown,name:'orgown',props: true},
+  { path: '/Stuedit/:opt', component: Stuedit,name:'stuedit',props:true}
 ]
 const router = new VueRouter({
   mode: 'history',

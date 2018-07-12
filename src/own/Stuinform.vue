@@ -16,7 +16,7 @@
       </div>
       <div style="clear:both;"></div>
     </div>
-    <v-btn flat class="fill-inform" v-if="mine">填写个人信息</v-btn>
+    <router-link :to="{name:'stuedit',params:{opt:'myinform'}}"><v-btn flat class="fill-inform" v-if="mine">填写个人信息</v-btn></router-link>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的关注</p>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的关注</p>
     <Attention :items="items"></Attention>

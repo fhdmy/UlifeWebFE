@@ -17,10 +17,8 @@
       <Orginform :class="{'informfixed':fixed}" :name="name" :attention="attention" :stars="stars" :acts="acts" :items="items" :mine="mine"></Orginform>
       <div class="asinform" v-if="fixed"></div>
       <Inform v-if="item=='inform'" :mine="mine" :lists="lists"></Inform>
-      <Trends v-if="item=='trends'"></Trends>
-      <Collect v-if="item=='collect'"></Collect>
-      <Historyview v-if="item=='historyview'"></Historyview>
-      <Historyattend v-if="item=='historyattend'"></Historyattend>
+      <Draft v-if="item=='draft'" :lists="lists"></Draft>
+      <Orgmyact v-if="item=='myact'" :lists="lists"></Orgmyact>
       <Orgmsg v-if="item=='orgmsg'"></Orgmsg>
       <div style="clear:both;"></div>
     </div>
