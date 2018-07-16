@@ -3,7 +3,7 @@
       <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
         <Toolbar></Toolbar>
       </div>
-      <v-parallax :src="parallaxpath" height="600"></v-parallax>
+      <img :src="parallaxpath" class="large-img"/>
       <div class="elevation-1 white" :class="{'isfixed':fixed}">
         <div class="middle-wrapper">
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}"><v-avatar size="120" v-if="!fixed"><img :src="img" :alt="org"></v-avatar></router-link>
@@ -149,13 +149,13 @@
       },
       fixed:function(){
         var k=this.offsetTop;
-        if(k>=600){
+        if(k>=664){
           return true;
         }
       },
       display:function(){
         var k = this.offsetTop;
-        if(k<520){
+        if(k<584){
           return 'block';
         }
         else
@@ -209,5 +209,12 @@
     margin: 0 auto;
     height: auto;
     position: relative;
+  }
+  .large-img{
+    margin-top: 64px;
+    width: 100%;
+    height: 600px;
+    max-height:100%;
+    max-width:100%;
   }
 </style>

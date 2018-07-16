@@ -3,7 +3,7 @@
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Orgtoolbar></Orgtoolbar>
     </div>
-    <v-parallax :src="parallaxpath" height="600"></v-parallax>
+    <img :src="parallaxpath" class="large-img"/>
     <div class="elevation-1 white" :class="{'isfixed':fixed}">
       <div class="middle-wrapper">
         <Orgowntoolbar :itembottom="item"></Orgowntoolbar>
@@ -18,7 +18,9 @@
       <div class="asinform" v-if="fixed"></div>
       <Inform v-if="item=='inform'" :mine="mine" :lists="lists"></Inform>
       <Draft v-if="item=='draft'" :lists="lists"></Draft>
+      <Create v-if="item=='create'" :lists="lists"></Create>
       <Orgmyact v-if="item=='myact'" :lists="lists"></Orgmyact>
+      <Mysignup v-if="item=='mysignup'" :lists="lists"></Mysignup>
       <Orgmsg v-if="item=='orgmsg'"></Orgmsg>
       <div style="clear:both;"></div>
     </div>
@@ -324,5 +326,12 @@
     height: auto;
     margin: 0 auto 150px auto;
     position: relative;
+  }
+  .large-img{
+    margin-top: 64px;
+    width: 100%;
+    height: 600px;
+    max-height:100%;
+    max-width:100%;
   }
 </style>

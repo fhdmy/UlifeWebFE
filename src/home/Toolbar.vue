@@ -20,7 +20,7 @@
   export default {
     data:()=>({
       isprimary:false,
-      value: ''  
+      value: ''
     }),
     methods:{
       changecolor:function(){

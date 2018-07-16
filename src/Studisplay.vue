@@ -3,7 +3,7 @@
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Stutoolbar></Stutoolbar>
     </div>
-    <v-parallax :src="parallaxpath" height="600"></v-parallax>
+    <img :src="parallaxpath" class="large-img"/>
     <div class="elevation-1 white" :class="{'isfixed':fixed}">
       <div class="middle-wrapper">
         <Studisplaytoolbar :itembottom="item"></Studisplaytoolbar>
@@ -204,5 +204,12 @@
     height: auto;
     margin: 0 auto 150px auto;
     position: relative;
+  }
+  .large-img{
+    margin-top: 64px;
+    width: 100%;
+    height: 600px;
+    max-height:100%;
+    max-width:100%;
   }
 </style>

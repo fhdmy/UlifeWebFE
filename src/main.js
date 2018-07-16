@@ -57,6 +57,9 @@ import Stueditsecret from './own/Stueditsecret.vue'
 import Stueditbg from './own/Stueditbg.vue'
 import Draft from './own/Draft.vue'
 import Orgmyact from './own/Orgmyact.vue'
+import Mysignup from './own/Mysignup.vue'
+import Create from './own/Create.vue'
+import Createact from './Createact.vue'
 import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify, {
   theme: {  
@@ -123,6 +126,9 @@ Vue.component("Stueditsecret",Stueditsecret)
 Vue.component("Stueditbg",Stueditbg)
 Vue.component("Draft",Draft)
 Vue.component("Orgmyact",Orgmyact)
+Vue.component("Mysignup",Mysignup)
+Vue.component("Create",Create)
+Vue.component("Createact",Createact)
 
 const routes = [
   { path: '/', component: Apphome},
@@ -141,7 +147,8 @@ const routes = [
   { path: '/Studisplay/:opt', component: Studisplay,name:'studisplay',props: true},
   { path: '/Orgdisplay/:opt', component: Orgdisplay,name:'orgdisplay',props: true},
   { path: '/Apporgown/:opt', component: Apporgown,name:'orgown',props: true},
-  { path: '/Stuedit/:opt', component: Stuedit,name:'stuedit',props:true}
+  { path: '/Stuedit/:opt', component: Stuedit,name:'stuedit',props:true},
+  { path: '/createact', component: Createact }
 ]
 const router = new VueRouter({
   mode: 'history',
@@ -152,3 +159,4 @@ new Vue({
   router,
   render: h => h(App)
 })
+

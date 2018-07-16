@@ -9,11 +9,11 @@
             <v-divider vertical class="register-divider"></v-divider>
           </v-flex>
           <v-flex xl6 md6 lg6>
-            <v-text-field solo label="请输入昵称" prepend-icon="account_circle" clearable class="input1"></v-text-field>
-            <v-text-field solo label="请输入密码" prepend-icon="lock" clearable class="input2" type="password"></v-text-field>
-            <v-text-field solo label="请确认密码" prepend-icon="verified_user" clearable class="input2" type="password"></v-text-field>
-            <v-select :items="items" label="来自什么组织的宣传" solo class="input3" dark></v-select>
-            <router-link to="/"><v-btn color="primary register-confirm">注册</v-btn></router-link>
+            <v-text-field solo label="请输入昵称" prepend-icon="account_circle" clearable class="input1" v-model="username" :rules="[rules.required,rules.username]"></v-text-field>
+            <v-text-field solo label="请输入密码" prepend-icon="lock" clearable class="input2" type="password" v-model="pwd" :rules="[rules.required,rules.pwd]"></v-text-field>
+            <v-text-field solo label="请确认密码" prepend-icon="verified_user" clearable class="input2" type="password" v-model="confirmpwd" :rules="[rules.required,rules.confirm(confirmpwd,pwd)]"></v-text-field>
+            <v-select :items="items" label="来自什么组织的宣传" solo class="input3" dark v-model="select" :rules="[rules.required]"></v-select>
+            <v-btn color="primary register-confirm" @click="register">注册</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -32,8 +32,45 @@
 <script>
   export default {
     data: () => ({
-      items: ['无组织', '经济学院学生会', '计算机学院学生会', '上大车协','上大电竞社']
-    })
+      items: ['无组织', '经济学院学生会', '计算机学院学生会', '上大车协','上大电竞社'],
+      username:'',
+      pwd:'',
+      confirmpwd:'',
+      select:'',
+      rules:{
+        required:value => !!value || '不能为空！',
+        username:value=>{
+          var t;
+          if(value.length<4 || value.length>14)
+            t=false;
+          else
+            t=true;
+          return t || '昵称长度在4-14位！';
+        },
+        pwd:value=>{
+          var t;
+          if(value.length<6 || value.length>18)
+            t=false;
+          else
+            t=true;
+          return t || '密码长度请大于6位！';
+        },
+        confirm:(value,pwd)=>{
+          var t;
+          if(value!=pwd)
+            t=false;
+          else
+            t=true;
+          return t || '密码不一致！';
+        }
+      }
+    }),
+    methods:{
+      register:function(){
+        if(this.rules.username(this.username)==true && this.rules.pwd(this.pwd)==true && this.rules.confirm(this.confirmpwd,this.pwd)==true && this.rules.required(this.confirmpwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.username)==true && this.rules.required(this.select)==true)
+          this.$router.push('/');
+      }
+    }
   }
 
 </script>

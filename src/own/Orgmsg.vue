@@ -3,23 +3,26 @@
     <v-icon color="primary" class="mr-2 today-icon">mail_outline</v-icon>
     <span class="title">我的消息</span>
     <div class="Homemaincontent-mainwrapper">
-      <v-list two-line>
-        <template v-for="(item,index) in items">
-          <v-list-tile :key="index+100" avatar>
-            <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
-            <v-list-tile-avatar>
-              <img :src="item.avatar">
-            </v-list-tile-avatar>
-            </router-link>
-            <v-list-tile-content>
-              <v-list-tile-title v-html="item.title"></v-list-tile-title>
-              <v-list-tile-sub-title>{{ item.headline }}</v-list-tile-sub-title>
-              <v-list-tile-sub-title v-html="item.subtitle"></v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
-          <v-divider v-if="item.divider" :key="index"></v-divider>
-        </template>
-      </v-list>
+      <div v-for="(item,i) in items" :key="i" class="msg-content">
+        <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
+          <v-avatar size="50">
+            <img :src="item.avatar" />
+          </v-avatar>
+        </router-link>
+        <div class="msg-right">
+          <router-link to="/Orgdisplay/inform">
+            <span class="msg-title">{{item.title}}</span>
+          </router-link>
+          <span class="msg-sendt">发送了消息</span>
+          <v-icon class="msg-close">close</v-icon>
+          <span class="msg-headline">{{item.headline}}</span>
+          <div class="maincontent-wrapper">
+            <p class="msg-content">{{item.subtitle}}</p>
+          </div>
+        </div>
+        <div style="clear:both;"></div>
+        <v-divider></v-divider>
+      </div>
     </div>
   </div>
 </template>
@@ -27,19 +30,18 @@
 <script>
   export default {
     data: () => ({
-      items: [
-        {
+      items: [{
           avatar: '/src/assets/suselogo.jpg',
           title: '经济学院学生会',
           headline: '2018-02-11',
-          subtitle: "I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
+          subtitle: "2018中国人眼中的丝绸之路丝绸之路旅游推广联盟、 清华大学媒介调查实验室和马蜂窝旅游邀你一起参与：【 2018 中国人眼中的丝绸之路旅游十佳】 系列评选活动。精品游记带你探索丝路精华、 见证丝路繁盛！4 月20日 - 5 月20日， 为你眼中十佳的特色旅游城市、 旅游品牌活动、 旅游景区、 特色旅游酒店、 特色旅游美食、 旅游商品、 旅行游记投票吧！ ",
           divider: true
         },
         {
           avatar: '/src/assets/xnick.jpg',
           title: '系统消息',
           headline: '2018-02-11',
-          subtitle: "to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
+          subtitle: "斯巴鲁带你横跨险峻，纵越巅峰在西藏高原，你翻越过什么最险公路？在荒野路上，你经历过什么刻骨瞬间？",
           divider: true
         },
         {
@@ -79,4 +81,63 @@
     margin-top: 25px;
   }
 
+  .msg-content {
+    width: 100%;
+    position: relative;
+  }
+
+  .v-avatar {
+    float: left;
+    margin-left: 20px;
+    margin-top: 10px;
+  }
+
+  .msg-right {
+    float: left;
+    width: 680px;
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+
+  .v-divider {
+    position: absolute;
+    bottom: 0;
+  }
+
+  .msg-title {
+    color: #E03636;
+  }
+
+  .msg-sendt {
+    color: #666;
+  }
+
+  .msg-headline {
+    color: #666;
+    float: right;
+    margin-right: 10px;
+  }
+
+  .msg-close {
+    float: right;
+    margin-right: 65px;
+    margin-top: -2px;
+    cursor: pointer;
+  }
+
+  .msg-close:hover {
+    color: #E03636;
+  }
+
+  .maincontent-wrapper {
+    margin-right: 99px;
+    min-height: 20px;
+  }
+  .msg-content{
+    color: #999;
+    font-size: 14px;
+    margin-top: 10px; 
+    word-break:break-word;
+    word-wrap:break-word;
+  }
 </style>
