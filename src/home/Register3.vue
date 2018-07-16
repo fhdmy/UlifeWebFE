@@ -22,7 +22,7 @@
       <router-link to="/Login"> 立即登录</router-link>
     </p>
     <router-link to="/">
-      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5">
+      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="clearsession">
         <v-icon>home</v-icon>
       </v-btn>
     </router-link>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import {SHA256} from '../webtoolkit.sha256.js'
   export default {
     data: () => ({
       items: ['无组织', '经济学院学生会', '计算机学院学生会', '上大车协','上大电竞社'],
@@ -67,8 +68,28 @@
     }),
     methods:{
       register:function(){
-        if(this.rules.username(this.username)==true && this.rules.pwd(this.pwd)==true && this.rules.confirm(this.confirmpwd,this.pwd)==true && this.rules.required(this.confirmpwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.username)==true && this.rules.required(this.select)==true)
+        if(this.rules.username(this.username)==true && this.rules.pwd(this.pwd)==true && this.rules.confirm(this.confirmpwd,this.pwd)==true && this.rules.required(this.confirmpwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.username)==true && this.rules.required(this.select)==true){
+          var number=sessionStorage.getItem('number');
+          var phone=sessionStorage.getItem('phone');
+          axios.post('/api/realusers/create',{
+            params:{
+              sno:number,
+              phone_number:phone,
+              username:SHA256(this.username),
+              pwd:SHA256(this.pwd),
+              select:SHA256(this.select)
+            }
+          }).then((res)=>{
+           console.log(res);
+          })
+          this.clearsession();
+          localStorage.setItem("username",this.username);
           this.$router.push('/');
+        }
+      },
+      clearsession:function(){
+        sessionStorage.removeItem("phone");
+        sessionStorage.removeItem("number");
       }
     }
   }

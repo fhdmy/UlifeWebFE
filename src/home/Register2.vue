@@ -19,7 +19,7 @@
     </div>
     <p class="text-md-center text-lg-center text-xl-center subheading register-tosignin">已有账号？<router-link to="/Login">  立即登录</router-link></p>
     <router-link to="/">
-      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5">
+      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="clearsession">
         <v-icon>home</v-icon>
       </v-btn>
     </router-link>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import {SHA256} from '../webtoolkit.sha256.js'
   export default {
     data: () => ({
       number:'',
@@ -47,9 +48,13 @@
     methods:{
       nextpath:function(){
         if(this.rules.number(this.number)==true && this.rules.required(this.number)==true){
-          sessionStorage.setItem("phone",this.number);
+          var n=SHA256(this.number);
+          sessionStorage.setItem("phone",n);
           this.$router.push('/register3');
         }
+      },
+      clearsession:function(){
+        sessionStorage.removeItem("phone");
       }
     }
   }

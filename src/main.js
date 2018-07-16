@@ -159,4 +159,4 @@ new Vue({
   router,
   render: h => h(App)
 })
-
+axios.defaults.baseURL = 'http://192.168.43.2'

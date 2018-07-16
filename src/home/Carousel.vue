@@ -66,10 +66,6 @@
         }
         clearInterval(timer);
         timer=setInterval(this.carouselrightchange, 5000);
-        axios.get('')
-        .then(function (response) {
-          console.log(response);
-        })
       }
     }
   }
