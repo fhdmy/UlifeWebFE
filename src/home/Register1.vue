@@ -55,8 +55,8 @@ import {SHA256} from '../webtoolkit.sha256.js'
     methods:{
       confirm:function(){
         if(this.rules.number(this.number)==true && this.rules.pwd(this.pwd)==true && this.rules.required(this.number)==true && this.rules.required(this.pwd)==true){
-          var n=SHA256(this.number);
-          sessionStorage.setItem("number",n);
+          // var n=SHA256(this.number);
+          sessionStorage.setItem("number",this.number);
           this.$router.push('/register2');
         }
       },

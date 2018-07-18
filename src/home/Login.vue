@@ -9,12 +9,10 @@
             <v-divider vertical class="register-divider"></v-divider>
           </v-flex>
           <v-flex xl6 md6 lg6>
-            <v-text-field solo label="请输入手机号或组织名称" prepend-icon="account_circle" clearable class="input1"></v-text-field>
-            <v-text-field solo label="请输入账号密码" prepend-icon="lock" clearable class="input2" type="password"></v-text-field>
+            <v-text-field solo label="请输入手机号或组织名称" prepend-icon="account_circle" clearable class="input1" v-model="username" :rules="[rules.required]"></v-text-field>
+            <v-text-field solo label="请输入账号密码" prepend-icon="lock" clearable class="input2" type="password" v-model="pwd" :rules="[rules.required,rules.pwd]"></v-text-field>
             <router-link to="/Forgetpwd1" class="login-toforgetpwd">忘记密码</router-link>
-            <router-link to="/">
-              <v-btn color="primary register-confirm">登录</v-btn>
-            </router-link>
+              <v-btn color="primary register-confirm"  @click="login">登录</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -33,8 +31,25 @@
 <script>
   export default {
     data: () => ({
-
-    })
+      username:"",
+      pwd:"",
+       rules:{
+        required:value => !!value || '不能为空！',
+        pwd:value=>{
+          var t;
+          if(value.length<6 || value.length>18)
+            t=false;
+          else
+            t=true;
+          return t || '密码长度请大于6位！';
+        }
+       }
+    }),
+    methods:{
+      login:function(){
+        this.$router.push('/');
+      }
+    }
   }
 
 </script>

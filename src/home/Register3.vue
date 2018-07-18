@@ -14,6 +14,7 @@
             <v-text-field solo label="请确认密码" prepend-icon="verified_user" clearable class="input2" type="password" v-model="confirmpwd" :rules="[rules.required,rules.confirm(confirmpwd,pwd)]"></v-text-field>
             <v-select :items="items" label="来自什么组织的宣传" solo class="input3" dark v-model="select" :rules="[rules.required]"></v-select>
             <v-btn color="primary register-confirm" @click="register">注册</v-btn>
+            <div class="be-sure-text">注册表示你同意Ulife个人信息保护政策和Ulife服务使用协议</div>
           </v-flex>
         </v-layout>
       </v-container>
@@ -71,20 +72,21 @@ import {SHA256} from '../webtoolkit.sha256.js'
         if(this.rules.username(this.username)==true && this.rules.pwd(this.pwd)==true && this.rules.confirm(this.confirmpwd,this.pwd)==true && this.rules.required(this.confirmpwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.username)==true && this.rules.required(this.select)==true){
           var number=sessionStorage.getItem('number');
           var phone=sessionStorage.getItem('phone');
-          axios.post('/api/realusers/create',{
-            params:{
-              sno:number,
+          axios.post('/signup/',{
+              student_id:number,
               phone_number:phone,
-              username:SHA256(this.username),
-              pwd:SHA256(this.pwd),
-              select:SHA256(this.select)
-            }
+              // username:SHA256(this.username),
+              // password:SHA256(this.pwd),
+              // college:SHA256(this.select)
+              username:this.username,
+              password:this.pwd,
+              college:this.select
           }).then((res)=>{
            console.log(res);
           })
           this.clearsession();
           localStorage.setItem("username",this.username);
-          this.$router.push('/');
+          // this.$router.push('/');
         }
       },
       clearsession:function(){
@@ -196,5 +198,15 @@ import {SHA256} from '../webtoolkit.sha256.js'
     margin: 0 32px 0 0;
     cursor: pointer;
   }
-
+  .be-sure-text{
+    font-size:8px;
+    color: white;
+    margin-top: 5px;
+    cursor: pointer;
+    width: 160px;
+    margin-left: 115px;
+  }
+  .be-sure-text:hover{
+    color: #E03636;
+  }
 </style>

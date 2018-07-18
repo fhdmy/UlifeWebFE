@@ -48,8 +48,8 @@ import {SHA256} from '../webtoolkit.sha256.js'
     methods:{
       nextpath:function(){
         if(this.rules.number(this.number)==true && this.rules.required(this.number)==true){
-          var n=SHA256(this.number);
-          sessionStorage.setItem("phone",n);
+          // var n=SHA256(this.number);
+          sessionStorage.setItem("phone",this.number);
           this.$router.push('/register3');
         }
       },

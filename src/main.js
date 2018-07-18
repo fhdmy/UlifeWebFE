@@ -60,6 +60,8 @@ import Orgmyact from './own/Orgmyact.vue'
 import Mysignup from './own/Mysignup.vue'
 import Create from './own/Create.vue'
 import Createact from './Createact.vue'
+import Createleft from './create/Createleft.vue'
+import Createright from './create/Createright.vue'
 import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify, {
   theme: {  
@@ -129,6 +131,9 @@ Vue.component("Orgmyact",Orgmyact)
 Vue.component("Mysignup",Mysignup)
 Vue.component("Create",Create)
 Vue.component("Createact",Createact)
+Vue.component("Createleft",Createleft)
+Vue.component("Createright",Createright)
+
 
 const routes = [
   { path: '/', component: Apphome},
@@ -159,4 +164,4 @@ new Vue({
   router,
   render: h => h(App)
 })
-axios.defaults.baseURL = 'http://192.168.43.2'
+axios.defaults.baseURL = 'http://192.168.43.2:8000'
