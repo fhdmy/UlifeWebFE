@@ -9,7 +9,7 @@
             <v-divider vertical class="register-divider"></v-divider>
           </v-flex>
           <v-flex xl6 md6 lg6>
-            <v-text-field solo label="请输入手机号或组织名称" prepend-icon="account_circle" clearable class="input1" v-model="username" :rules="[rules.required]"></v-text-field>
+            <v-text-field solo label="请输入手机号或组织名称" prepend-icon="account_circle" clearable class="input1" v-model="number" :rules="[rules.required]"></v-text-field>
             <v-text-field solo label="请输入账号密码" prepend-icon="lock" clearable class="input2" type="password" v-model="pwd" :rules="[rules.required,rules.pwd]"></v-text-field>
             <router-link to="/Forgetpwd1" class="login-toforgetpwd">忘记密码</router-link>
               <v-btn color="primary register-confirm"  @click="login">登录</v-btn>
@@ -31,7 +31,7 @@
 <script>
   export default {
     data: () => ({
-      username:"",
+      number:"",
       pwd:"",
        rules:{
         required:value => !!value || '不能为空！',
@@ -47,7 +47,20 @@
     }),
     methods:{
       login:function(){
-        this.$router.push('/');
+        if(this.rules.pwd(this.pwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.number)==true){
+          axios.post('/api-auth-token/',{
+              username:this.number,
+              password:this.pwd
+          }).then((res)=>{
+            alert("success");
+            // this.clearsession();
+            // localStorage.setItem("username",this.username);
+            // this.$router.push('/');
+          }).catch(function (error) {
+            // handle error
+            alert("传输故障，注册失败！");
+          })//不同种报错可能判断=>todo
+        }
       }
     }
   }

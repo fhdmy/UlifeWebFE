@@ -1,5 +1,5 @@
 <template>
-  <div class="register-bg">
+  <div class="register-bg" @keyup.13="register()">
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">注册Ulife</p>
     <div class="register1-wrapper">
       <v-container>
@@ -82,11 +82,13 @@ import {SHA256} from '../webtoolkit.sha256.js'
               password:this.pwd,
               college:this.select
           }).then((res)=>{
-           console.log(res);
-          })
-          this.clearsession();
-          localStorage.setItem("username",this.username);
-          // this.$router.push('/');
+            this.clearsession();
+            localStorage.setItem("username",this.username);
+            this.$router.push('/');
+          }).catch(function (error) {
+            // handle error
+            alert("传输故障，注册失败！");
+          })//不同种报错可能判断=>todo
         }
       },
       clearsession:function(){
