@@ -48,18 +48,22 @@
     methods:{
       login:function(){
         if(this.rules.pwd(this.pwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.number)==true){
-          axios.post('/api-auth-token/',{
+          this.$http.post('/login/',{
               username:this.number,
               password:this.pwd
           }).then((res)=>{
-            alert("success");
-            // this.clearsession();
-            // localStorage.setItem("username",this.username);
-            // this.$router.push('/');
+            localStorage.setItem("token",res.data.token);
+            localStorage.setItem("id",res.data.profile_id);
+            this.$router.push('/');
           }).catch(function (error) {
-            // handle error
-            alert("传输故障，注册失败！");
-          })//不同种报错可能判断=>todo
+            // console.log(error.response.data.non_field_errors[0]);
+            if(error.response.data.non_field_errors[0]=="Unable to log in with provided credentials."){
+              alert("账号或密码错误！");
+            }
+            else{
+              alert("传输故障，注册失败！");
+            }
+          })
         }
       }
     }

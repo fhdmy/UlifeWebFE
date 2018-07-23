@@ -1,6 +1,7 @@
 <template>
   <div class="rank-wrapper">
-    <input type="file" hidden ref="selectimg" accept="image/png, image/jpeg, image/gif, image/jpg"/>
+    <input type="file" hidden ref="selectimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="imgchange" multiple/>
+    <!-- <div ref="imageholder"> </div> (测试用的)-->
     <v-dialog v-model="brief" persistent max-width="500px">
         <div class="menu-div" slot="activator">
           <v-icon>{{items[0].iconname}}</v-icon>
@@ -176,7 +177,28 @@
         this.$emit("sentrequire",this.opts);
       },
       sendparsetoparent:function(){
-        this.$emit("sentparse",this.selectedparsetext);
+        if(this.selectedparsetext!=''){
+          this.$emit("sentparse",this.selectedparsetext);
+          this.selectedparsetext="";
+        }
+      },
+      imgchange:function(){
+        if(typeof(FileReader)!='undefined'){
+          var image_holder=this.$refs.imageholder;
+          for(let i=0;i<this.$refs.selectimg.files.length;i++){
+            let reader=new FileReader();
+            let file=this.$refs.selectimg.files[i];
+            reader.readAsDataURL(file);
+            console.log(file);
+            reader.onload=(e)=>{
+              console.log(reader.result); 
+              this.$emit("sentimg",reader.result);
+            }
+          }
+        }
+        else{
+          alert("抱歉，你的浏览器不支持 FileReader");
+        }
       }
     }
   }

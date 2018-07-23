@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
+import axios from 'axios'
+import global_ from './Global.vue'
 import App from './App.vue'
 import Toolbar from './home/Toolbar.vue'
 import Footer from './home/Footer.vue'
@@ -134,7 +136,6 @@ Vue.component("Createact",Createact)
 Vue.component("Createleft",Createleft)
 Vue.component("Createright",Createright)
 
-
 const routes = [
   { path: '/', component: Apphome},
   { path: '/Login', component: Login },
@@ -159,10 +160,12 @@ const router = new VueRouter({
   mode: 'history',
   routes // (缩写) 相当于 routes: routes
 })
+Vue.prototype.GLOBAL = global_
+axios.defaults.baseURL=global_.BASE_URL
+Vue.prototype.$http = axios
 new Vue({
   el: '#app',
   router,
   render: h => h(App)
 })
-// axios.defaults.baseURL = 'http://192.168.43.2:8000'
-axios.defaults.baseURL = 'http://127.0.0.1:8000'
+

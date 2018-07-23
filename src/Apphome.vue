@@ -1,5 +1,9 @@
 <template>
     <v-content style="background: #f3f4f5;">
+      <v-snackbar v-model="snackbar" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+        {{ text }}
+        <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
+      </v-snackbar>
       <div class="elevation-1 white home-toolbar-wrapper">
         <!-- <Toolbar v-if="user.type=='none'"></Toolbar> -->
         <!-- <Stutoolbar v-if="user.type=='stu'"></Stutoolbar> -->
@@ -35,8 +39,25 @@
         type:'none',
         username:'',
         img:''
-      }
-    })
+      },
+      y:'top',
+      snackbar: false,
+      color:'#E03636',
+      mode: '',
+      timeout: 3000,
+      text: 'Hello, I\'m a snackbar'
+    }),
+    created:function(){
+      var id=localStorage.getItem("id");
+      this.$http({
+        method:'get',
+        url:"/api/realusers/" + id+"/",
+        headers:{
+           "Authorization":"Token " + localStorage.getItem("token")
+        }
+      });
+      this.snackbar=true;
+    }
   }
 
 </script>

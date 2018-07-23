@@ -3,12 +3,13 @@
     <div class="elevation-1 white home-toolbar-wrapper">
       <Toolbar></Toolbar>
     </div>
-    <img :src="parallaxpath" class="large-img" />
+    <img :src="parallaxpath" class="large-img" ref="topimgreader"/>
+    <!-- <div :style="{'background':'url('+parallaxpath+')'}" class="large-img" ref="topimgreader"/></div> -->
     <div class="add-topimg-wrapper">
       <div class="add-topimg-inner">
-        <v-icon size="64" color="secondary" class="add-icon" @click="addimg">photo</v-icon>
+        <v-icon size="64" color="secondary" class="add-icon" @click="addimg" :class="{'hidden':havetopimg}">photo</v-icon>
         <input type="file" hidden ref="selectimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="changetopimg" />
-        <div class="add-topimgtext">
+        <div class="add-topimgtext" :class="{'hidden':havetopimg}">
           <span>设置活动头图</span>
           <p>图片建议选择尺寸大于1680px的高清大图，如相机原图</p>
         </div>
@@ -17,15 +18,15 @@
       <v-text-field v-model="title" :rules="rules" counter="25" box label="填写活动标题" class="add-acttitle"></v-text-field>
     </div>
     <div class="main-wrapper">
-      <Createleft></Createleft>
-      <Createright @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse"></Createright>
+      <Createleft :gotdata="computeddata" @senttext="gettext" :textjudge="this.textjudge"></Createleft>
+      <Createright @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg"></Createright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
       <v-btn class="preview" flat>预览</v-btn>
       <v-btn class="submit" flat>发表活动</v-btn>
     </div>
-    <div class="side-slider" :style="{'left':slide}">
+    <div class="side-slider" :style=" {'left':slide}">
       <v-btn @click="moveleft" class="sort-btn">
         <v-icon>keyboard_arrow_left</v-icon>
         <span>顺序编辑器</span>
@@ -50,6 +51,7 @@
 </template>
 
 <script>
+  // import Vue from 'vue'
   export default {
     data: () => ({
       parallaxpath: '/src/assets/createdefault.jpg',
@@ -70,10 +72,28 @@
       selectedparsetext:'',
       date:'',
       requires:[],
-      parse:''
+      parse:'',
+      text:'',
+      cal:1,
+      img:[],
+      textjudge:0,
+      computeddata:[
+        {
+          title:"",
+          text:'',
+          img:'',
+          number:0
+        }
+      ]
     }),
-    computed: {
-
+    computed:{
+      havetopimg:function(){
+        if(this.parallaxpath=='/src/assets/createdefault.jpg'){
+          return false;
+        }
+        else
+          return true;
+      }
     },
     methods: {
       onScroll(e) {
@@ -83,7 +103,21 @@
         this.$refs.selectimg.click();
       },
       changetopimg: function () {
-        alert(this.$refs.selectimg.value);
+        if(typeof(FileReader)!='undefined'){
+          var image_holder=this.$refs.topimgreader;
+          var file=this.$refs.selectimg.files[0];
+          // console.log(file);
+          var reader=new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload=(e)=>{
+            // console.log(reader.result);
+            // image_holder.innerHTML='<img src="'+reader.result+'" alt=""/>';
+            this.parallaxpath=reader.result;
+          }
+        }
+        else{
+          alert("抱歉，你的浏览器不支持 FileReader");
+        }
       },
       moveleft: function () {
         if(this.panel==false){
@@ -109,7 +143,49 @@
         this.requires=d;
       },
       getparse:function(d){
+        if(this.text!=''){
+          this.$set(this.computeddata,this.cal,{
+            title:'',
+            text:this.text,
+            img:'',
+            number:this.cal
+          });
+          this.cal++;
+        }
+        this.text="";
+        this.textjudge++;
         this.parse=d;
+        this.$set(this.computeddata,this.cal,{
+          title:d,
+          text:'',
+          img:'',
+          number:this.cal
+        });
+        this.cal++;
+      },
+      gettext:function(d){
+        this.text=d; 
+      },
+      getimg:function(d){
+        if(this.text!=''){
+          this.$set(this.computeddata,this.cal,{
+            title:'',
+            text:this.text,
+            img:'',
+            number:this.cal
+          });
+          this.cal++;
+        }
+        this.text="";
+        this.textjudge++;
+        this.img=d;
+        this.$set(this.computeddata,this.cal,{
+          title:'',
+          text:'',
+          img:d,
+          number:this.cal
+        });
+        this.cal++;
       }
     }
   }
@@ -161,8 +237,8 @@
     margin-top: 64px;
     width: 100%;
     height: 600px;
-    max-height: 100%;
-    max-width: 100%;
+    max-width:100%;
+    max-height:100%;
   }
 
   .add-topimg-wrapper {
@@ -295,5 +371,8 @@
     width: 100%;
     height: auto;
     float: left;
+  }
+  .hidden{
+    visibility: hidden;
   }
 </style>

@@ -72,7 +72,7 @@ import {SHA256} from '../webtoolkit.sha256.js'
         if(this.rules.username(this.username)==true && this.rules.pwd(this.pwd)==true && this.rules.confirm(this.confirmpwd,this.pwd)==true && this.rules.required(this.confirmpwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.username)==true && this.rules.required(this.select)==true){
           var number=sessionStorage.getItem('number');
           var phone=sessionStorage.getItem('phone');
-          axios.post('/signup/',{
+          this.$http.post('/signup/',{
               student_id:number,
               phone_number:phone,
               // username:SHA256(this.username),
@@ -86,9 +86,17 @@ import {SHA256} from '../webtoolkit.sha256.js'
             localStorage.setItem("username",this.username);
             this.$router.push('/');
           }).catch(function (error) {
-            // handle error
-            alert("传输故障，注册失败！");
-          })//不同种报错可能判断=>todo
+            // console.log(error.response);
+            if(error.response.data=="Username already exists"){
+              alert("用户名已存在！");
+            }
+            // if(error.response.data=="Phone number already exists"){
+            //   alert("手机号已被注册！");
+            // }
+            else{
+              alert("传输故障，注册失败！");
+            }
+          })
         }
       },
       clearsession:function(){
