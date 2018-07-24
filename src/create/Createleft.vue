@@ -2,7 +2,7 @@
   <div class="Homemaincontent-wrapper">
     <div class="textarea-wrapper">
       <div class="textarea-inner" v-for="(d,i) in gotdata" :key="i">
-        <div class="text-box" contenteditable="true" @input="oldhandleInput" v-if="d.text!=''">{{d.text}}</div>
+        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i)" v-if="d.text!=''">{{d.text}}</div>
         <img :src="d.img" class="img" v-if="d.img!=''"/>
         <p class="title" v-if="d.title!=''">{{d.title}}</p>
       </div>
@@ -16,7 +16,7 @@
   export default {
     props:['gotdata','textjudge'],
     data: () => ({
-      oldcontent:'',//有问题!
+      oldcontent:'',
       content:''
     }),
     watch:{
@@ -30,8 +30,9 @@
         this.content = $event.target.innerText;
         this.$emit("senttext",this.content);
       },
-      oldhandleInput($event) {
+      oldhandleInput($event,i) {
         this.oldcontent = $event.target.innerText;
+        this.$emit("sentoldtext",this.oldcontent,i);
       }
     }
   }

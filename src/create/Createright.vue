@@ -1,5 +1,6 @@
 <template>
   <div class="rank-wrapper">
+    <input type="file" hidden ref="selecttopimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="topimgchange"/>
     <input type="file" hidden ref="selectimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="imgchange" multiple/>
     <!-- <div ref="imageholder"> </div> (测试用的)-->
     <v-dialog v-model="brief" persistent max-width="500px">
@@ -68,14 +69,18 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <div class="menu-addimg menu-div" slot="activator" @click="addimg">
+      <div class="menu-addimg menu-div" slot="activator" @click="addtopimg">
           <v-icon>{{items[2].iconname}}</v-icon>
           <span>{{items[2].text}}</span>
       </div>
-      <v-dialog v-model="insertphase" persistent max-width="500px">
-        <div class="menu-div" slot="activator">
+      <div class="menu-addimg menu-div" slot="activator" @click="addimg">
           <v-icon>{{items[3].iconname}}</v-icon>
           <span>{{items[3].text}}</span>
+      </div>
+      <v-dialog v-model="insertphase" persistent max-width="500px">
+        <div class="menu-div" slot="activator">
+          <v-icon>{{items[4].iconname}}</v-icon>
+          <span>{{items[4].text}}</span>
         </div>
         <v-card>
           <v-card-title>
@@ -124,6 +129,10 @@
           iconname:'face',
           text:'报名需求',
         },
+         {
+          iconname:'photo_library',
+          text:'更改头图',
+        },
         {
           iconname:'photo',
           text:'插入图片',
@@ -139,6 +148,9 @@
     methods:{
       addimg: function () {
         this.$refs.selectimg.click();
+      },
+      addtopimg:function(){
+        this.$refs.selecttopimg.click();
       },
       save:function(date) {
         this.$refs.menu.save(date)
@@ -189,11 +201,24 @@
             let reader=new FileReader();
             let file=this.$refs.selectimg.files[i];
             reader.readAsDataURL(file);
-            console.log(file);
+            // console.log(file);
             reader.onload=(e)=>{
-              console.log(reader.result); 
+              // console.log(reader.result); 
               this.$emit("sentimg",reader.result);
             }
+          }
+        }
+        else{
+          alert("抱歉，你的浏览器不支持 FileReader");
+        }
+      },
+      topimgchange:function(){
+        if(typeof(FileReader)!='undefined'){
+          var file=this.$refs.selecttopimg.files[0];
+          var reader=new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload=(e)=>{
+            this.$emit("senttopimg",reader.result);
           }
         }
         else{

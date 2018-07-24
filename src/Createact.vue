@@ -18,8 +18,8 @@
       <v-text-field v-model="title" :rules="rules" counter="25" box label="填写活动标题" class="add-acttitle"></v-text-field>
     </div>
     <div class="main-wrapper">
-      <Createleft :gotdata="computeddata" @senttext="gettext" :textjudge="this.textjudge"></Createleft>
-      <Createright @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg"></Createright>
+      <Createleft :gotdata="computeddata" @senttext="gettext" :textjudge="this.textjudge" @sentoldtext="getoldtext"></Createleft>
+      <Createright @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"></Createright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -28,7 +28,7 @@
     </div>
     <div class="side-slider" :style=" {'left':slide}">
       <v-btn @click="moveleft" class="sort-btn">
-        <v-icon>keyboard_arrow_left</v-icon>
+        <v-icon class="slide-leftbutton">keyboard_arrow_left</v-icon>
         <span>顺序编辑器</span>
       </v-btn>
       <div class="slide-content">
@@ -39,7 +39,12 @@
           <div style="clear:both;"></div>
         </div>
         <div class="slide-sortwrapper">
-
+          <div class="box-wrapper" v-for="(box,i) in computeddata" :key="i">
+            <v-icon v-if="box.text!=''" class="slide-text">subject</v-icon>
+            <img :src="box.img" class="img" v-if="box.img!=''"/>
+            <v-icon v-if="box.title!=''" class="slide-title">format_list_bulleted</v-icon>
+          </div>
+          <div style="clear:both;"></div>
         </div>
       </div>
     </div>
@@ -74,17 +79,10 @@
       requires:[],
       parse:'',
       text:'',
-      cal:1,
+      cal:0,
       img:[],
       textjudge:0,
-      computeddata:[
-        {
-          title:"",
-          text:'',
-          img:'',
-          number:0
-        }
-      ]
+      computeddata:[]
     }),
     computed:{
       havetopimg:function(){
@@ -186,6 +184,17 @@
           number:this.cal
         });
         this.cal++;
+      },
+      gettopimg:function(d){
+        this.parallaxpath=d;
+      },
+      getoldtext:function(d,i){
+        this.$set(this.computeddata,i,{
+          title:'',
+          text:d,
+          img:'',
+          number:i
+        });
       }
     }
   }
@@ -321,7 +330,7 @@
     transform: translate(-5px, 0);
   }
 
-  .side-slider>>>i {
+  .side-slider>>>.slide-leftbutton {
     position: absolute;
     left: -10px;
     font-size: 56px;
@@ -371,6 +380,26 @@
     width: 100%;
     height: auto;
     float: left;
+    padding:20px 30px;
+  }
+  .box-wrapper{
+    width: 76px;
+    height: 76px;
+    float: left;
+    margin-right: 10px;
+    border: 2px solid #bbb;
+  }
+  .img{
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height:100%;
+  }
+  .slide-text,.slide-title{
+    width: 100%;
+    height: 100%;
+    font-size: 76px;
+    color: #ccc;
   }
   .hidden{
     visibility: hidden;
