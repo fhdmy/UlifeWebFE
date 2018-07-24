@@ -39,12 +39,20 @@
           <div style="clear:both;"></div>
         </div>
         <div class="slide-sortwrapper">
-          <div class="box-wrapper" v-for="(box,i) in computeddata" :key="i">
+          <div class="box-wrapper" v-for="(box,i) in computeddata" :key="i" @mouseover="mouseoverbox(i)">
             <v-icon v-if="box.text!=''" class="slide-text">subject</v-icon>
             <img :src="box.img" class="img" v-if="box.img!=''"/>
             <v-icon v-if="box.title!=''" class="slide-title">format_list_bulleted</v-icon>
           </div>
           <div style="clear:both;"></div>
+        </div>
+        <div class="slide-show">
+          <!-- <div class="slide-showbox" :class="{'slide-showbox-active':mouseoverbox}"> -->
+          <div class="slide-showbox">
+            <p class="slideshow-textbox" v-if="slidetext!=''">{{slidetext}}</p>
+            <img :src="slideimg" class="slideshow-img" v-if="slideimg!=''"/>
+            <p class="slideshow-title" v-if="slidetitle!=''">{{slidetitle}}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -82,7 +90,11 @@
       cal:0,
       img:[],
       textjudge:0,
-      computeddata:[]
+      computeddata:[],
+      // slide
+      slidetitle:'',
+      slidetext:'',
+      slideimg:''
     }),
     computed:{
       havetopimg:function(){
@@ -119,6 +131,17 @@
       },
       moveleft: function () {
         if(this.panel==false){
+          if(this.text!=''){
+            this.$set(this.computeddata ,this.cal,{
+              title:'',
+              text:this.text,
+              img:'',
+              number:this.cal
+            });
+            this.cal++;
+          }
+          this.text="";
+          this.textjudge++;
           var w = window.screen.availWidth;
           w -= 1440;
           this.slide = w + 'px';
@@ -162,7 +185,7 @@
         this.cal++;
       },
       gettext:function(d){
-        this.text=d; 
+        this.text=d;  
       },
       getimg:function(d){
         if(this.text!=''){
@@ -195,7 +218,25 @@
           img:'',
           number:i
         });
-      }
+      },
+      mouseoverbox:function(i){
+        var target=this.computeddata[i];
+        if(target.title!=''){
+          this.slidetitle=target.title;
+          this.slidetext='';
+          this.slideimg='';
+        }
+        else if(target.text!=''){
+          this.slidetext=target.text;
+          this.slidetitle='';
+          this.slideimg='';
+        }
+        else if(target.img!=''){
+          this.slidetitle='';
+          this.slidetext='';
+          this.slideimg=target.img;
+        }
+      },
     }
   }
 
@@ -378,16 +419,22 @@
   }
   .slide-sortwrapper{
     width: 100%;
-    height: auto;
+    height: 70%;
     float: left;
-    padding:20px 30px;
+    padding:20px 30px 0 30px;
+    overflow-y:scroll;
   }
   .box-wrapper{
     width: 76px;
     height: 76px;
     float: left;
     margin-right: 10px;
+    margin-bottom: 10px;
     border: 2px solid #bbb;
+    cursor: pointer;
+  }
+  .box-wrapper:hover{
+    border: 2px solid #FE9246;
   }
   .img{
     width: 100%;
@@ -400,6 +447,46 @@
     height: 100%;
     font-size: 76px;
     color: #ccc;
+  }
+  .slide-show{
+    width: 100%;
+    height: 30%;
+    float: left;
+    padding:0 30px;
+  }
+  .slide-showbox{
+    width: 320px;
+    height:180px;
+    margin: 0 auto;
+    border: 2px solid #FE9246;
+    padding-bottom: 20px;
+  }
+  .slide-showbox-active{
+    border: 2px solid #FE9246;
+  }
+  .slideshow-textbox{
+    width:100%;
+    height: 100%;
+    padding: 20px;
+    font-size: 15px;
+    color: #444; 
+    overflow:hidden; 
+    word-break: break-all;
+  }
+  .slideshow-img{
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    max-width:100%;
+  }
+  .slideshow-title{
+    width:100%;
+    height: 100%;
+    padding: 20px;
+    color: #222;
+    font-size:24px!important;
+    font-weight:400;
+    overflow:hidden;
   }
   .hidden{
     visibility: hidden;

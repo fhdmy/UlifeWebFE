@@ -1,15 +1,14 @@
 <template>
     <v-content style="background: #f3f4f5;">
       <v-snackbar v-model="snackbar" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-        {{ text }}
-        <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
+        欢迎回来，{{username}}！
+        <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
       </v-snackbar>
       <div class="elevation-1 white home-toolbar-wrapper">
-        <!-- <Toolbar v-if="user.type=='none'"></Toolbar> -->
-        <!-- <Stutoolbar v-if="user.type=='stu'"></Stutoolbar> -->
-        <!-- <Stutoolbar></Stutoolbar> -->
+        <!-- <Toolbar v-if="userurl=='' && officialurl==''"></Toolbar>
+        <Stutoolbar v-if="userurl!=''" :avatarurl="avatarurl" :username="username"></Stutoolbar>
+        <Orgtoolbar v-if="officialurl!=''"></Orgtoolbar> -->
         <Orgtoolbar></Orgtoolbar>
-        <!-- <Orgtoolbar v-if="user.type=='org'"></Orgtoolbar> -->
         <!-- <Admintoolbar v-if="user.type=='admin'"></Admintoolbar> -->
       </div>
       <div class="home-topshow-wrapper">
@@ -35,26 +34,46 @@
 <script>
   export default {
     data:()=>({
-      user:{
-        type:'none',
-        username:'',
-        img:''
-      },
+      userurl:'',
+      officialurl:'',
+      avatarurl:'',
+      username:'',
       y:'top',
       snackbar: false,
       color:'#E03636',
       mode: '',
       timeout: 3000,
-      text: 'Hello, I\'m a snackbar'
     }),
     created:function(){
       var id=localStorage.getItem("id");
       this.$http({
         method:'get',
-        url:"/api/realusers/" + id+"/",
+        url:"/api/users/" + id+"/",
         headers:{
-           "Authorization":"Token " + localStorage.getItem("token")
+          "Authorization":"Token " + localStorage.getItem("token")
         }
+      }).then((res)=>{
+        // console.log(res);
+        //如果是普通用户
+        if(res.data.realuser!=null){
+          this.userurl=res.data.realuser;
+        }
+        // 获得信息
+        this.$http({
+          method:'get',
+          url:this.userurl,
+          headers:{
+            "Authorization":"Token " + localStorage.getItem("token")
+          }
+        }).then((res)=>{
+          // console.log(res);
+          this.avatarurl=res.data.avatar;
+          this.username=res.data.username;
+        }).catch(function (error) {
+          alert("传输故障，注册失败！");
+        });
+      }).catch(function (error) {
+          alert("传输故障，注册失败！");
       });
       this.snackbar=true;
     }

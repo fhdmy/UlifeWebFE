@@ -6,8 +6,8 @@
         <img :src="d.img" class="img" v-if="d.img!=''"/>
         <p class="title" v-if="d.title!=''">{{d.title}}</p>
       </div>
-      <div class="text-box" contenteditable="true" @input="handleInput" placeholder="从这里开始你的活动正文" v-if="gotdata.length==1" ref="content"></div>
-      <div class="text-box" contenteditable="true" @input="handleInput" v-if="gotdata.length!=1" ref="content"></div>
+      <div class="text-box" contenteditable="true" @input="handleInput" placeholder="从这里开始你的活动正文" v-if="gotdata.length==0" ref="content"></div>
+      <div class="text-box" contenteditable="true" @input="handleInput" v-if="gotdata.length!=0" ref="content"></div>
     </div>
   </div>
 </template>

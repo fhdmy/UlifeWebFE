@@ -1,5 +1,5 @@
 <template>
-  <div class="register-bg">
+  <div class="register-bg" @keyup.13="login()">
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">Ulife欢迎您</p>
     <div class="register1-wrapper">
       <v-container>
