@@ -1,10 +1,10 @@
 <template>
   <div class="Homemaincontent-wrapper">
     <div class="textarea-wrapper">
-      <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.number" @mouseover="mouseoverbox(i)"  @mouseout="mouseoutbox(i)">
+      <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.key" @mouseover="mouseoverbox(i)"  @mouseout="mouseoutbox(i)">
         <v-icon class="reediticon" v-if="texticon[i]">colorize</v-icon>
         <v-icon class="clearicon" v-if="texticon[i]" @click="sentdeletetext(i)">delete_outline</v-icon>
-        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i)" v-if="d.img=='' && d.title==''" placeholder="从这里开始你的活动正文"></div>
+        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" v-if="d.img=='' && d.title==''" placeholder="从这里开始你的活动正文"></div>
         <img :src="d.img" class="img" v-if="d.img!=''"/>
         <p class="title" v-if="d.title!=''">{{d.title}}</p>
       </div>
@@ -27,9 +27,9 @@
         this.content = $event.target.innerText;
         // this.$emit("senttext",this.content);
       },
-      oldhandleInput($event,i) {
+      oldhandleInput($event,i,k) {
         this.oldcontent=$event.target.innerText;
-        this.$emit("sentoldtext",this.oldcontent,i);
+        this.$emit("sentoldtext",this.oldcontent,i,k);
       },
       mouseoverbox:function(i){
         this.$set(this.texticon,i,true);

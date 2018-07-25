@@ -91,6 +91,7 @@
       parse:'',
       text:'',
       cal:0,
+      key:0,
       img:[],
       computeddata:[],
       // slide
@@ -186,18 +187,22 @@
           title:d,
           text:'',
           img:'',
-          number:this.cal
+          number:this.cal,
+          key:this.key
         });
         this.cal++;
+        this.key++;
       },
       gettext:function(d){ 
         this.$set(this.computeddata,this.cal,{
             title:'',
             text:'',
             img:'',
-            number:this.cal
+            number:this.cal,
+            key:this.key
           });
         this.cal++;
+        this.key++;
       },
       getimg:function(d){
         // if(this.text!=''){
@@ -216,19 +221,22 @@
           title:'',
           text:'',
           img:d,
-          number:this.cal
+          number:this.cal,
+          key:this.key
         });
         this.cal++;
+        this.key++;
       },
       gettopimg:function(d){
         this.parallaxpath=d;
       },
-      getoldtext:function(d,i){
+      getoldtext:function(d,i,k){
         this.$set(this.computeddata,i,{
           title:'',
           text:d,
           img:'',
-          number:i
+          number:i,
+          key:k
         });
       },
       mouseoverbox:function(i){
@@ -258,14 +266,17 @@
             title:this.computeddata[i].title,
             text:this.computeddata[i].text,
             img:this.computeddata[i].img,
-            number:i
+            number:i,
+            key:this.computeddata[i].key
           };
         this.computeddata[i].title=this.computeddata[i-1].title;
         this.computeddata[i].text=this.computeddata[i-1].text;
         this.computeddata[i].img=this.computeddata[i-1].img;
+        this.computeddata[i].key=this.computeddata[i-1].key;
         this.computeddata[i-1].title=temp.title;
         this.computeddata[i-1].text=temp.text;
         this.computeddata[i-1].img=temp.img;
+        this.computeddata[i-1].key=temp.key;
         this.mouseoverbox(i);
       },
       sliderightchange:function(i){
@@ -273,18 +284,24 @@
             title:this.computeddata[i].title,
             text:this.computeddata[i].text,
             img:this.computeddata[i].img,
-            number:i
+            number:i,
+            key:this.computeddata[i].key
           };
         this.computeddata[i].title=this.computeddata[i+1].title;
         this.computeddata[i].text=this.computeddata[i+1].text;
         this.computeddata[i].img=this.computeddata[i+1].img;
+        this.computeddata[i].key=this.computeddata[i+1].key;
         this.computeddata[i+1].title=temp.title;
         this.computeddata[i+1].text=temp.text;
         this.computeddata[i+1].img=temp.img;
+        this.computeddata[i+1].key=temp.key;
         this.mouseoverbox(i);
       },
       getdeletetext:function(d){
         this.computeddata.splice(d,1);
+        for(let k=0;k<this.computeddata.length;k++){
+          this.computeddata[k].number=k;
+        }
         this.cal--;
       }
     }
