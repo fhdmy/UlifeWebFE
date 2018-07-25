@@ -1,38 +1,44 @@
 <template>
   <div class="Homemaincontent-wrapper">
     <div class="textarea-wrapper">
-      <div class="textarea-inner" v-for="(d,i) in gotdata" :key="i">
-        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i)" v-if="d.text!=''">{{d.text}}</div>
+      <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.number" @mouseover="mouseoverbox(i)"  @mouseout="mouseoutbox(i)">
+        <v-icon class="reediticon" v-if="texticon[i]">colorize</v-icon>
+        <v-icon class="clearicon" v-if="texticon[i]" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i)" v-if="d.img=='' && d.title==''" placeholder="从这里开始你的活动正文"></div>
         <img :src="d.img" class="img" v-if="d.img!=''"/>
         <p class="title" v-if="d.title!=''">{{d.title}}</p>
       </div>
-      <div class="text-box" contenteditable="true" @input="handleInput" placeholder="从这里开始你的活动正文" v-if="gotdata.length==0" ref="content"></div>
-      <div class="text-box" contenteditable="true" @input="handleInput" v-if="gotdata.length!=0" ref="content"></div>
+      <!-- <div class="text-box" contenteditable="true" @input="handleInput" placeholder="从这里开始你的活动正文" v-if="gotdata.length==0" ref="content"></div>
+      <div class="text-box" contenteditable="true" @input="handleInput" v-if="gotdata.length!=0" ref="content"></div> -->
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    props:['gotdata','textjudge'],
+    props:['gotdata'],
     data: () => ({
       oldcontent:'',
-      content:''
+      texticon:[]
+      // content:''
     }),
-    watch:{
-      textjudge:function(val){
-        this.$refs.content.innerHTML="";
-        this.content="";
-      }
-    },
     methods: {
       handleInput($event) {
         this.content = $event.target.innerText;
-        this.$emit("senttext",this.content);
+        // this.$emit("senttext",this.content);
       },
       oldhandleInput($event,i) {
-        this.oldcontent = $event.target.innerText;
+        this.oldcontent=$event.target.innerText;
         this.$emit("sentoldtext",this.oldcontent,i);
+      },
+      mouseoverbox:function(i){
+        this.$set(this.texticon,i,true);
+      },
+      mouseoutbox:function(i){
+        this.$set(this.texticon,i,false);
+      },
+      sentdeletetext:function(i){
+        this.$emit("sentdeletetext",i);
       }
     }
   }
@@ -46,7 +52,26 @@
     background: white;
     float: left;
   }
-
+  .textarea-inner{
+    position: relative;
+    z-index: 10;
+  }
+  .clearicon{
+    position: absolute;
+    top: 20px;
+    right: 0;
+    cursor: pointer;
+    color:#aaa;
+    font-size: 30px;
+  }
+  .reediticon{
+    position: absolute;
+    top: 20px;
+    right:40px;
+    cursor: pointer;
+    color:#aaa;
+    font-size: 30px;
+  }
   .text-box {
     width: 100%;
     outline: none;

@@ -18,12 +18,13 @@
       <v-text-field v-model="title" :rules="rules" counter="25" box label="填写活动标题" class="add-acttitle"></v-text-field>
     </div>
     <div class="main-wrapper">
-      <Createleft :gotdata="computeddata" @senttext="gettext" :textjudge="this.textjudge" @sentoldtext="getoldtext"></Createleft>
-      <Createright @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"></Createright>
+      <Createleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext"></Createleft>
+      <Createright @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg" @senttext="gettext"></Createright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
       <v-btn class="preview" flat>预览</v-btn>
+      <v-btn class="save" flat>保存</v-btn>
       <v-btn class="submit" flat>发表活动</v-btn>
     </div>
     <div class="side-slider" :style=" {'left':slide}">
@@ -33,14 +34,16 @@
       </v-btn>
       <div class="slide-content">
         <div class="explain-text">拖拽调整照片或文字顺序</div>
-        <div class="slide-btn">
+        <!-- <div class="slide-btn">
           <v-btn flat class="slide-cancel">取消</v-btn>
           <v-btn flat class="slide-save">保存</v-btn>
           <div style="clear:both;"></div>
-        </div>
+        </div> -->
         <div class="slide-sortwrapper">
-          <div class="box-wrapper" v-for="(box,i) in computeddata" :key="i" @mouseover="mouseoverbox(i)">
-            <v-icon v-if="box.text!=''" class="slide-text">subject</v-icon>
+          <div class="box-wrapper" v-for="(box,i) in computeddata" :key="i" @mouseover="mouseoverbox(i)" @mouseout="mouseoutbox(i)">
+            <div class="slide-left-btn" @click="slideleftchange(i)" v-if="slidebtn[i]"></div>
+            <div class="slide-right-btn" @click="sliderightchange(i)" v-if="slidebtn[i]"></div>
+            <v-icon v-if="box.title=='' && box.img==''" class="slide-text">subject</v-icon>
             <img :src="box.img" class="img" v-if="box.img!=''"/>
             <v-icon v-if="box.title!=''" class="slide-title">format_list_bulleted</v-icon>
           </div>
@@ -89,12 +92,15 @@
       text:'',
       cal:0,
       img:[],
-      textjudge:0,
       computeddata:[],
       // slide
       slidetitle:'',
       slidetext:'',
-      slideimg:''
+      slideimg:'',
+      disX:0,
+      disY:0,
+      slidebtn:[],
+      mousemoveflag:false
     }),
     computed:{
       havetopimg:function(){
@@ -131,17 +137,17 @@
       },
       moveleft: function () {
         if(this.panel==false){
-          if(this.text!=''){
-            this.$set(this.computeddata ,this.cal,{
-              title:'',
-              text:this.text,
-              img:'',
-              number:this.cal
-            });
-            this.cal++;
-          }
-          this.text="";
-          this.textjudge++;
+          // if(this.text!=''){
+          //   this.$set(this.computeddata ,this.cal,{
+          //     title:'',
+          //     text:this.text,
+          //     img:'',
+          //     number:this.cal
+          //   });
+          //   this.cal++;
+          // }
+          // this.text="";
+          // this.textjudge++;
           var w = window.screen.availWidth;
           w -= 1440;
           this.slide = w + 'px';
@@ -164,17 +170,17 @@
         this.requires=d;
       },
       getparse:function(d){
-        if(this.text!=''){
-          this.$set(this.computeddata,this.cal,{
-            title:'',
-            text:this.text,
-            img:'',
-            number:this.cal
-          });
-          this.cal++;
-        }
-        this.text="";
-        this.textjudge++;
+        // if(this.text!=''){
+        //   this.$set(this.computeddata,this.cal,{
+        //     title:'',
+        //     text:this.text,
+        //     img:'',
+        //     number:this.cal
+        //   });
+        //   this.cal++;
+        // }
+        // this.text="";
+        // this.textjudge++;
         this.parse=d;
         this.$set(this.computeddata,this.cal,{
           title:d,
@@ -184,21 +190,27 @@
         });
         this.cal++;
       },
-      gettext:function(d){
-        this.text=d;  
-      },
-      getimg:function(d){
-        if(this.text!=''){
-          this.$set(this.computeddata,this.cal,{
+      gettext:function(d){ 
+        this.$set(this.computeddata,this.cal,{
             title:'',
-            text:this.text,
+            text:'',
             img:'',
             number:this.cal
           });
-          this.cal++;
-        }
-        this.text="";
-        this.textjudge++;
+        this.cal++;
+      },
+      getimg:function(d){
+        // if(this.text!=''){
+        //   this.$set(this.computeddata,this.cal,{
+        //     title:'',
+        //     text:this.text,
+        //     img:'',
+        //     number:this.cal
+        //   });
+        //   this.cal++;
+        // }
+        // this.text="";
+        // this.textjudge++;
         this.img=d;
         this.$set(this.computeddata,this.cal,{
           title:'',
@@ -226,7 +238,7 @@
           this.slidetext='';
           this.slideimg='';
         }
-        else if(target.text!=''){
+        else if(target.title=='' && target.img==''){
           this.slidetext=target.text;
           this.slidetitle='';
           this.slideimg='';
@@ -236,7 +248,45 @@
           this.slidetext='';
           this.slideimg=target.img;
         }
+        this.slidebtn[i]=true;
       },
+      mouseoutbox:function(i){
+        this.slidebtn[i]=false;
+      },
+      slideleftchange:function(i){
+        var temp={
+            title:this.computeddata[i].title,
+            text:this.computeddata[i].text,
+            img:this.computeddata[i].img,
+            number:i
+          };
+        this.computeddata[i].title=this.computeddata[i-1].title;
+        this.computeddata[i].text=this.computeddata[i-1].text;
+        this.computeddata[i].img=this.computeddata[i-1].img;
+        this.computeddata[i-1].title=temp.title;
+        this.computeddata[i-1].text=temp.text;
+        this.computeddata[i-1].img=temp.img;
+        this.mouseoverbox(i);
+      },
+      sliderightchange:function(i){
+        var temp={
+            title:this.computeddata[i].title,
+            text:this.computeddata[i].text,
+            img:this.computeddata[i].img,
+            number:i
+          };
+        this.computeddata[i].title=this.computeddata[i+1].title;
+        this.computeddata[i].text=this.computeddata[i+1].text;
+        this.computeddata[i].img=this.computeddata[i+1].img;
+        this.computeddata[i+1].title=temp.title;
+        this.computeddata[i+1].text=temp.text;
+        this.computeddata[i+1].img=temp.img;
+        this.mouseoverbox(i);
+      },
+      getdeletetext:function(d){
+        this.computeddata.splice(d,1);
+        this.cal--;
+      }
     }
   }
 
@@ -269,7 +319,16 @@
     border-radius: 50px;
     font-size: 18px;
     color: #FE9246;
-    margin-left: 340px;
+    margin-left: 300px;
+    margin-right: 30px;
+  }
+  .save{
+    width: 130px;
+    height: 60px;
+    border: 1px solid #bbbbbb;
+    border-radius: 50px;
+    font-size: 18px;
+    color: #FE9246;
     margin-right: 30px;
   }
 
@@ -402,7 +461,7 @@
     margin-top: 30px;
     margin-right: 60px;
   }
-  .slide-cancel{
+  /* .slide-cancel{
     background: #eee!important;
     color: #666;
   }
@@ -416,7 +475,7 @@
   }
   .slide-save:hover{
     background: #E03636!important;
-  }
+  } */
   .slide-sortwrapper{
     width: 100%;
     height: 70%;
@@ -425,28 +484,37 @@
     overflow-y:scroll;
   }
   .box-wrapper{
-    width: 76px;
-    height: 76px;
+    width: 85px;
+    height: 85px;
     float: left;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    border: 2px solid #bbb;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #bbb;
     cursor: pointer;
+    position: relative;
   }
   .box-wrapper:hover{
-    border: 2px solid #FE9246;
+    border: 1px solid #FE9246;
   }
   .img{
     width: 100%;
     height: 100%;
     max-width: 100%;
     max-height:100%;
+    border: 1px solid #bbb;
+  }
+  .img:hover{
+    border: 1px solid #FE9246;
   }
   .slide-text,.slide-title{
     width: 100%;
     height: 100%;
     font-size: 76px;
     color: #ccc;
+    border: 1px solid #bbb;
+  }
+  .slide-text:hover,.slide-title:hover{
+    border: 1px solid #FE9246;
   }
   .slide-show{
     width: 100%;
@@ -459,15 +527,14 @@
     height:180px;
     margin: 0 auto;
     border: 2px solid #FE9246;
-    padding-bottom: 20px;
   }
   .slide-showbox-active{
     border: 2px solid #FE9246;
   }
   .slideshow-textbox{
     width:100%;
-    height: 100%;
-    padding: 20px;
+    height: 85%;
+    padding: 7%;
     font-size: 15px;
     color: #444; 
     overflow:hidden; 
@@ -481,8 +548,8 @@
   }
   .slideshow-title{
     width:100%;
-    height: 100%;
-    padding: 20px;
+    height: 85%;
+    padding: 7%;
     color: #222;
     font-size:24px!important;
     font-weight:400;
@@ -490,5 +557,26 @@
   }
   .hidden{
     visibility: hidden;
+  }
+  .slide-left-btn {
+    background-image: url(/src/assets/btn-left.png);
+    background-size: cover;
+    cursor: pointer;
+    position: absolute;
+    top: 35%;
+    left: 0;
+    width: 20px;
+    height: 30px;
+  }
+
+  .slide-right-btn {
+    background-image: url(/src/assets/btn-right.png);
+    background-size: cover;
+    cursor: pointer;
+    position: absolute;
+    top: 35%;
+    right: 0;
+    width: 20px;
+    height: 30px;
   }
 </style>

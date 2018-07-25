@@ -100,6 +100,10 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <div class="menu-addimg menu-div" slot="activator" @click="addtext">
+          <v-icon>{{items[5].iconname}}</v-icon>
+          <span>{{items[5].text}}</span>
+      </div>
   </div>
 </template>
 
@@ -140,8 +144,13 @@
         },
         {
           iconname:'format_list_bulleted',
-          text:'插入段落',
+          text:'插入标题',
           path:'insertphase'
+        },
+        {
+          iconname:'subject',
+          text:'插入文本',
+          path:'inserttext'
         }
       ]
     }),
@@ -224,6 +233,9 @@
         else{
           alert("抱歉，你的浏览器不支持 FileReader");
         }
+      },
+      addtext:function(){
+        this.$emit("senttext",true);
       }
     }
   }
