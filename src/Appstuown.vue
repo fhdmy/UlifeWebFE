@@ -4,7 +4,7 @@
       <Stutoolbar></Stutoolbar>
     </div>
     <img :src="parallaxpath" class="large-img"/>
-    <div class="elevation-1 white" :class="{'isfixed':fixed}">
+    <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
       <div class="middle-wrapper">
         <Stuowntoolbar :itembottom="item"></Stuowntoolbar>
         <v-avatar size="100">
@@ -236,5 +236,9 @@
     height: 600px;
     max-height:100%;
     max-width:100%;
+  }
+  .owntoolbar-wrapper{
+    margin-top: -6px;
+    width:100%;
   }
 </style>

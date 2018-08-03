@@ -4,7 +4,7 @@
       <Orgtoolbar></Orgtoolbar>
     </div>
     <img :src="parallaxpath" class="large-img"/>
-    <div class="elevation-1 white" :class="{'isfixed':fixed}">
+    <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
       <div class="middle-wrapper">
         <Orgowntoolbar :itembottom="item"></Orgowntoolbar>
         <v-avatar size="100">
@@ -312,6 +312,11 @@
     width: 1063px;
     margin: 0 auto;
     position: relative;
+  }
+
+  .owntoolbar-wrapper{
+    margin-top: -6px;
+    width:100%;
   }
 
   .v-avatar {

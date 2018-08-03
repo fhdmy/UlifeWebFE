@@ -78,13 +78,13 @@
           <span>{{items[3].text}}</span>
       </div>
       <v-dialog v-model="insertphase" persistent max-width="500px">
-        <div class="menu-div" slot="activator">
+        <div class="menu-div" slot="activator" ref="inserttitle">
           <v-icon>{{items[4].iconname}}</v-icon>
           <span>{{items[4].text}}</span>
         </div>
         <v-card>
           <v-card-title>
-            <span class="headline">插入段落</span>
+            <span class="headline">插入标题</span>
           </v-card-title>
           <v-card-text>
             <v-container grid-list-md>
@@ -121,6 +121,7 @@
       time:'',
       brieftext:'',
       selectedparsetext:'',
+      reedit:false,
       forms:['比赛', '分享', '互动'],
       opts:[''],
       interests:['游戏','影视','棋牌','文化艺术','运动/户外','学术科技','社会科学','公益','实践'],
@@ -183,6 +184,7 @@
       },
       deleteparsedata:function(){
         this.selectedparsetext='';
+        this.reedit=false;
       },
       sendbrieftoparent:function(){
         this.$emit("sentbrief",{
@@ -199,6 +201,12 @@
       },
       sendparsetoparent:function(){
         if(this.selectedparsetext!=''){
+          if(this.reedit){
+            this.$emit("reeditparse",this.selectedparsetext);
+            this.selectedparsetext="";
+            this.reedit=false;
+            return;
+          }
           this.$emit("sentparse",this.selectedparsetext);
           this.selectedparsetext="";
         }
@@ -236,6 +244,11 @@
       },
       addtext:function(){
         this.$emit("senttext",true);
+      },
+      clickaddparse:function(title){
+        this.selectedparsetext=title;
+        this.$refs.inserttitle.click();
+        this.reedit=true;
       }
     }
   }

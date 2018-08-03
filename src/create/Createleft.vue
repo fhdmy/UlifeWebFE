@@ -2,8 +2,12 @@
   <div class="Homemaincontent-wrapper">
     <div class="textarea-wrapper">
       <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.key" @mouseover="mouseoverbox(i)"  @mouseout="mouseoutbox(i)">
-        <v-icon class="reediticon" v-if="texticon[i]">colorize</v-icon>
-        <v-icon class="clearicon" v-if="texticon[i]" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <v-icon class="reediticon" v-if="texticon[i] && d.title!=''" @click="sentreedit(i)">colorize</v-icon>
+        <v-icon class="clearicon" v-if="texticon[i] && d.img==''" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <div class="imgeidtdiv" v-if="texticon[i] && d.img!=''">
+          <v-icon class="imgreediticon" @click="rotateimg(i)">refresh</v-icon>
+          <v-icon class="imgclearicon" @click="sentdeletetext(i)">delete_outline</v-icon>
+        </div>
         <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" v-if="d.img=='' && d.title==''" placeholder="从这里开始你的活动正文"></div>
         <img :src="d.img" class="img" v-if="d.img!=''"/>
         <p class="title" v-if="d.title!=''">{{d.title}}</p>
@@ -39,6 +43,12 @@
       },
       sentdeletetext:function(i){
         this.$emit("sentdeletetext",i);
+      },
+      sentreedit:function(i){
+        this.$emit("sentreedit",i);
+      },
+      rotateimg:function(i){
+        
       }
     }
   }
@@ -51,10 +61,11 @@
     width: 761.19px;
     background: white;
     float: left;
+    z-index: 0;
   }
   .textarea-inner{
     position: relative;
-    z-index: 10;
+    z-index: 3;
   }
   .clearicon{
     position: absolute;
@@ -99,11 +110,38 @@
     height: auto;
     padding: 20px 0;
   }
+  /* .rotate90{
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg); 	
+    -moz-transform:rotate(90deg); 	
+    -webkit-transform:rotate(90deg);
+    -o-transform:rotate(90deg); 
+  } */
   .title{
     color: #222;
     font-size: 24px!important;
     font-weight:400;
     padding: 20px 0;
     margin-bottom: 0;
+  }
+  .imgeidtdiv{
+    position: absolute;
+    background: rgba(2,2,2,0.6);
+    top: 20px;
+    right: 0;
+    width: 80px;
+    padding: 5px;
+  }
+  .imgclearicon{
+    cursor: pointer;
+    color:#ddd;
+    font-size: 20px;
+  }
+  .imgreediticon{
+    cursor: pointer;
+    color:#ddd;
+    font-size: 20px;
+    margin-right: 10px;
+    margin-left: 10px;
   }
 </style>

@@ -18,8 +18,8 @@
       <v-text-field v-model="title" :rules="rules" counter="25" box label="填写活动标题" class="add-acttitle"></v-text-field>
     </div>
     <div class="main-wrapper">
-      <Createleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext"></Createleft>
-      <Createright @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg" @senttext="gettext"></Createright>
+      <Createleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit"></Createleft>
+      <Createright ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg" @senttext="gettext" @reeditparse="getreeditfromright"></Createright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -94,6 +94,7 @@
       key:0,
       img:[],
       computeddata:[],
+      reedititem:0,
       // slide
       slidetitle:'',
       slidetext:'',
@@ -303,6 +304,13 @@
           this.computeddata[k].number=k;
         }
         this.cal--;
+      },
+      getreedit:function(d){
+        this.reedititem=d;
+        this.$refs.rightchild.clickaddparse(this.computeddata[d].title);
+      },
+      getreeditfromright:function(d){
+        this.computeddata[this.reedititem].title=d;
       }
     }
   }

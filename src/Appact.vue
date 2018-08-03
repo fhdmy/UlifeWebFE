@@ -4,7 +4,7 @@
         <Toolbar></Toolbar>
       </div>
       <img :src="parallaxpath" class="large-img"/>
-      <div class="elevation-1 white" :class="{'isfixed':fixed}">
+      <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
         <div class="middle-wrapper">
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}"><v-avatar size="120" v-if="!fixed"><img :src="img" :alt="org"></v-avatar></router-link>
           <p class="act-title display-1" v-if="!fixed">{{title}}</p>
@@ -216,5 +216,10 @@
     height: 600px;
     max-height:100%;
     max-width:100%;
+  }
+
+  .owntoolbar-wrapper{
+    margin-top: -6px;
+    width:100%;
   }
 </style>

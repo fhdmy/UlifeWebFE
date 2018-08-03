@@ -24,9 +24,9 @@
          <Actrank></Actrank>
         <div style="clear:both;"></div>
       </div>
-      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
+      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0)">
         <v-icon>keyboard_arrow_up</v-icon>
-      </v-btn>
+      </v-btn>  
       <Footer></Footer>
     </v-content>
 </template>
