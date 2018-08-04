@@ -4,6 +4,16 @@
     <span class="title">我的消息</span>
     <div class="Homemaincontent-mainwrapper">
       <div v-for="(item,i) in items" :key="i" class="msg-content">
+        <v-dialog v-model="dialog" max-width="290">
+          <v-card>
+            <v-card-text>你确定要删除它？</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" flat="flat" @click="dialog = false">点错了</v-btn> 
+              <v-btn color="green darken-1" flat="flat" @click="dialog = false,deleteitem(ii)">删除</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
           <v-avatar size="50">
             <img :src="item.avatar" />
@@ -14,7 +24,7 @@
             <span class="msg-title">{{item.title}}</span>
           </router-link>
           <span class="msg-sendt">发送了消息</span>
-          <v-icon class="msg-close">close</v-icon>
+          <v-icon class="msg-close" @click.stop="dialog = true,ii=i">close</v-icon>
           <span class="msg-headline">{{item.headline}}</span>
           <div class="maincontent-wrapper">
             <p class="msg-content">{{item.subtitle}}</p>
@@ -30,6 +40,8 @@
 <script>
   export default {
     data: () => ({
+      dialog:false,
+      ii:0,
       items: [{
           avatar: '/src/assets/suselogo.jpg',
           title: '经济学院学生会',
@@ -54,7 +66,9 @@
       ]
     }),
     methods: {
-
+      deleteitem:function(i){
+        this.items.splice(i,1);
+      }
     }
   }
 

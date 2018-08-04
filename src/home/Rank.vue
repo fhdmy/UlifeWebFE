@@ -13,7 +13,8 @@
             <v-list-tile-title v-text="item.orgname" class="body-2"></v-list-tile-title>
           </v-list-tile-content>
           <span class="ml-1">{{item.stars}}
-            <v-icon color="primary" standard>star</v-icon>
+            <!-- <v-icon color="primary" standard>star</v-icon> -->
+            <v-icon color="primary" standard class="iconfont icon-star_full"></v-icon>
           </span>
         </v-list-tile>
         </router-link>

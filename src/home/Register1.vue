@@ -44,11 +44,11 @@ import {SHA256} from '../webtoolkit.sha256.js'
         },
         pwd:value=>{
           var t;
-          if(value.length<6 || value.length>18)
+          if(value.length<6 || value.length>17)
             t=false;
           else
             t=true;
-          return t || '密码长度请大于6位！';
+          return t || '密码长度请大于6位小于18位！';
         }
       } 
     }),

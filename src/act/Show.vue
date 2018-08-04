@@ -2,10 +2,10 @@
   <div class="Homemaincontent-wrapper">
     <div class="rough-introduction">
       <p>{{introduction}}</p>
-        <v-icon class="ml-4 pl-2" color="orange">schedule</v-icon><span class="mx-1">时间：</span><span class="mr-2">{{date}}</span><span>{{time}}</span>
-        <v-icon class="ml-4" color="deep-purple ">place</v-icon><span class="mx-1">地点：</span><span>{{place}}</span>
-        <v-icon class="ml-4" color="red lighten-1">web</v-icon><span class="mx-1">形式：</span><span>{{type}}</span>
-        <v-icon class="ml-4" color="light-green accent-3">style</v-icon><span class="mx-1">兴趣：</span><span>{{interest}}</span>
+        <v-icon class="ml-4 pl-2 iconfont icon-time subheading" color="orange"></v-icon><span class="mx-1">时间：</span><span class="mr-2">{{date}}</span><span>{{time}}</span>
+        <v-icon class="ml-4 iconfont icon-xiangmudidian subheading" color="deep-purple "></v-icon><span class="mx-1">地点：</span><span>{{place}}</span>
+        <v-icon class="ml-4 iconfont icon-whatshot subheading" color="red lighten-1"></v-icon><span class="mx-1">形式：</span><span>{{type}}</span>
+        <v-icon class="ml-4 iconfont icon-ganxingqu subheading" color="light-green accent-3"></v-icon><span class="mx-1">兴趣：</span><span>{{interest}}</span>
     </div>
     <div class="text-maincontent">
       <div v-for="i in lists" :key="i.number">

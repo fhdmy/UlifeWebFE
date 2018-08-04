@@ -2,7 +2,8 @@
   <v-container class="pt-3 pb-3 px-0">
     <v-layout row wrap>
       <v-flex xl3 lg3 md3>
-        <v-icon color="blue darken-1" small class="mr-1 ml-3">schedule</v-icon>
+        <!-- <v-icon color="blue darken-1" small class="mr-1 ml-3">schedule</v-icon> -->
+        <v-icon color="blue darken-1" small class="mr-1 ml-3 iconfont icon-time"></v-icon>
         <span class="title">时间</span>
         <div class="choose-content-wrapper ml-3">
         <div class="choose-content-inner mt-3 ml-4">
@@ -31,7 +32,8 @@
         </div>
       </v-flex>
       <v-flex xl2 lg2 md2>
-        <v-icon color="deep-purple lighten-3" small class="mr-1">whatshot</v-icon>
+        <!-- <v-icon color="deep-purple lighten-3" small class="mr-1">whatshot</v-icon> -->
+        <v-icon color="deep-purple lighten-3" small class="mr-1 iconfont icon-whatshot"></v-icon>
         <span class="title">形式</span>
         <div class="choose-content-wrapper">
         <div class="choose-content-inner mt-3 ml-4">
@@ -49,7 +51,8 @@
         </div>
       </v-flex>
       <v-flex xl4 lg4 md4>
-        <v-icon color="light-green accent-3" small class="mr-1">accessibility_new</v-icon>
+        <!-- <v-icon color="light-green accent-3" small class="mr-1">accessibility_new</v-icon> -->
+        <v-icon color="light-green accent-3" small class="mr-1 iconfont icon-ganxingqu"></v-icon>
         <span class="title">兴趣</span>
         <div class="choose-content-bigwrapper">
         <div class="choose-content-inner mt-3 ml-4">
@@ -90,7 +93,7 @@
       </v-flex>
       <v-flex xl3 lg3 md3>
         <div class="p-for-search text-md-center text-lg-center text-xl-center title font-weight-bold">详 细 搜 索</div>
-        <div class="text-md-center text-lg-center text-xl-center mt-2"><v-icon x-large>arrow_downward</v-icon></div>
+        <div class="text-md-center text-lg-center text-xl-center mt-2"><v-icon x-large class="iconfont icon-jiantou"></v-icon></div>
         <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'all'}}"><div class="text-md-center text-lg-center text-xl-center"><v-btn depressed class="bt-2" color="primary" large>点我</v-btn></div></router-link>
       </v-flex>
     </v-layout>

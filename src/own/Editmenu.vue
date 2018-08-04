@@ -2,7 +2,7 @@
   <div class="menu-wrapper">
     <div v-for="(item,i) in items" :key="i" :class="{'isactive':activejudge(item.path)}">
       <router-link :to="{name:'stuedit',params:{opt:item.path}}">
-        <v-icon>{{item.iconname}}</v-icon>
+        <v-icon :class="item.iconname" class="iconfont"></v-icon>
         <span>{{item.text}}</span>
       </router-link>
     </div>
@@ -15,27 +15,27 @@
     data: () => ({
       items:[
         {
-          iconname:'person_outline',
+          iconname:'icon-info-1-copy',
           text:'我的信息',
           path:'myinform'
         },
         {
-          iconname:'face',
+          iconname:'icon-touxiang',
           text:'我的头像',
           path:'myimg'
         },
         {
-          iconname:'laptop_mac',
+          iconname:'icon-beijingtupian',
           text:'我的背景',
           path:'mybg'
         },
         {
-          iconname:'verified_user',
+          iconname:'icon-anquan',
           text:'账号安全',
           path:'accountsecurity'
         },
         {
-          iconname:'vpn_key',
+          iconname:'icon-yinsicelve',
           text:'隐私设置',
           path:'settings'
         }
@@ -78,7 +78,7 @@
   }
   .menu-wrapper>div i{
     color: #666;
-    font-size: 28px;
+    font-size: 24px;
     margin:0 10px 0 24px;
     position: relative;
     top: 5px;

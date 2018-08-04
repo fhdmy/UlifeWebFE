@@ -64,6 +64,7 @@ import Create from './own/Create.vue'
 import Createact from './Createact.vue'
 import Createleft from './create/Createleft.vue'
 import Createright from './create/Createright.vue'
+import Orgactview from './Orgactview.vue'
 import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify, {
   theme: {  
@@ -135,6 +136,7 @@ Vue.component("Create",Create)
 Vue.component("Createact",Createact)
 Vue.component("Createleft",Createleft)
 Vue.component("Createright",Createright)
+Vue.component("Orgactview",Orgactview)
 
 const routes = [
   { path: '/', component: Apphome},
@@ -154,7 +156,8 @@ const routes = [
   { path: '/Orgdisplay/:opt', component: Orgdisplay,name:'orgdisplay',props: true},
   { path: '/Apporgown/:opt', component: Apporgown,name:'orgown',props: true},
   { path: '/Stuedit/:opt', component: Stuedit,name:'stuedit',props:true},
-  { path: '/createact', component: Createact }
+  { path: '/createact', component: Createact },
+  { path: '/Orgactview', component: Orgactview }
 ]
 const router = new VueRouter({
   mode: 'history',

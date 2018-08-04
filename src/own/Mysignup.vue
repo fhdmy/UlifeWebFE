@@ -1,6 +1,6 @@
 <template>
   <div class="signup-wrapper">
-    <v-icon color="primary" class="mr-2 today-icon">healing</v-icon>
+    <v-icon color="primary" class="mr-2 today-icon iconfont icon-baoming"></v-icon>
     <span class="title">报名</span>
     <div class="Homemaincontent-mainwrapper">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
@@ -11,8 +11,9 @@
           <router-link to="/Appact">
             <h3 class="title mb-2 actname">{{act.actname}}</h3>
             <div class="headline-leftcontent">
-              <v-icon class="mr-1">schedule</v-icon>{{act.acttime}}
-              <v-icon class="ml-2 mr-1">place</v-icon>{{act.actplace}}</div>
+              <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.acttime}}
+              <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.actplace}}
+            </div>
           </router-link>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <v-avatar color="grey lighten-4 ml-3" size="60">
@@ -140,6 +141,7 @@
   .headline-leftcontent {
     color: #333;
     opacity: 0.9;
+    margin-top: 12px;
   }
   .signup-wrapper {
     float: left;

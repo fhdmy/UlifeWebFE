@@ -1,10 +1,11 @@
 <template>
   <div class="edit-content">
-    <p class="inform-title">我的头像</p>
+    <input type="file" hidden ref="mybg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="imgchange"/>
+    <p class="inform-title">我的背景</p>
     <v-divider class="mb-4"></v-divider>
       <img :src="imgsrc"/>
     <br/>
-    <v-btn flat color="white" class="selectimg">选择图片</v-btn>
+    <v-btn flat color="white" class="selectimg" @click="clickbg">选择图片</v-btn>
   </div>
 </template>
 
@@ -12,7 +13,25 @@
   export default {
     data: () => ({
       imgsrc:'/src/assets/stuownbg.jpg'
-    })
+    }),
+    methods:{
+      clickbg:function(){
+        this.$refs.mybg.click();
+      },
+      imgchange:function(){
+        if(typeof(FileReader)!='undefined'){
+          var file=this.$refs.mybg.files[0];
+          var reader=new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload=(e)=>{
+            this.imgsrc=reader.result;
+          }
+        }
+        else{
+          alert("抱歉，你的浏览器不支持 FileReader");
+        }
+      }
+    }
   }
 
 </script>

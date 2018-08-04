@@ -5,11 +5,11 @@
         <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
       </v-snackbar>
       <div class="elevation-1 white home-toolbar-wrapper">
-        <!-- <Toolbar v-if="userurl=='' && officialurl==''"></Toolbar>
+        <Toolbar v-if="userurl=='' && officialurl==''"></Toolbar>
         <Stutoolbar v-if="userurl!=''" :avatarurl="avatarurl" :username="username"></Stutoolbar>
-        <Orgtoolbar v-if="officialurl!=''"></Orgtoolbar> -->
+        <Orgtoolbar v-if="officialurl!=''"></Orgtoolbar>
         <Orgtoolbar></Orgtoolbar>
-        <!-- <Admintoolbar v-if="user.type=='admin'"></Admintoolbar> -->
+        <!--<Admintoolbar v-if="user.type=='admin'"></Admintoolbar> -->
       </div>
       <div class="home-topshow-wrapper">
         <Carousel></Carousel>
@@ -25,7 +25,8 @@
         <div style="clear:both;"></div>
       </div>
       <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0)">
-        <v-icon>keyboard_arrow_up</v-icon>
+        <!-- <v-icon>keyboard_arrow_up</v-icon> -->
+        <i class="iconfont icon-jiantou-copy-copy-copy"></i>
       </v-btn>  
       <Footer></Footer>
     </v-content>

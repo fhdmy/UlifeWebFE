@@ -23,7 +23,7 @@
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
-      <v-btn class="preview" flat>预览</v-btn>
+      <router-link to="/Orgactview"><v-btn class="preview" flat>预览</v-btn></router-link>
       <v-btn class="save" flat>保存</v-btn>
       <v-btn class="submit" flat>发表活动</v-btn>
     </div>
@@ -60,7 +60,7 @@
       </div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
-      <v-icon>keyboard_arrow_up</v-icon>
+      <i class="iconfont icon-jiantou-copy-copy-copy"></i>
     </v-btn>
     <Footer></Footer>
   </v-content>

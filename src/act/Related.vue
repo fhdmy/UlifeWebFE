@@ -11,8 +11,9 @@
         <router-link to="/Appact">
           <h3 class="subheading mb-1 actname">{{act.actname}}</h3>
           <div class="headline-leftcontent body-2">
-            <v-icon class="mr-1" size="15">schedule</v-icon>{{act.acttime}}
-            <v-icon class="ml-2 mr-1" size="15">place</v-icon>{{act.actplace}}</div>
+            <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.acttime}}
+            <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.actplace}}
+          </div>
         </router-link>
         <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <v-avatar color="grey lighten-4 ml-3" size="40">
@@ -149,6 +150,7 @@
   .headline-leftcontent {
     color: #333;
     opacity: 0.9;
+    margin-top: 5px;
   }
 
 </style>

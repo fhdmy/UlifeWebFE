@@ -6,7 +6,7 @@
       <dl class="dl1">
         <dt>昵称:</dt>
         <dd class="dd1">
-          <input type="text" maxlength="10" class="nickname" />
+          <input type="text" maxlength="10" class="nickname" v-model="mynickname"/>
         </dd>
       </dl>
       <dl>
@@ -22,16 +22,16 @@
       <dl class="dl3">
         <dt>院系:</dt>
         <dd class="dd3">
-          <v-select :items="colleges" class="select3" color="secondary"></v-select>
+          <v-select :items="colleges" class="select3" color="secondary" v-model="mycollege"></v-select>
         </dd>
       </dl>
       <dl class="dl3 mt-3">
         <dt>年级:</dt>
         <dd class="dd3">
-          <v-select :items="grades" class="select3" color="secondary"></v-select>
+          <v-select :items="grades" class="select3" color="secondary" v-model="mygrade"></v-select>
         </dd>
       </dl>
-      <v-btn flat color="white" class="savebtn">保存</v-btn>
+      <v-btn flat color="white" class="savebtn" @click="save">保存</v-btn>
       <p class="attentiontext">报名活动需要填写以上信息</p>
     </form>
   </div>
@@ -42,8 +42,21 @@
     data: () => ({
       row: null,
       colleges: ['经管大类', '计算机工程与科学学院', '中欧机械系', '应用数学系'],
-      grades:['大一','大二','大三','大四']
-    })
+      grades:['大一','大二','大三','大四'],
+      mynickname:'',
+      mycollege:'',
+      mygrade:''
+    }),
+    methods:{
+      save:function(){
+        console.log({
+          nickname:this.mynickname,
+          sex:this.row,
+          college:this.mycollege,
+          grade:this.mygrade
+        });
+      }
+    }
   }
 
 </script>

@@ -51,11 +51,11 @@ import {SHA256} from '../webtoolkit.sha256.js'
         },
         pwd:value=>{
           var t;
-          if(value.length<6 || value.length>18)
+          if(value.length<6 || value.length>17)
             t=false;
           else
             t=true;
-          return t || '密码长度请大于6位！';
+          return t || '密码长度请大于6位小于18位！';
         },
         confirm:(value,pwd)=>{
           var t;
@@ -72,7 +72,7 @@ import {SHA256} from '../webtoolkit.sha256.js'
         if(this.rules.username(this.username)==true && this.rules.pwd(this.pwd)==true && this.rules.confirm(this.confirmpwd,this.pwd)==true && this.rules.required(this.confirmpwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.username)==true && this.rules.required(this.select)==true){
           var number=sessionStorage.getItem('number');
           var phone=sessionStorage.getItem('phone');
-          this.$http.post('/signup/',{
+          this.$http.post('/account/signup/',{
               student_id:number,
               phone_number:phone,
               // username:SHA256(this.username),

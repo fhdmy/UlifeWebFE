@@ -14,7 +14,7 @@
     </div>
     <v-toolbar-items class="hidden-sm-and-down">
       <v-btn flat class="subheading toolbar-signinbtn">报名</v-btn>
-      <v-btn flat class="subheading toolbar-btn"><v-icon class="toolbar-icon" color="primary">star_border</v-icon><span>收藏</span></v-btn>
+      <v-btn flat class="subheading toolbar-btn" @click="collect"><v-icon :class="{'toolbar-icon':true,'iconfont':true,'icon-wujiaoxing':!collected,'icon-star_full':collected}" color="primary"></v-icon><span>收藏</span></v-btn>
       <v-btn flat class="subheading toolbar-btn"><v-icon class="toolbar-icon" color="light-green lighten-1">share</v-icon><span>分享</span></v-btn>
     </v-toolbar-items>
   </v-toolbar>
@@ -24,7 +24,7 @@
   export default {
     props:['org','launchdate','isfinished','stars','fixed','title'],
     data:()=>({
-
+      collected:false
     }),
     computed:{
       wholestar:function(){
@@ -35,6 +35,16 @@
       },
       nostar:function(){
         return 5-this.wholestar-2*this.halfstar;
+      }
+    },
+    methods:{
+      collect:function(){
+        if(this.collected){
+          this.collected=false;
+        }
+        else{
+          this.collected=true;
+        }
       }
     }
   }
