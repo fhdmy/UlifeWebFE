@@ -1,10 +1,10 @@
 <template>
   <div class="edit-content">
-    <input type="file" hidden ref="myimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="imgchange"/>
+    <input type="file" hidden ref="myimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="imgchange" />
     <p class="inform-title">我的头像</p>
     <v-divider class="mb-4"></v-divider>
     <v-avatar size="130">
-      <img :src="imgsrc"/>
+      <img :src="imgsrc" />
     </v-avatar>
     <br/>
     <v-btn flat color="white" class="selectimg" @click="clickimg">选择图片</v-btn>
@@ -13,23 +13,38 @@
 
 <script>
   export default {
+    props:['userurl','imgsrc'],
     data: () => ({
-      imgsrc:'/src/assets/xnick.jpg'
+      
     }),
-    methods:{
-      clickimg:function(){
+    methods: {
+      clickimg: function () {
         this.$refs.myimg.click();
       },
-      imgchange:function(){
-        if(typeof(FileReader)!='undefined'){
-          var file=this.$refs.myimg.files[0];
-          var reader=new FileReader();
+      imgchange: function () {
+        if (typeof (FileReader) != 'undefined') {
+          var file = this.$refs.myimg.files[0];
+          var reader = new FileReader();
           reader.readAsDataURL(file);
-          reader.onload=(e)=>{
-            this.imgsrc=reader.result;
+          reader.onload = (e) => {
+            // 发送数据到服务器
+            this.$http({
+              method: 'patch',
+              url: this.userurl,
+              headers: {
+                "Authorization": "Token " + localStorage.getItem("token")
+              },
+              data: {
+                avatar:reader.result
+              }
+            }).then((res) => {
+              // 成功则改变本地view
+              this.imgsrc = reader.result;
+            }).catch(function (error) {
+              alert("传输故障，注册失败！");
+            });
           }
-        }
-        else{
+        } else {
           alert("抱歉，你的浏览器不支持 FileReader");
         }
       }
@@ -50,8 +65,9 @@
     font-size: 24px;
     color: #444;
   }
-  .selectimg{
-    background: #FE9246!important;
+
+  .selectimg {
+    background: #FE9246 !important;
     margin: 40px 0 10px 0;
     width: 130px;
   }

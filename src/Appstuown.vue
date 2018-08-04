@@ -18,9 +18,9 @@
       <div class="asinform" v-if="fixed"></div>
       <Signup v-if="item=='signup'"></Signup>
       <Trends v-if="item=='trends'"></Trends>
-      <Collect v-if="item=='collect'"></Collect>
+      <Collect v-if="item=='collect'" :mine="mine"></Collect>
       <Historyview v-if="item=='historyview'"></Historyview>
-      <Historyattend v-if="item=='historyattend'"></Historyattend>
+      <Historyattend v-if="item=='historyattend'" :mine="mine"></Historyattend>
       <Stumsg v-if="item=='stumsg'"></Stumsg>
       <div style="clear:both;"></div>
     </div>

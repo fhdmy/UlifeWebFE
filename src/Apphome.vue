@@ -8,8 +8,8 @@
         <Toolbar v-if="userurl=='' && officialurl==''"></Toolbar>
         <Stutoolbar v-if="userurl!=''" :avatarurl="avatarurl" :username="username"></Stutoolbar>
         <Orgtoolbar v-if="officialurl!=''"></Orgtoolbar>
-        <Orgtoolbar></Orgtoolbar>
-        <!--<Admintoolbar v-if="user.type=='admin'"></Admintoolbar> -->
+        <!--<Orgtoolbar></Orgtoolbar>
+        <Admintoolbar v-if="user.type=='admin'"></Admintoolbar> -->
       </div>
       <div class="home-topshow-wrapper">
         <Carousel></Carousel>
@@ -35,8 +35,8 @@
 <script>
   export default {
     data:()=>({
-      userurl:'',
-      officialurl:'',
+      userurl:'',//普通用户
+      officialurl:'',//组织用户
       avatarurl:'',
       username:'',
       y:'top',
@@ -49,30 +49,30 @@
       var id=localStorage.getItem("id");
       this.$http({
         method:'get',
-        url:"/api/users/" + id+"/",
+        url:"/account/users/" + id+"/",
         headers:{
           "Authorization":"Token " + localStorage.getItem("token")
         }
       }).then((res)=>{
         // console.log(res);
         //如果是普通用户
-        if(res.data.realuser!=null){
-          this.userurl=res.data.realuser;
+        if(res.data.student!=null){
+          this.userurl=res.data.student;
+          // 获得信息
+          this.$http({
+            method:'get',
+            url:this.userurl,
+            headers:{
+              "Authorization":"Token " + localStorage.getItem("token")
+            }
+          }).then((res)=>{
+            // console.log(res);
+            this.avatarurl=res.data.avatar;
+            this.username=res.data.nickname;
+          }).catch(function (error) {
+            alert("传输故障，注册失败！");
+          });
         }
-        // 获得信息
-        this.$http({
-          method:'get',
-          url:this.userurl,
-          headers:{
-            "Authorization":"Token " + localStorage.getItem("token")
-          }
-        }).then((res)=>{
-          // console.log(res);
-          this.avatarurl=res.data.avatar;
-          this.username=res.data.username;
-        }).catch(function (error) {
-          alert("传输故障，注册失败！");
-        });
       }).catch(function (error) {
           alert("传输故障，注册失败！");
       });

@@ -6,7 +6,7 @@
       <dl class="dl1">
         <dt>昵称:</dt>
         <dd class="dd1">
-          <input type="text" maxlength="10" class="nickname" v-model="mynickname"/>
+          <input type="text" maxlength="10" class="nickname" v-model="mynickname" />
         </dd>
       </dl>
       <dl>
@@ -39,21 +39,44 @@
 
 <script>
   export default {
+    props: ['mynickname', 'mycollege', 'mygrade', 'userurl', 'row'],
     data: () => ({
-      row: null,
-      colleges: ['经管大类', '计算机工程与科学学院', '中欧机械系', '应用数学系'],
-      grades:['大一','大二','大三','大四'],
-      mynickname:'',
-      mycollege:'',
-      mygrade:''
+      colleges: ['经管大类', '计算机工程与科学学院', '中欧机械系', '应用数学系', '其他'],
+      grades: ['大一', '大二', '大三', '大四', '其他']
     }),
-    methods:{
-      save:function(){
-        console.log({
-          nickname:this.mynickname,
-          sex:this.row,
-          college:this.mycollege,
-          grade:this.mygrade
+    methods: {
+      save: function () {
+        this.$http({
+          method: 'patch',
+          url: this.userurl,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          },
+          data: {
+            nickname: this.mynickname,
+            gender: this.gender,
+            college: this.mycollege,
+            grade: this.mygrade
+          }
+        }).then((res) => {
+
+        }).catch(function (error) {
+          var err = error.response.data;
+          var bool=false;
+          for (let e in err) {
+            if (err[e][0] === "This field may not be blank.") {
+              alert("请填满个人信息！");
+              bool=true;
+              break;
+            }
+          }
+          if(err.nickname[0]=="student with this nickname already exists."){
+            bool=true;
+            alert("用户名已存在！");
+          }
+          if(bool==false){
+            alert("传输故障，注册失败！");
+          }
         });
       }
     }
@@ -77,11 +100,13 @@
   .dl1 {
     padding-bottom: 5px;
   }
-  dl{
+
+  dl {
     clear: both;
     display: block;
     overflow: hidden;
   }
+
   dt {
     float: left;
     width: 85px;
@@ -108,39 +133,48 @@
     color: #999;
     line-height: 18px;
     font-size: 14px;
-    outline:none;
+    outline: none;
   }
-  .nickname:focus{
+
+  .nickname:focus {
     border: 1px solid #FE9246;
   }
+
   .dd2 {
     float: left;
     width: 640px;
     height: 64px;
     margin-left: 10px;
   }
-  .dl3{
+
+  .dl3 {
     height: 37px;
   }
-  .dd3{
+
+  .dd3 {
     float: left;
     width: 640px;
     height: 64px;
     margin-left: 10px;
   }
-  .select3{
+
+  .select3 {
     margin-top: 0;
     width: 208px;
   }
-  .select3>>>.v-select__selection{
+
+  .select3>>>.v-select__selection {
     color: #999;
   }
-  .savebtn{
-    background: #FE9246!important;
+
+  .savebtn {
+    background: #FE9246 !important;
     margin: 20px 140px 10px 140px;
   }
-  .attentiontext{
+
+  .attentiontext {
     margin-left: 100px;
     color: #2196f3;
   }
+
 </style>

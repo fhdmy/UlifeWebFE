@@ -2,7 +2,7 @@
   <div class="signup-wrapper">
     <v-icon color="primary" class="mr-2 today-icon">face</v-icon>
     <span class="title">历史参加</span>
-    <span class="clear" @click.stop="dialog = true">清空</span>
+    <span class="clear" @click.stop="dialog = true" v-if="mine">清空</span>
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
         <v-card-text>你确定要清空吗？</v-card-text>
@@ -40,6 +40,7 @@
 
 <script>
   export default {
+    props:["mine"],
     data: () => ({
       dialog:false,
        acts: [{

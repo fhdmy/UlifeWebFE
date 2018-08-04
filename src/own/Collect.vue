@@ -5,7 +5,7 @@
     <span class="title" v-if="mine">我的收藏</span>
     <div class="Homemaincontent-mainwrapper">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
-        <v-dialog v-model="dialog" max-width="290">
+        <v-dialog v-model="dialog" max-width="290" v-if="mine">
           <v-card>
             <v-card-text>你确定要删除它？</v-card-text>
             <v-card-actions>
@@ -15,7 +15,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <div class="close-div" v-if="hover[index]">
+        <div class="close-div" v-if="hover[index] && mine">
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
         <div class="act-cardd-media">

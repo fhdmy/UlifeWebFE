@@ -1,5 +1,5 @@
 <template>
-  <div class="register-bg">
+  <div class="register-bg" @keyup.13="nextpath()">
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">忘记密码</p>
     <div class="register1-wrapper">
       <v-container>
@@ -9,18 +9,18 @@
             <v-divider vertical class="register-divider"></v-divider>
           </v-flex>
           <v-flex xl6 md6 lg6>
-            <v-text-field solo label="请输入手机号" prepend-icon="account_circle" clearable class="input1"></v-text-field>
-            <v-text-field solo label="请输入验证码" prepend-icon="verified_user" clearable class="input2"></v-text-field>
+            <v-text-field solo label="请输入手机号" prepend-icon="account_circle" clearable class="input1" :rules="[rules.required,rules.number]" v-model="number"></v-text-field>
+            <v-text-field solo label="请输入验证码" prepend-icon="verified_user" clearable class="input2" v-model="cfmnumber"></v-text-field>
             <p class="register2-getconfirm">获得验证码</p>
             <router-link to="/Changephone1" class="login-tochangephone">更换手机</router-link>
-            <router-link to="/Forgetpwd2"><v-btn color="primary register-confirm">下一步</v-btn></router-link>
+            <v-btn color="primary register-confirm" @click="nextpath">下一步</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
     </div>
     <p class="text-md-center text-lg-center text-xl-center subheading register-tosignin">已有账号？<router-link to="/Login">  立即登录</router-link></p>
     <router-link to="/">
-      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5">
+      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="clearsession">
         <v-icon>home</v-icon>
       </v-btn>
     </router-link>
@@ -30,8 +30,33 @@
 <script>
   export default {
     data: () => ({
-
-    })
+      number:'',
+      cfmnumber:'',
+      rules:{
+        required:value => !!value || '不能为空！',
+        number:value=>{
+          const pattern = /^1(3|4|5|7|8)\d{9}$/;
+          var t;
+          if(pattern.test(value)==false)
+            t=false;
+          else
+            t=true
+          return t || '请输入11位手机号码';
+        }
+      }
+    }),
+    methods:{
+      nextpath:function(){
+        if(this.rules.number(this.number)==true && this.rules.required(this.number)==true){
+          // var n=SHA256(this.number);
+          sessionStorage.setItem("phone",this.number);
+          this.$router.push('/Forgetpwd2');
+        }
+      },
+      clearsession:function(){
+        sessionStorage.removeItem("phone");
+      }
+    }
   }
 
 </script>

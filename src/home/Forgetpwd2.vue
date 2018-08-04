@@ -1,5 +1,5 @@
 <template>
-  <div class="register-bg">
+  <div class="register-bg" @keyup.13="finish()">
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">忘记密码</p>
     <div class="register1-wrapper">
       <v-container>
@@ -9,9 +9,9 @@
             <v-divider vertical class="register-divider"></v-divider>
           </v-flex>
           <v-flex xl6 md6 lg6>
-            <v-text-field solo label="请输入新密码" prepend-icon="lock" clearable class="input1" type="password"></v-text-field>
-            <v-text-field solo label="请确认新密码" prepend-icon="verified_user" clearable class="input2" type="password"></v-text-field>
-            <router-link to="/Login"><v-btn color="primary register-confirm">完成</v-btn></router-link>
+            <v-text-field solo label="请输入新密码" prepend-icon="lock" clearable class="input1" type="password" v-model="pwd" :rules="[rules.required,rules.pwd]"></v-text-field>
+            <v-text-field solo label="请确认新密码" prepend-icon="verified_user" clearable class="input2" type="password" v-model="confirmpwd" :rules="[rules.required,rules.confirm(confirmpwd,pwd)]"></v-text-field>
+            <v-btn color="primary register-confirm" @click="finish()">完成</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -28,8 +28,44 @@
 <script>
   export default {
     data: () => ({
-
-    })
+      pwd:'',
+      confirmpwd:'',
+      rules:{
+      required:value => !!value || '不能为空！',
+      pwd:value=>{
+          var t;
+          if(value.length<6 || value.length>17)
+            t=false;
+          else
+            t=true;
+          return t || '密码长度请大于6位小于18位！';
+        },
+        confirm:(value,pwd)=>{
+          var t;
+          if(value!=pwd)
+            t=false;
+          else
+            t=true;
+          return t || '密码不一致！';
+        }
+      }
+    }),
+    methods:{
+      finish:function(){
+        this.$http.post('/account/change-passwd/',{
+          phone_number:sessionStorage.getItem("phone"),
+          new_passwd:this.pwd
+        }).then((res)=>{
+          this.clearsession();
+          this.$router.push('/Login');
+        }).catch(function (error) {
+          alert("传输故障，注册失败！");
+        });
+      },
+      clearsession:function(){
+        sessionStorage.removeItem("phone");
+      }
+    }
   }
 
 </script>

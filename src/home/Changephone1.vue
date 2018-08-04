@@ -1,5 +1,5 @@
 <template>
-  <div class="register-bg">
+  <div class="register-bg" @keyup.13="confirm()">
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">更换手机</p>
     <div class="register1-wrapper">
       <v-container>
@@ -9,16 +9,16 @@
             <v-divider vertical class="register-divider"></v-divider>
           </v-flex>
           <v-flex xl6 md6 lg6>
-            <v-text-field solo label="请输入上海大学学号" prepend-icon="account_circle" clearable class="input1"></v-text-field>
-            <v-text-field solo label="请输入一卡通密码" prepend-icon="lock" clearable class="input2" type="password"></v-text-field>
-            <router-link to="/Changephone2"><v-btn color="primary register-confirm">验证</v-btn></router-link>
+            <v-text-field solo label="请输入上海大学学号" prepend-icon="account_circle" clearable class="input1" v-model="number" :rules="[rules.required,rules.number]"></v-text-field>
+            <v-text-field solo label="请输入一卡通密码" prepend-icon="lock" clearable class="input2" type="password" v-model="pwd" :rules="[rules.required,rules.pwd]"></v-text-field>
+            <v-btn color="primary register-confirm" @click="confirm">验证</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
     </div>
     <p class="text-md-center text-lg-center text-xl-center subheading register-tosignin">已有账号？<router-link to="/Login">  立即登录</router-link></p>
     <router-link to="/">
-      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5">
+      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="clearsession">
         <v-icon>home</v-icon>
       </v-btn>
     </router-link>
@@ -28,8 +28,41 @@
 <script>
   export default {
     data: () => ({
-
-    })
+      number:'',
+      pwd:'',
+      rules:{
+        required:value => !!value || '不能为空！',
+        number:value=>{
+          const pattern = /^[0-9]*$/;
+          var t;
+          if(pattern.test(value)==false || value.length!=8)
+            t=false;
+          else
+            t=true
+          return t || '请输入8位数字的学号！';
+        },
+        pwd:value=>{
+          var t;
+          if(value.length<6 || value.length>17)
+            t=false;
+          else
+            t=true;
+          return t || '密码长度请大于6位小于18位！';
+        }
+      } 
+    }),
+    methods:{
+      confirm:function(){
+        if(this.rules.number(this.number)==true && this.rules.pwd(this.pwd)==true && this.rules.required(this.number)==true && this.rules.required(this.pwd)==true){
+          // var n=SHA256(this.number);
+          sessionStorage.setItem("number",this.number);
+          this.$router.push('/Changephone2');
+        }
+      },
+      clearsession:function(){
+        sessionStorage.removeItem("number");
+      }
+    }
   }
 
 </script>

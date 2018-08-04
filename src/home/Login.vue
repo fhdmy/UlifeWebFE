@@ -48,12 +48,12 @@
     methods:{
       login:function(){
         if(this.rules.pwd(this.pwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.number)==true){
-          this.$http.post('/login/',{
+          this.$http.post('/account/login/',{
               username:this.number,
               password:this.pwd
           }).then((res)=>{
             localStorage.setItem("token",res.data.token);
-            localStorage.setItem("id",res.data.profile_id);
+            localStorage.setItem("id",res.data.user_id);
             this.$router.push('/');
           }).catch(function (error) {
             // console.log(error.response.data.non_field_errors[0]);

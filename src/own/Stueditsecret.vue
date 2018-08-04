@@ -6,36 +6,52 @@
       <dl>
         <dt>是否公开个人信息:</dt>
         <dd>
-          <v-switch v-model="inform"></v-switch>
+          <v-switch v-model="isfavpublic"></v-switch>
         </dd>
       </dl>
        <dl>
         <dt>是否公开个人收藏:</dt>
         <dd>
-          <v-switch v-model="collect"></v-switch>
+          <v-switch v-model="isprofilepublic"></v-switch>
         </dd>
       </dl>
       <dl>
         <dt>是否公开历史参加活动:</dt>
         <dd>
-          <v-switch v-model="historyact"></v-switch>
+          <v-switch v-model="ishistorypublic"></v-switch>
         </dd>
       </dl>
-      <v-btn flat color="white" class="savebtn">保存</v-btn>
+      <v-btn flat color="white" class="savebtn" @click="save">保存</v-btn>
     </form>
   </div>
 </template>
 
 <script>
   export default {
+    props:['userurl','isfavpublic','ishistorypublic','isprofilepublic'],
     data: () => ({
-      row: null,
-      colleges: ['经管大类', '计算机工程与科学学院', '中欧机械系', '应用数学系'],
-      grades:['大一','大二','大三','大四'],
-      inform: true,
-      collect:true,
-      historyact:true
-    })
+
+    }),
+    methods:{
+      save:function(){
+        this.$http({
+          method: 'patch',
+          url: this.userurl,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          },
+          data: {
+            is_fav_public: this.isfavpublic,
+            is_history_public: this.ishistorypublic,
+            is_profile_public: this.isprofilepublic,
+          }
+        }).then((res) => {
+
+        }).catch(function (error) {
+          alert("传输故障，注册失败！");
+        });
+      }
+    }
   }
 
 </script>

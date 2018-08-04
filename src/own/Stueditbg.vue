@@ -11,8 +11,9 @@
 
 <script>
   export default {
+    props:["userurl","imgsrc"],
     data: () => ({
-      imgsrc:'/src/assets/stuownbg.jpg'
+ 
     }),
     methods:{
       clickbg:function(){
@@ -24,7 +25,22 @@
           var reader=new FileReader();
           reader.readAsDataURL(file);
           reader.onload=(e)=>{
-            this.imgsrc=reader.result;
+            // 发送数据到服务器
+            this.$http({
+              method: 'patch',
+              url: this.userurl,
+              headers: {
+                "Authorization": "Token " + localStorage.getItem("token")
+              },
+              data: {
+                bg_img:reader.result
+              }
+            }).then((res) => {
+              // 成功则改变本地view
+              this.imgsrc = reader.result;
+            }).catch(function (error) {
+              alert("传输故障，注册失败！");
+            });
           }
         }
         else{

@@ -1,5 +1,5 @@
 <template>
-  <div class="register-bg">
+  <div class="register-bg" @keyup.13="login()">
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">Ulife欢迎您</p>
     <div class="register1-wrapper">
       <v-container>
@@ -9,13 +9,11 @@
             <v-divider vertical class="register-divider"></v-divider>
           </v-flex>
           <v-flex xl6 md6 lg6>
-            <v-text-field solo label="请输入手机号或组织名称" prepend-icon="account_circle" clearable class="input1"></v-text-field>
-            <v-text-field solo label="请输入账号密码" prepend-icon="lock" clearable class="input2" type="password"></v-text-field>
+            <v-text-field solo label="请输入手机号或组织名称" prepend-icon="account_circle" clearable class="input1" v-model="number" :rules="[rules.required]"></v-text-field>
+            <v-text-field solo label="请输入账号密码" prepend-icon="lock" clearable class="input2" type="password" v-model="pwd" :rules="[rules.required,rules.pwd]"></v-text-field>
             <router-link to="/Forgetpwd1" class="login-toforgetpwd">忘记密码</router-link>
-            <router-link to="/" class="justlogout">我只想注销</router-link>
-            <router-link to="/">
-              <v-btn color="primary register-confirm">登录</v-btn>
-            </router-link>
+            <a class="justlogout" @click="logout">我只想注销</a>
+            <v-btn color="primary register-confirm" @click="login">登录</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -34,8 +32,46 @@
 <script>
   export default {
     data: () => ({
-
-    })
+      number:"",
+      pwd:"",
+       rules:{
+        required:value => !!value || '不能为空！',
+        pwd:value=>{
+          var t;
+          if(value.length<6 || value.length>18)
+            t=false;
+          else
+            t=true;
+          return t || '密码长度请大于6位！';
+        }
+       }
+    }),
+    methods:{
+      login:function(){
+        if(this.rules.pwd(this.pwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.number)==true){
+          this.$http.post('/account/login/',{
+              username:this.number,
+              password:this.pwd
+          }).then((res)=>{
+            localStorage.setItem("token",res.data.token);
+            localStorage.setItem("id",res.data.profile_id);
+            this.$router.push('/');
+          }).catch(function (error) {
+            // console.log(error.response.data.non_field_errors[0]);
+            if(error.response.data.non_field_errors[0]=="Unable to log in with provided credentials."){
+              alert("账号或密码错误！");
+            }
+            else{
+              alert("传输故障，注册失败！");
+            }
+          })
+        }
+      },
+      logout:function(){
+        localStorage.clear();
+        this.$router.push('/');
+      }
+    }
   }
 
 </script>
