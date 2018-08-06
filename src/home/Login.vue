@@ -12,7 +12,7 @@
             <v-text-field solo label="请输入手机号或组织名称" prepend-icon="account_circle" clearable class="input1" v-model="number" :rules="[rules.required]"></v-text-field>
             <v-text-field solo label="请输入账号密码" prepend-icon="lock" clearable class="input2" type="password" v-model="pwd" :rules="[rules.required,rules.pwd]"></v-text-field>
             <router-link to="/Forgetpwd1" class="login-toforgetpwd">忘记密码</router-link>
-              <v-btn color="primary register-confirm"  @click="login">登录</v-btn>
+            <v-btn color="primary register-confirm" @click="login">登录</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -31,39 +31,62 @@
 <script>
   export default {
     data: () => ({
-      number:"",
-      pwd:"",
-       rules:{
-        required:value => !!value || '不能为空！',
-        pwd:value=>{
+      number: "",
+      pwd: "",
+      rules: {
+        required: value => !!value || '不能为空！',
+        pwd: value => {
           var t;
-          if(value.length<6 || value.length>18)
-            t=false;
+          if (value.length < 6 || value.length > 18)
+            t = false;
           else
-            t=true;
+            t = true;
           return t || '密码长度请大于6位！';
         }
-       }
+      }
     }),
-    methods:{
-      login:function(){
-        if(this.rules.pwd(this.pwd)==true && this.rules.required(this.pwd)==true && this.rules.required(this.number)==true){
-          this.$http.post('/account/login/',{
-              username:this.number,
-              password:this.pwd
-          }).then((res)=>{
-            localStorage.setItem("token",res.data.token);
-            localStorage.setItem("id",res.data.user_id);
-            this.$router.push('/');
-          }).catch(function (error) {
-            // console.log(error.response.data.non_field_errors[0]);
-            if(error.response.data.non_field_errors[0]=="Unable to log in with provided credentials."){
-              alert("账号或密码错误！");
-            }
-            else{
-              alert("传输故障，注册失败！");
-            }
-          })
+    methods: {
+      login: function () {
+        if (this.rules.pwd(this.pwd) == true && this.rules.required(this.pwd) == true && this.rules.required(this.number) ==
+          true) {
+          const pattern = /^1(3|4|5|7|8)\d{9}$/;
+          if (pattern.test(this.number)) {
+            // 普通用户
+            this.$http.post('/account/login/', {
+              username: this.number,
+              password: this.pwd
+            }).then((res) => {
+              localStorage.setItem("token", res.data.token);
+              localStorage.setItem("user_url", res.data.profile_url);
+              localStorage.removeItem("org_url");
+              this.$router.push('/');
+            }).catch(function (error) {
+              // console.log(error.response.data.non_field_errors[0]);
+              if (error.response.data.non_field_errors[0] == "Unable to log in with provided credentials.") {
+                alert("账号或密码错误！");
+              } else {
+                alert("网络传输故障!");
+              }
+            });
+          } else {
+            // 组织用户
+            this.$http.post('/account/org-login/', {
+              username: this.number,
+              password: this.pwd
+            }).then((res) => {
+              localStorage.setItem("token", res.data.token);
+              localStorage.setItem("org_url", res.data.profile_url);
+              localStorage.removeItem("user_url");
+              this.$router.push('/');
+            }).catch(function (error) {
+              // console.log(error.response.data.non_field_errors[0]);
+              if (error.response.data.non_field_errors[0] == "Unable to log in with provided credentials.") {
+                alert("账号或密码错误！");
+              } else {
+                alert("网络传输故障!");
+              }
+            });
+          }
         }
       }
     }

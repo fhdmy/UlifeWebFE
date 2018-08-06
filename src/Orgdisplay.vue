@@ -16,8 +16,8 @@
     <div class="stuown-mainwrapper">
       <Orginform :class="{'informfixed':fixed}" :name="name" :attention="attention" :stars="stars" :acts="acts" :items="items" :mine="mine"></Orginform>
       <div class="asinform" v-if="fixed"></div>
-      <Inform v-if="item=='inform'" :mine="mine" :lists="lists"></Inform>
-      <Trends v-if="item=='trends'"></Trends>
+      <Inform v-show="item=='inform'" :mine="mine" :lists="lists"></Inform>
+      <Trends v-show="item=='trends'"></Trends>
       <div style="clear:both;"></div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">

@@ -16,12 +16,12 @@
     <div class="stuown-mainwrapper">
       <Orginform :class="{'informfixed':fixed}" :name="name" :attention="attention" :stars="stars" :acts="acts" :items="items" :mine="mine"></Orginform>
       <div class="asinform" v-if="fixed"></div>
-      <Inform v-if="item=='inform'" :mine="mine" :lists="lists"></Inform>
-      <Draft v-if="item=='draft'" :lists="lists"></Draft>
-      <Create v-if="item=='create'" :lists="lists"></Create>
-      <Orgmyact v-if="item=='myact'" :lists="lists"></Orgmyact>
-      <Mysignup v-if="item=='mysignup'" :lists="lists"></Mysignup>
-      <Orgmsg v-if="item=='orgmsg'"></Orgmsg>
+      <Inform v-show="item=='inform'" :mine="mine" :lists="lists"></Inform>
+      <Draft v-show="item=='draft'" :lists="lists"></Draft>
+      <Create v-show="item=='create'" :lists="lists"></Create>
+      <Orgmyact v-show="item=='myact'" :lists="lists"></Orgmyact>
+      <Mysignup v-show="item=='mysignup'" :lists="lists"></Mysignup>
+      <Orgmsg v-show="item=='orgmsg'"></Orgmsg>
       <div style="clear:both;"></div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">

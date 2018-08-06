@@ -1,7 +1,7 @@
 <template>
   <v-content style="background: white;" v-scroll="onScroll">
     <div class="elevation-1 white home-toolbar-wrapper">
-      <Toolbar></Toolbar>
+      <Orgtoolbar :avatar="img" :name="org"></Orgtoolbar>
     </div>
     <img :src="parallaxpath" class="large-img" ref="topimgreader"/>
     <!-- <div :style="{'background':'url('+parallaxpath+')'}" class="large-img" ref="topimgreader"/></div> -->
@@ -24,7 +24,7 @@
     </div>
     <div class="previeworsubmit">
       <router-link to="/Orgactview"><v-btn class="preview" flat>预览</v-btn></router-link>
-      <v-btn class="save" flat>保存</v-btn>
+      <v-btn class="save" flat @click="savetodraft">保存</v-btn>
       <v-btn class="submit" flat>发表活动</v-btn>
     </div>
     <div class="side-slider" :style=" {'left':slide}">
@@ -70,10 +70,11 @@
   // import Vue from 'vue'
   export default {
     data: () => ({
+      url1:'',
       parallaxpath: '/src/assets/createdefault.jpg',
-      img: '/src/assets/suselogo.jpg',
+      img: '',
       title: '',
-      org: '经济学院学生会',
+      org: '',
       offsetTop: 0,
       slide: '100%',
       rules: [
@@ -83,10 +84,10 @@
       selectedform:'',
       selectedinterest:'',
       place:'',
-      time:'',
+      time:'00:00',
       brieftext:'',
       selectedparsetext:'',
-      date:'',
+      date:'2018-08-05',
       requires:[],
       parse:'',
       text:'',
@@ -112,6 +113,21 @@
         else
           return true;
       }
+    },
+    created:function(){
+      this.url1 = localStorage.getItem("org_url");
+      this.$http({
+          method: 'get',
+          url: this.url1,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          this.img = res.data.avatar;
+          this.org = res.data.org_name;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
     },
     methods: {
       onScroll(e) {
@@ -311,6 +327,36 @@
       },
       getreeditfromright:function(d){
         this.computeddata[this.reedititem].title=d;
+      }, 
+      savetodraft:function(){
+        // if(this.title=='' || this.date=='' || this.time=='' || this.place=='' || this.selectedform=='' || this.selectedinterest=='' || this.brieftext==''){
+        //   alert("信息未填写完整！");
+        //   return;
+        // }
+        // 活动简介
+        this.$http({
+          method:'post',
+          url:"/activity/activities/",
+          headers:{
+            "Authorization":"Token " + localStorage.getItem("token")
+          },
+          data:{
+            start_at:this.date+'T'+this.time+':00.000000Z',
+            location:this.place,
+            _type:this.selectedform,
+            hobby:this.selectedinterest,
+            description:this.brieftext,
+            owner:this.url1,
+            heading:this.title,
+            requirement:JSON.stringify(this.requires),
+            head_img:this.parallaxpath,
+            demonstration:JSON.stringify(this.computeddata)
+          }
+        }).then((res)=>{
+          
+        }).catch(function(error){
+          alert("网络传输故障！");
+        });
       }
     }
   }

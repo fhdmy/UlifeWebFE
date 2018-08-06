@@ -59,7 +59,7 @@
           this.clearsession();
           this.$router.push('/Login');
         }).catch(function (error) {
-          alert("传输故障，注册失败！");
+          alert("网络传输故障!");
         });
       },
       clearsession:function(){

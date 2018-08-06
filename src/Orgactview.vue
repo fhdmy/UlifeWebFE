@@ -14,7 +14,6 @@
       <div v-if="fixed" style="height:70px;"></div>
       <div class="main-wrapper">
          <Show :introduction="introduction" :date="date" :time="time" :place="place" :type="type" :interest="interest" :lists="lists" :customlists="customlists"></Show>
-         <Related></Related>
          <div style="clear:both;"></div>
       </div>
       <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">

@@ -27,6 +27,9 @@
 <script>
   export default {
     data:()=>({
+      // usertype:'none',
+      // name:'',
+      // avatar:'',
       parallaxpath:'/src/assets/stuownbg.jpg',
       img:'/src/assets/suselogo.jpg',
       title:'ISHARE',
@@ -136,6 +139,15 @@
       ],
       offsetTop:0
     }),
+    created:function(){
+      // this.$http({
+      //   method:'get',
+      //   url:"/account/users/" + id+"/",
+      //   headers:{
+      //     "Authorization":"Token " + localStorage.getItem("token")
+      //   }
+      // })
+    },
     computed:{
       toolbaropacity:function(){
         var k=this.offsetTop;

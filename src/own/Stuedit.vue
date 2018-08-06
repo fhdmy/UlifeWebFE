@@ -1,15 +1,15 @@
 <template>
   <v-content style="background:white;">
     <div class="elevation-1 white home-toolbar-wrapper">
-      <Stutoolbar></Stutoolbar>
+      <Stutoolbar :avatar="img" :name="name"></Stutoolbar>
     </div>
     <div class="edit-wrapper">
       <Editmenu :opt="opt"></Editmenu>
-      <Stueditinform v-if="opt=='myinform'" :mynickname="name" :mycollege="college" :mygrade="grade" :userurl="userurl" :row="gender"></Stueditinform>
-      <Stueditimg v-if="opt=='myimg'" :userurl="userurl" :imgsrc="img"></Stueditimg>
-      <Stueditbg v-if="opt=='mybg'" :userurl="userurl" :imgsrc="bg_img"></Stueditbg>
-      <Stueditacc v-if="opt=='accountsecurity'"></Stueditacc>
-      <Stueditsecret v-if="opt=='settings'" :userurl="userurl" :isfavpublic="is_fav_public" :ishistorypublic="is_history_public" :isprofilepublic="is_profile_public"></Stueditsecret>
+      <Stueditinform v-show="opt=='myinform'" :mynickname.sync="name" :mycollege.sync="college" :mygrade.sync="grade" :userurl="userurl" :row.sync="gender"></Stueditinform>
+      <Stueditimg v-show="opt=='myimg'" :userurl="userurl" :imgsrc.sync="img"></Stueditimg>
+      <Stueditbg v-show="opt=='mybg'" :userurl="userurl" :imgsrc.sync="bg_img"></Stueditbg>
+      <Stueditacc v-show="opt=='accountsecurity'"></Stueditacc>
+      <Stueditsecret v-show="opt=='settings'" :userurl="userurl" :isfavpublic.sync="is_fav_public" :ishistorypublic.sync="is_history_public" :isprofilepublic.sync="is_profile_public"></Stueditsecret>
       <div style="clear:both;"></div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
@@ -35,23 +35,14 @@
       bg_img:''
     }),
     created:function(){
-      var id=localStorage.getItem("id");
+      this.userurl = localStorage.getItem("user_url");
       this.$http({
         method:'get',
-        url:"/account/users/" + id+"/",
+        url:this.userurl,
         headers:{
           "Authorization":"Token " + localStorage.getItem("token")
         }
       }).then((res)=>{
-          this.userurl=res.data.student;
-          // 获得信息
-          this.$http({
-            method:'get',
-            url:this.userurl,
-            headers:{
-              "Authorization":"Token " + localStorage.getItem("token")
-            }
-          }).then((res)=>{
             this.name=res.data.nickname;
             this.img=res.data.avatar;
             this.college=res.data.college;
@@ -61,10 +52,6 @@
             this.is_history_public=res.data.is_history_public;
             this.is_profile_public=res.data.is_profile_public;
             this.bg_img=res.data.bg_img;
-          }).catch(function (error) {
-
-            alert("传输故障，注册失败！");
-          });
       }).catch(function (error) {
           alert("传输故障，注册失败！");
       });
@@ -73,7 +60,12 @@
       
     },
     methods: {
-      
+      // getbg:function(d){
+      //   this.bg_img=d;
+      // },
+      // getimg:function(d){
+      //   this.img=d;
+      // }
     }
   }
 

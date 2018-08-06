@@ -16,8 +16,8 @@
     <div class="stuown-mainwrapper">
       <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="attention" :rollin="rollin" :trust="trust" :items="items" :mine="mine"></Stuinform>
       <div class="asinform" v-if="fixed"></div>
-      <Collect v-if="item=='collect'"></Collect>
-      <Historyattend v-if="item=='historyattend'"></Historyattend>
+      <Collect v-show="item=='collect'"></Collect>
+      <Historyattend v-show="item=='historyattend'"></Historyattend>
       <div style="clear:both;"></div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">

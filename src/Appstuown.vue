@@ -16,12 +16,12 @@
     <div class="stuown-mainwrapper">
       <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="attention" :rollin="rollin" :trust="trust" :items="items" :mine="mine"></Stuinform>
       <div class="asinform" v-if="fixed"></div>
-      <Signup v-if="item=='signup'"></Signup>
-      <Trends v-if="item=='trends'"></Trends>
-      <Collect v-if="item=='collect'" :mine="mine"></Collect>
-      <Historyview v-if="item=='historyview'"></Historyview>
-      <Historyattend v-if="item=='historyattend'" :mine="mine"></Historyattend>
-      <Stumsg v-if="item=='stumsg'"></Stumsg>
+      <Signup v-show="item=='signup'"></Signup>
+      <Trends v-show="item=='trends'"></Trends>
+      <Collect v-show="item=='collect'" :mine="mine"></Collect>
+      <Historyview v-show="item=='historyview'"></Historyview>
+      <Historyattend v-show="item=='historyattend'" :mine="mine"></Historyattend>
+      <Stumsg v-show="item=='stumsg'"></Stumsg>
       <div style="clear:both;"></div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">

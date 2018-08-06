@@ -18,7 +18,7 @@
       <router-link :to="{ name: 'stuown', params: {opt:'signup'}}">
       <v-menu open-on-hover offset-y top transition="slide-y-transition">
         <v-btn slot="activator" flat>
-          <v-avatar size="36"><img :src="avatarurl" :alt="username"></v-avatar>
+          <v-avatar size="36"><img :src="avatar" :alt="name"></v-avatar>
           <v-icon class="ml-1">keyboard_arrow_down</v-icon>
         </v-btn>
         <v-list>
@@ -40,7 +40,7 @@
 
 <script>
   export default {
-    props:['avatarurl','username'],
+    props:['avatar','name'],
     data: () => ({
       isprimary: false,
       value: '',

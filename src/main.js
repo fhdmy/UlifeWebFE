@@ -65,6 +65,7 @@ import Createact from './Createact.vue'
 import Createleft from './create/Createleft.vue'
 import Createright from './create/Createright.vue'
 import Orgactview from './Orgactview.vue'
+import Retext from './home/Retext.vue'
 import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify, {
   theme: {  
@@ -137,7 +138,7 @@ Vue.component("Createact",Createact)
 Vue.component("Createleft",Createleft)
 Vue.component("Createright",Createright)
 Vue.component("Orgactview",Orgactview)
-
+Vue.component("Retext",Retext)
 const routes = [
   { path: '/', component: Apphome},
   { path: '/Login', component: Login },

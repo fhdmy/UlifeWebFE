@@ -6,7 +6,7 @@
       <dl class="dl1">
         <dt>昵称:</dt>
         <dd class="dd1">
-          <input type="text" maxlength="10" class="nickname" v-model="mynickname" />
+          <input type="text" maxlength="10" class="nickname" v-model="mynickname"/>
         </dd>
       </dl>
       <dl>
@@ -42,8 +42,22 @@
     props: ['mynickname', 'mycollege', 'mygrade', 'userurl', 'row'],
     data: () => ({
       colleges: ['经管大类', '计算机工程与科学学院', '中欧机械系', '应用数学系', '其他'],
-      grades: ['大一', '大二', '大三', '大四', '其他']
+      grades: ['大一', '大二', '大三', '大四', '其他'],
     }),
+    watch:{
+      mynickname:function(val){
+        this.$emit("update:mynickname",val);
+      },
+      mycollege:function(val){
+        this.$emit("update:mycollege",val);
+      },
+      mygrade:function(val){
+        this.$emit("update:mygrade",val);
+      },
+      row:function(val){
+        this.$emit("update:row",val);
+      }
+    },
     methods: {
       save: function () {
         this.$http({
@@ -53,10 +67,10 @@
             "Authorization": "Token " + localStorage.getItem("token")
           },
           data: {
-            nickname: this.mynickname,
+            nickname: this.nickname,
             gender: this.gender,
-            college: this.mycollege,
-            grade: this.mygrade
+            college: this.college,
+            grade: this.grade
           }
         }).then((res) => {
 
@@ -75,7 +89,7 @@
             alert("用户名已存在！");
           }
           if(bool==false){
-            alert("传输故障，注册失败！");
+            alert("网络传输故障!");
           }
         });
       }

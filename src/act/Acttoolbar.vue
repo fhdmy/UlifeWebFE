@@ -15,7 +15,14 @@
     <v-toolbar-items class="hidden-sm-and-down">
       <v-btn flat class="subheading toolbar-signinbtn">报名</v-btn>
       <v-btn flat class="subheading toolbar-btn" @click="collect"><v-icon :class="{'toolbar-icon':true,'iconfont':true,'icon-wujiaoxing':!collected,'icon-star_full':collected}" color="primary"></v-icon><span>收藏</span></v-btn>
-      <v-btn flat class="subheading toolbar-btn"><v-icon class="toolbar-icon" color="light-green lighten-1">share</v-icon><span>分享</span></v-btn>
+      <v-menu open-on-hover bottom offset-y nudge-left="30">
+        <v-btn slot="activator" flat class="subheading toolbar-btn"><v-icon class="toolbar-icon" color="light-green lighten-1">share</v-icon><span>分享</span></v-btn>
+        <v-list>
+          <v-list-tile v-for="(item, index) in items" :key="index" @click="chooseshare(index)">
+            <v-icon class="iconfont shareicon" :class="item.name" :style="{'color':item.color}"></v-icon>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </v-toolbar-items>
   </v-toolbar>
 </template>
@@ -24,7 +31,21 @@
   export default {
     props:['org','launchdate','isfinished','stars','fixed','title'],
     data:()=>({
-      collected:false
+      collected:false,
+      items:[
+        {
+          name:'icon-weibo',
+          color:'rgb(249, 110, 118)'
+        },
+        {
+          name:'icon-qunfengqqkongjian',
+          color:'#ffce00'
+        },
+        {
+          name:'icon-weixin-copy',
+          color:'rgb(125, 210, 57)'
+        }
+      ]
     }),
     computed:{
       wholestar:function(){
@@ -44,6 +65,29 @@
         }
         else{
           this.collected=true;
+        }
+      },
+      chooseshare:function(i){
+        // 微博
+        if(i==0){
+
+        }
+        // qq空间
+        else if(i==1){
+          this.$http.post('https://graph.qq.com/share/add_share',{
+            title:'QQ空间',
+            url:'http://www.qzone.com/ ',
+            site:'Ulife',
+            fromurl:'http://baidu.com'
+          }).then((res)=>{
+            console.log(res);
+          }).catch(function(error){
+            alert("网络传输故障!");
+          });
+        }
+        // 微信朋友圈
+        else{
+
         }
       }
     }
@@ -83,5 +127,24 @@
 .fixed-title{
   margin-right: -70px;
   color: #E03636;
+}
+.v-menu__content{
+  width:144px;
+}
+.v-menu__content>>>.v-list{
+  padding: 0;
+  height: 48px;
+}
+.v-menu__content>>>.v-list div{
+  width: 48px;
+  float: left;
+}
+.v-menu__content>>>.v-list__tile{
+  padding:0;
+  width: 48px;
+}
+.shareicon{
+  width: 48px;
+  height: 48px;
 }
 </style>

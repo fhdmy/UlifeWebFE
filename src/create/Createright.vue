@@ -4,7 +4,7 @@
     <input type="file" hidden ref="selectimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="imgchange" multiple/>
     <!-- <div ref="imageholder"> </div> (测试用的)-->
     <v-dialog v-model="brief" persistent max-width="500px">
-        <div class="menu-div" slot="activator">
+        <div class="menu-div" slot="activator" @click="changedata">
           <v-icon>{{items[0].iconname}}</v-icon>
           <span>{{items[0].text}}</span>
         </div>
@@ -16,25 +16,25 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12 sm6 md6>
-                  <v-menu ref="menu" :close-on-content-click="false" v-model="menu" :nudge-right="40" :return-value.sync="date" lazy transition="scale-transition" offset-y full-width min-width="290px">
-                    <v-text-field slot="activator" label="时间" readonly v-model="date"></v-text-field>
-                    <v-date-picker v-model="date" @input="$refs.menu.save(date)"></v-date-picker>
+                  <v-menu ref="menu" :close-on-content-click="false" v-model="menu" :nudge-right="40" :return-value.sync="date0" lazy transition="scale-transition" offset-y full-width min-width="290px">
+                    <v-text-field slot="activator" label="时间" readonly v-model="date0"></v-text-field>
+                    <v-date-picker v-model="date0" @input="$refs.menu.save(date0)"></v-date-picker>
                   </v-menu>
                 </v-flex>
                 <v-flex xs12 sm6 md6>
-                  <v-text-field value="12:30:00" type="time" suffix="PST" v-model="time"></v-text-field>
+                  <v-text-field value="12:30:00" type="time" suffix="PST" v-model="time0"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field label="地点" required v-model="place"></v-text-field>
+                  <v-text-field label="地点" required v-model="place0"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-select :items="forms" label="形式" v-model="selectedform"></v-select>
+                  <v-select :items="forms" label="形式" v-model="selectedform0"></v-select>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-select :items="interests" label="兴趣" v-model="selectedinterest"></v-select>
+                  <v-select :items="interests" label="兴趣" v-model="selectedinterest0"></v-select>
                 </v-flex>
                 <v-flex xs12>
-                  <v-textarea name="input-7-1" label="活动简介" value="在这里简要介绍本次活动" v-model="brieftext"></v-textarea>
+                  <v-textarea name="input-7-1" label="活动简介" value="在这里简要介绍本次活动" v-model="brieftext0"></v-textarea>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -112,14 +112,20 @@
     data: () => ({
       brief:false,
       date: null,
+      date0: null,
       menu: false,
       myrequire:false,
       insertphase:false,
       selectedform:'',
+      selectedform0:'',
       selectedinterest:'',
+      selectedinterest0:'',
       place:'',
+      place0:'',
       time:'',
+      time0:'',
       brieftext:'',
+      brieftext0:'',
       selectedparsetext:'',
       reedit:false,
       forms:['比赛', '分享', '互动'],
@@ -156,6 +162,14 @@
       ]
     }),
     methods:{
+      changedata:function(){
+        this.date0=this.date,
+        this.time0=this.time,
+        this.place0=this.place,
+        this.selectedform0=this.selectedform;
+        this.selectedinterest0=this.selectedinterest;
+        this.brieftext0=this.brieftext;
+      },
       addimg: function () {
         this.$refs.selectimg.click();
       },
@@ -172,12 +186,12 @@
         this.opts.splice(r,1);
       },
       deletebriefdata:function(){
-        this.date='',
-        this.time='',
-        this.place='',
-        this.selectedform='';
-        this.selectedinterest='';
-        this.brieftext='';
+        this.date0='',
+        this.time0='',
+        this.place0='',
+        this.selectedform0='';
+        this.selectedinterest0='';
+        this.brieftext0='';
       },
       deleterequiredata:function(){
         this.opts=[''];
@@ -187,6 +201,12 @@
         this.reedit=false;
       },
       sendbrieftoparent:function(){
+        this.date=this.date0,
+        this.time=this.time0,
+        this.place=this.place0,
+        this.selectedform=this.selectedform0;
+        this.selectedinterest=this.selectedinterest0;
+        this.brieftext=this.brieftext0;
         this.$emit("sentbrief",{
           date:this.date,
           time:this.time,
@@ -219,8 +239,7 @@
             let file=this.$refs.selectimg.files[i];
             reader.readAsDataURL(file);
             // console.log(file);
-            reader.onload=(e)=>{
-              // console.log(reader.result); 
+            reader.onload=(e)=>{ 
               this.$emit("sentimg",reader.result);
             }
           }

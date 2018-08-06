@@ -28,10 +28,34 @@
 
 <script>
   export default {
-    props:['userurl','isfavpublic','ishistorypublic','isprofilepublic'],
+    props:['userurl','isfavpublic','isprofilepublic','ishistorypublic'],
     data: () => ({
-
+      // fav:this.isfavpublic,
+      // pro:this.isprofilepublic,
+      // his:this.ishistorypublic
     }),
+    // watch:{
+    //   isfavpublic:function(){
+    //     this.fav=this.isfavpublic;
+    //   },
+    //   isprofilepublic:function(){
+    //     this.pro=this.isprofilepublic;
+    //   },
+    //   ishistorypublic:function(){
+    //     this.his=this.ishistorypublic;
+    //   }
+    // },
+    watch:{
+      isfavpublic:function(val){
+        this.$emit("update:isfavpublic",val);
+      },
+      isprofilepublic:function(val){
+        this.$emit("update:isprofilepublic",val);
+      },
+      ishistorypublic:function(val){
+        this.$emit("update:ishistorypublic",val);
+      }
+    },
     methods:{
       save:function(){
         this.$http({
@@ -48,7 +72,7 @@
         }).then((res) => {
 
         }).catch(function (error) {
-          alert("传输故障，注册失败！");
+          alert("网络传输故障!");
         });
       }
     }

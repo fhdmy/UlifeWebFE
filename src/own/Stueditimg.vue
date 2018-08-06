@@ -15,8 +15,18 @@
   export default {
     props:['userurl','imgsrc'],
     data: () => ({
-      
+
     }),
+    // watch:{
+    //   imgsrc:function(){
+    //     this.img=this.imgsrc;
+    //   }
+    // },
+    watch:{
+      imgsrc:function(val){
+        this.$emit("update:imgsrc",val);
+      }
+    },
     methods: {
       clickimg: function () {
         this.$refs.myimg.click();
@@ -40,8 +50,9 @@
             }).then((res) => {
               // 成功则改变本地view
               this.imgsrc = reader.result;
+              // this.$emit("getimg",reader.result);
             }).catch(function (error) {
-              alert("传输故障，注册失败！");
+              alert("网络传输故障!");
             });
           }
         } else {

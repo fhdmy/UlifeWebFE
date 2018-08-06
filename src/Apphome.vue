@@ -1,82 +1,88 @@
 <template>
-    <v-content style="background: #f3f4f5;">
-      <v-snackbar v-model="snackbar" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-        欢迎回来，{{username}}！
-        <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
-      </v-snackbar>
-      <div class="elevation-1 white home-toolbar-wrapper">
-        <Toolbar v-if="userurl=='' && officialurl==''"></Toolbar>
-        <Stutoolbar v-if="userurl!=''" :avatarurl="avatarurl" :username="username"></Stutoolbar>
-        <Orgtoolbar v-if="officialurl!=''"></Orgtoolbar>
-        <!--<Orgtoolbar></Orgtoolbar>
+  <v-content style="background: #f3f4f5;">
+    <v-snackbar v-model="snackbar" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      欢迎回来，{{username}}！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <div class="elevation-1 white home-toolbar-wrapper">
+      <Toolbar v-if="type=='none'"></Toolbar>
+      <Stutoolbar v-if="type=='user'" :avatar="avatarurl" :name="username"></Stutoolbar>
+      <Orgtoolbar v-if="type=='org'" :avatar="avatarurl" :name="username"></Orgtoolbar>
+      <!--<Orgtoolbar></Orgtoolbar>
         <Admintoolbar v-if="user.type=='admin'"></Admintoolbar> -->
-      </div>
-      <div class="home-topshow-wrapper">
-        <Carousel></Carousel>
-        <Orgcommend></Orgcommend>
-      </div>
-      <div class="home-choose-wrapper">
-        <Choose></Choose>
-      </div>
-      <div class="home-maincontent-wrapper">
-        <Maincontent></Maincontent>
-        <Rank></Rank>
-         <Actrank></Actrank>
-        <div style="clear:both;"></div>
-      </div>
-      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0)">
-        <!-- <v-icon>keyboard_arrow_up</v-icon> -->
-        <i class="iconfont icon-jiantou-copy-copy-copy"></i>
-      </v-btn>  
-      <Footer></Footer>
-    </v-content>
+    </div>
+    <div class="home-topshow-wrapper">
+      <Carousel></Carousel>
+      <Orgcommend></Orgcommend>
+    </div>
+    <div class="home-choose-wrapper">
+      <Choose></Choose>
+    </div>
+    <div class="home-maincontent-wrapper">
+      <Maincontent></Maincontent>
+      <Rank></Rank>
+      <Actrank></Actrank>
+      <div style="clear:both;"></div>
+    </div>
+    <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0)">
+      <!-- <v-icon>keyboard_arrow_up</v-icon> -->
+      <i class="iconfont icon-jiantou-copy-copy-copy"></i>
+    </v-btn>
+    <Footer></Footer>
+  </v-content>
 </template>
 
 <script>
   export default {
-    data:()=>({
-      userurl:'',//普通用户
-      officialurl:'',//组织用户
-      avatarurl:'',
-      username:'',
-      y:'top',
+    data: () => ({
+      type:'none',
+      avatarurl: '',
+      username: '',
+      y: 'top',
       snackbar: false,
-      color:'#E03636',
+      color: '#E03636',
       mode: '',
       timeout: 3000,
     }),
-    created:function(){
-      var id=localStorage.getItem("id");
-      this.$http({
-        method:'get',
-        url:"/account/users/" + id+"/",
-        headers:{
-          "Authorization":"Token " + localStorage.getItem("token")
-        }
-      }).then((res)=>{
-        // console.log(res);
-        //如果是普通用户
-        if(res.data.student!=null){
-          this.userurl=res.data.student;
-          // 获得信息
-          this.$http({
-            method:'get',
-            url:this.userurl,
-            headers:{
-              "Authorization":"Token " + localStorage.getItem("token")
-            }
-          }).then((res)=>{
-            // console.log(res);
-            this.avatarurl=res.data.avatar;
-            this.username=res.data.nickname;
-          }).catch(function (error) {
-            alert("传输故障，注册失败！");
-          });
-        }
-      }).catch(function (error) {
-          alert("传输故障，注册失败！");
-      });
-      this.snackbar=true;
+    created: function () {
+      var url0 = localStorage.getItem("user_url");
+      var url1 = localStorage.getItem("org_url");
+      if (url0 != null) {
+        this.type='user';
+        // 普通用户
+        this.$http({
+          method: 'get',
+          url: url0,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          this.avatarurl = res.data.avatar;
+          this.username = res.data.nickname;
+          this.snackbar = true;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      }
+      else if(url1 != null){
+        this.type='org';
+        // 组织用户
+        this.$http({
+          method: 'get',
+          url: url1,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          this.avatarurl = res.data.avatar;
+          this.username = res.data.org_name;
+          sessionStorage.setItem("nickname", this.username);
+          sessionStorage.setItem("avatar", this.avatarurl);
+          this.snackbar = true;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      }
     }
   }
 
