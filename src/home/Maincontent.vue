@@ -4,21 +4,21 @@
     <v-icon color="primary" class="mr-2 today-icon iconfont icon-icon"></v-icon>
     <span class="title">近期活动</span>
     <div class="Homemaincontent-mainwrapper">
-      <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
+      <v-card class="elevation-1" v-for="(act,index) in actcontainer" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <div class="act-cardd-media">
-          <router-link to="/Appact"><img :src="act.actimgpath" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
+          <router-link to="/Appact"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
         </div>
         <v-card-title primary-title class="pb-2">
           <router-link to="/Appact">
-            <h3 class="title mb-2 actname">{{act.actname}}</h3>
+            <h3 class="title mb-2 actname">{{act.heading}}</h3>
             <div class="headline-leftcontent">
-              <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.acttime}}
-              <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.actplace}}
+              <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.date}}
+              <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
           </router-link>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
             <v-avatar color="grey lighten-4 ml-3" size="60">
-              <img :src="act.orgimgpath" :alt="act.orgname">
+              <img :src="act.orgavatar">
             </v-avatar>
           </router-link>
         </v-card-title>
@@ -33,51 +33,18 @@
 
 <script>
   export default {
+    props:['actcontainer'],
     data: () => ({
-      acts: [{
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/suse.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        },
-        {
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/g20.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        },
-        {
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/success.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        },
-        {
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/ISHARE.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        }
-      ],
+
     }),
     methods: {
       largerimg: function (i) {
-        this.acts[i].isover=true;
+        this.actcontainer[i].isover=true;
+        // this.$emit("update:actcontainer[i].isover",true);
       },
       smallerimg: function (i) {
-        this.acts[i].isover=false;
+        this.actcontainer[i].isover=false;
+        // this.$emit("update:actcontainer[i].isover",false);
       }
     }
   }

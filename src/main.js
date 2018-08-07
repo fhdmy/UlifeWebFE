@@ -62,6 +62,7 @@ import Orgmyact from './own/Orgmyact.vue'
 import Mysignup from './own/Mysignup.vue'
 import Create from './own/Create.vue'
 import Createact from './Createact.vue'
+import Editact from './Editact.vue'
 import Createleft from './create/Createleft.vue'
 import Createright from './create/Createright.vue'
 import Orgactview from './Orgactview.vue'
@@ -135,6 +136,7 @@ Vue.component("Orgmyact",Orgmyact)
 Vue.component("Mysignup",Mysignup)
 Vue.component("Create",Create)
 Vue.component("Createact",Createact)
+Vue.component("Editact",Editact)
 Vue.component("Createleft",Createleft)
 Vue.component("Createright",Createright)
 Vue.component("Orgactview",Orgactview)
@@ -157,8 +159,9 @@ const routes = [
   { path: '/Orgdisplay/:opt', component: Orgdisplay,name:'orgdisplay',props: true},
   { path: '/Apporgown/:opt', component: Apporgown,name:'orgown',props: true},
   { path: '/Stuedit/:opt', component: Stuedit,name:'stuedit',props:true},
-  { path: '/createact', component: Createact },
-  { path: '/Orgactview', component: Orgactview }
+  { path: '/Createact', component: Createact },
+  { path: '/Editact', component: Editact },
+  { path: '/Orgactview/:opt', component: Orgactview,name:'orgactview',props:true}
 ]
 const router = new VueRouter({
   mode: 'history',

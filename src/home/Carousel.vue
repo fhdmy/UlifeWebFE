@@ -3,9 +3,9 @@
     <div class="carousel-left-btn" @click="carouselleftchange"></div>
     <div class="carousel-right-btn" @click="carouselrightchange"></div>
     <ul class="carousel-list">
-      <li v-for="(imgsrc,i) in imgsrcs" :key="i" class="carousel-item is-anim" :class="calclass(i)">
+      <li v-for="(imgsrc,i) in carouselcontainer" :key="i" class="carousel-item is-anim" :class="calclass(i)">
         <a>
-          <router-link to="/Appact"><img :src="imgsrc.path" class="carousel-img" /></router-link>
+          <router-link to="/Appact"><img :src="imgsrc.head_img" class="carousel-img" /></router-link>
         </a>
       </li>
     </ul>
@@ -15,42 +15,43 @@
 <script>
   var timer;
   export default {
+    props:['carouselcontainer'],
     data: () => ({
-      imgsrcs: [{
-          path: '/src/assets/activitydisplay.jpg',
-          number: 0,
-        },
-        {
-          path: '/src/assets/ISHARE.jpg',
-          number: 1
-        },
-        {
-          path: '/src/assets/g20.jpg',
-          number: 2
-        },
-        {
-          path: '/src/assets/suse.jpg',
-          number: 3
-        },
-        {
-          path: '/src/assets/success.jpg',
-          number: 4
-        }
-      ]
+      // imgsrcs: [{
+      //     path: '/src/assets/activitydisplay.jpg',
+      //     number: 0,
+      //   },
+      //   {
+      //     path: '/src/assets/ISHARE.jpg',
+      //     number: 1
+      //   },
+      //   {
+      //     path: '/src/assets/g20.jpg',
+      //     number: 2
+      //   },
+      //   {
+      //     path: '/src/assets/suse.jpg',
+      //     number: 3
+      //   },
+      //   {
+      //     path: '/src/assets/success.jpg',
+      //     number: 4
+      //   }
+      // ]
     }),
     created: function () {
       timer=setInterval(this.carouselrightchange, 5000);
     },
     methods: {
       calclass: function (i) {
-        return 'carousel-slider-item-' + String(this.imgsrcs[i].number);
+        return 'carousel-slider-item-' + String(this.carouselcontainer[i].number);
       },
       carouselleftchange: function () {
         var k;
         for(k=0;k<5;k++){
-          this.imgsrcs[k].number--;
-          if(this.imgsrcs[k].number==-1){
-            this.imgsrcs[k].number=4;
+          this.carouselcontainer[k].number--;
+          if(this.carouselcontainer[k].number==-1){
+            this.carouselcontainer[k].number=4;
           }
         }
         clearInterval(timer);
@@ -59,9 +60,9 @@
       carouselrightchange: function () {
         var k;
         for(k=0;k<5;k++){
-          this.imgsrcs[k].number++;
-          if(this.imgsrcs[k].number==5){
-            this.imgsrcs[k].number=0;
+          this.carouselcontainer[k].number++;
+          if(this.carouselcontainer[k].number==5){
+            this.carouselcontainer[k].number=0;
           }
         }
         clearInterval(timer);

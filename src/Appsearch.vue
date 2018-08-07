@@ -13,7 +13,7 @@
          <Actrank></Actrank>
         <div style="clear:both;"></div>
       </div>
-      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
+      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0)">
         <i class="iconfont icon-jiantou-copy-copy-copy"></i>
       </v-btn>
       <Footer></Footer>

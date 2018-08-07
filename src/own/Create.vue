@@ -1,6 +1,6 @@
 <template>
   <div class="create-wrapper">
-    <router-link to="/createact"><v-btn color="primary">创建活动</v-btn></router-link>
+    <router-link to="/Createact"><v-btn color="primary">创建活动</v-btn></router-link>
   </div>
 </template>
 

@@ -25,9 +25,7 @@
     </p>
     <router-link to="/">
       <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="clearsession">
-        <v-icon>
-          home
-        </v-icon>
+        <v-icon>home</v-icon>
       </v-btn>
     </router-link>
   </div>
@@ -74,7 +72,9 @@
       }
     }),
     created: function () {
-      this.$http.get('/account/orgs/', {}).then((res) => {
+      this.$http.get('/account/orgs/', {
+        
+      }).then((res) => {
         for (let k = 0; k < res.data.length; k++) {
           this.$set(this.items, k, res.data[k].org_name);
         }
@@ -85,16 +85,15 @@
     },
     methods: {
       register: function () {
-        if (this.rules.username(this.username) == true && this.rules.pwd(this.pwd) == true && this.rules.confirm(this
-            .confirmpwd, this.pwd) == true && this.rules.required(this.confirmpwd) == true && this.rules.required(
-            this.pwd) == true && this.rules.required(this.username) == true && this.rules.required(this.select) ==
-          true) {
+        if (this.rules.username(this.username) == true && this.rules.pwd(this.pwd) == true && this.rules.confirm(this.confirmpwd, this.pwd) == true && this.rules.required(this.confirmpwd) == true && this.rules.required(this.pwd) == true && this.rules.required(this.username) == true && this.rules.required(this.select) ==true) {
           var number = sessionStorage.getItem('number');
           var phone = sessionStorage.getItem('phone');
           this.$http.post('/account/signup/', {
             student_no: number,
             phone_number: phone,
-            // username:SHA256(this.username), // password:SHA256(this.pwd), // college:SHA256(this.select) 
+            // username:SHA256(this.username), 
+            // password:SHA256(this.pwd), 
+            // college:SHA256(this.select) 
             username: this.username,
             raw_passwd: this.pwd,
             invited_by_org: this.select
@@ -106,8 +105,7 @@
             // localStorage.setItem("username",this.username); 
             this.$router.push('/');
           }).catch(function (error) {
-            // console.log(error.response); 
-            if (error.response.data == "Nickname already exists") {
+            if(error.response.data == "Nickname already exists") {
               alert("用户名已存在！");
             }
             //if (error.response.data == "Phone number already exists") {

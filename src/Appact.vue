@@ -1,7 +1,9 @@
 <template>
     <v-content style="background: #f3f4f5;" v-scroll="onScroll">
       <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
-        <Toolbar></Toolbar>
+        <Toolbar v-if="type=='none'"></Toolbar>
+        <Stutoolbar v-if="type=='user'" :avatar="avatarurl" :name="username"></Stutoolbar>
+        <Orgtoolbar v-if="type=='org'" :avatar="avatarurl" :name="username"></Orgtoolbar>
       </div>
       <img :src="parallaxpath" class="large-img"/>
       <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
@@ -17,7 +19,7 @@
          <Related></Related>
          <div style="clear:both;"></div>
       </div>
-      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
+      <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0)">
         <i class="iconfont icon-jiantou-copy-copy-copy"></i>
       </v-btn>
       <Footer></Footer>
@@ -27,9 +29,9 @@
 <script>
   export default {
     data:()=>({
-      // usertype:'none',
-      // name:'',
-      // avatar:'',
+      username:'',
+      avatarurl:'',
+      type:'none',
       parallaxpath:'/src/assets/stuownbg.jpg',
       img:'/src/assets/suselogo.jpg',
       title:'ISHARE',
@@ -140,13 +142,18 @@
       offsetTop:0
     }),
     created:function(){
-      // this.$http({
-      //   method:'get',
-      //   url:"/account/users/" + id+"/",
-      //   headers:{
-      //     "Authorization":"Token " + localStorage.getItem("token")
-      //   }
-      // })
+      // toolbar
+      var url0 = localStorage.getItem("user_url");
+      var url1 = localStorage.getItem("org_url");
+      if(url0 != null){
+        this.type='user';
+      }
+      else if(url1 != null){
+        this.type='org';
+      }
+      this.username=localStorage.getItem("nickname");
+      this.avatarurl=localStorage.getItem("avatar");
+
     },
     computed:{
       toolbaropacity:function(){

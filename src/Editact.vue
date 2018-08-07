@@ -24,7 +24,9 @@
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
-      <v-btn class="preview" flat @click="openpreview">预览</v-btn>
+      <router-link to="/Orgactview">
+        <v-btn class="preview" flat>预览</v-btn>
+      </router-link>
       <v-btn class="save" flat @click="savetodraft">保存</v-btn>
       <v-btn class="submit" flat @click="publicact">发表活动</v-btn>
     </div>
@@ -60,7 +62,7 @@
         </div>
       </div>
     </div>
-    <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0)">
+    <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
       <i class="iconfont icon-jiantou-copy-copy-copy"></i>
     </v-btn>
     <Footer></Footer>
@@ -444,25 +446,6 @@
           });
         }
       },
-      openpreview:function(){
-        var myDate = new Date();
-        this.$router.push({ name: 'orgactview', params:{ opt: {
-          parallaxpath:this.parallaxpath,
-          avatar:this.avatar,
-          name:this.org,
-          title:this.title,
-          launchdate:myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate(),
-          isfinished:false,
-          stars:5,
-          introduction:this.brieftext,
-          date:this.date,
-          time:this.time,
-          place:this.place,
-          type:this.selectedform,
-          interest:this.selectedinterest,
-          lists:this.computeddata
-      }}});
-      }
     }
   }
 

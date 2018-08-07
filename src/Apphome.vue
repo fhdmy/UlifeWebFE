@@ -12,14 +12,14 @@
         <Admintoolbar v-if="user.type=='admin'"></Admintoolbar> -->
     </div>
     <div class="home-topshow-wrapper">
-      <Carousel></Carousel>
+      <Carousel :carouselcontainer="carouselcontainer"></Carousel>
       <Orgcommend></Orgcommend>
     </div>
     <div class="home-choose-wrapper">
       <Choose></Choose>
     </div>
     <div class="home-maincontent-wrapper">
-      <Maincontent></Maincontent>
+      <Maincontent :actcontainer.sync="actcontainer"></Maincontent>
       <Rank></Rank>
       <Actrank></Actrank>
       <div style="clear:both;"></div>
@@ -35,7 +35,7 @@
 <script>
   export default {
     data: () => ({
-      type:'none',
+      type: 'none',
       avatarurl: '',
       username: '',
       y: 'top',
@@ -43,12 +43,15 @@
       color: '#E03636',
       mode: '',
       timeout: 3000,
+      actcontainer: [],
+      carouselcontainer:[]
     }),
     created: function () {
+      // toolbar
       var url0 = localStorage.getItem("user_url");
       var url1 = localStorage.getItem("org_url");
       if (url0 != null) {
-        this.type='user';
+        this.type = 'user';
         // 普通用户
         this.$http({
           method: 'get',
@@ -59,13 +62,14 @@
         }).then((res) => {
           this.avatarurl = res.data.avatar;
           this.username = res.data.nickname;
+          sessionStorage.setItem("nickname", this.username);
+          sessionStorage.setItem("avatar", this.avatarurl);
           this.snackbar = true;
         }).catch(function (error) {
           alert("网络传输故障！");
         });
-      }
-      else if(url1 != null){
-        this.type='org';
+      } else if (url1 != null) {
+        this.type = 'org';
         // 组织用户
         this.$http({
           method: 'get',
@@ -83,6 +87,61 @@
           alert("网络传输故障！");
         });
       }
+
+      // 获取活动
+      this.$http({
+        method: 'get',
+        url: '/activity/activities/?ordering=-created_at',
+        headers: {
+          "Authorization": "Token " + localStorage.getItem("token")
+        }
+      }).then((res) => {
+        for (let k = 0; k < 8 && k < res.data.length; k++) {
+          // 获得头像
+          var ownerurl;
+          this.$http({
+            method: 'get',
+            url: res.data[k].owner,
+            headers: {
+              "Authorization": "Token " + localStorage.getItem("token")
+            }
+          }).then((res) => {
+            ownerurl=res.data.avatar;
+          }).catch(function (error) {
+            alert("网络传输故障！");
+          });
+          // 设置数组
+          var computeddate=res.data[k].start_at.split('T');
+          this.$set(this.actcontainer, k, {
+            head_img: res.data[k].head_img,
+            heading: res.data[k].heading,
+            date: computeddate[0],
+            location: res.data[k].location,
+            orgavatar:ownerurl,
+            isover: false
+          });
+        }
+      }).catch(function (error) {
+        alert("网络传输故障！");
+      });
+
+      //滚播图片
+      this.$http({
+          method: 'get',
+          url: '/activity/activities/?is_homepaged=True',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0;k < res.data.length; k++) {
+            this.$set(this.carouselcontainer, k, {
+              head_img: res.data[k].head_img,
+              number:k
+            });
+          }
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
     }
   }
 

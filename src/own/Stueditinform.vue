@@ -67,10 +67,10 @@
             "Authorization": "Token " + localStorage.getItem("token")
           },
           data: {
-            nickname: this.nickname,
-            gender: this.gender,
-            college: this.college,
-            grade: this.grade
+            nickname: this.mynickname,
+            gender: this.row,
+            college: this.mycollege,
+            grade: this.mygrade
           }
         }).then((res) => {
 
