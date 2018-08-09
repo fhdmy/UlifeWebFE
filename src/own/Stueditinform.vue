@@ -1,12 +1,16 @@
 <template>
   <div class="edit-content">
+    <v-snackbar v-model="snackbar" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      保存成功！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <p class="inform-title">我的信息</p>
     <v-divider class="mb-4"></v-divider>
     <form>
       <dl class="dl1">
         <dt>昵称:</dt>
         <dd class="dd1">
-          <input type="text" maxlength="10" class="nickname" v-model="mynickname"/>
+          <input type="text" maxlength="10" class="nickname" v-model="mynickname" />
         </dd>
       </dl>
       <dl>
@@ -43,19 +47,24 @@
     data: () => ({
       colleges: ['经管大类', '计算机工程与科学学院', '中欧机械系', '应用数学系', '其他'],
       grades: ['大一', '大二', '大三', '大四', '其他'],
+      y: 'top',
+      snackbar: false,
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
     }),
-    watch:{
-      mynickname:function(val){
-        this.$emit("update:mynickname",val);
+    watch: {
+      mynickname: function (val) {
+        this.$emit("update:mynickname", val);
       },
-      mycollege:function(val){
-        this.$emit("update:mycollege",val);
+      mycollege: function (val) {
+        this.$emit("update:mycollege", val);
       },
-      mygrade:function(val){
-        this.$emit("update:mygrade",val);
+      mygrade: function (val) {
+        this.$emit("update:mygrade", val);
       },
-      row:function(val){
-        this.$emit("update:row",val);
+      row: function (val) {
+        this.$emit("update:row", val);
       }
     },
     methods: {
@@ -73,22 +82,22 @@
             grade: this.mygrade
           }
         }).then((res) => {
-
+          this.snackbar = true;
         }).catch(function (error) {
           var err = error.response.data;
-          var bool=false;
+          var bool = false;
           for (let e in err) {
             if (err[e][0] === "This field may not be blank.") {
               alert("请填满个人信息！");
-              bool=true;
+              bool = true;
               break;
             }
           }
-          if(err.nickname[0]=="student with this nickname already exists."){
-            bool=true;
+          if (err.nickname[0] == "student with this nickname already exists.") {
+            bool = true;
             alert("用户名已存在！");
           }
-          if(bool==false){
+          if (bool == false) {
             alert("网络传输故障!");
           }
         });

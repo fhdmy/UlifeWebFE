@@ -1,5 +1,9 @@
 <template>
   <div class="edit-content">
+    <v-snackbar v-model="snackbar" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      保存成功！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <p class="inform-title">隐私设置</p>
     <v-divider class="mb-4"></v-divider>
     <form>
@@ -30,6 +34,11 @@
   export default {
     props:['userurl','isfavpublic','isprofilepublic','ishistorypublic'],
     data: () => ({
+      y: 'top',
+      snackbar: false,
+      color: '#E03636',
+      mode: '',
+      timeout: 2000
       // fav:this.isfavpublic,
       // pro:this.isprofilepublic,
       // his:this.ishistorypublic
@@ -70,7 +79,7 @@
             is_profile_public: this.isprofilepublic,
           }
         }).then((res) => {
-
+          this.snackbar=true;
         }).catch(function (error) {
           alert("网络传输故障!");
         });

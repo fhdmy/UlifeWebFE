@@ -8,7 +8,7 @@
       <div class="middle-wrapper">
         <Stuowntoolbar :itembottom="item"></Stuowntoolbar>
         <v-avatar size="100">
-          <img :src="img" :alt="name">
+          <img :src="img">
         </v-avatar>
       </div>
     </div>
@@ -35,9 +35,9 @@
   export default {
     props: ['opt'],
     data: () => ({
-      parallaxpath: '/src/assets/stuownbg.jpg',
-      img: '/src/assets/xnick.jpg',
-      name: 'Xnick',
+      parallaxpath: '',
+      img: '',
+      name: '',
       item: 'signup',
       offsetTop: 0,
       attention: 10,
@@ -114,6 +114,25 @@
           this.item = 'stumsg';
           break;
       }
+      this.img=sessionStorage.getItem("avatar");
+      var user_url=localStorage.getItem("user_url");
+      user_url = user_url.split("/");
+      var id=user_url[3];
+      this.$http({
+          method: 'get',
+          url: '/account/student-homepages/' + id + '/',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          console.log(res.data);
+          this.name=res.data.nickname;
+          this.parallaxpath=res.data.bg_img;
+          this.trust=res.data.credit;
+          
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
     },
     watch: {
       '$route' (to, from) {

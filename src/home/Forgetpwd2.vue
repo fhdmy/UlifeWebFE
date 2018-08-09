@@ -1,5 +1,9 @@
 <template>
   <div class="register-bg" @keyup.13="finish()">
+    <v-snackbar v-model="snackbar" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      密码已修改！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">忘记密码</p>
     <div class="register1-wrapper">
       <v-container>
@@ -28,6 +32,11 @@
 <script>
   export default {
     data: () => ({
+      y: 'top',
+      snackbar: false,
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       pwd:'',
       confirmpwd:'',
       rules:{
@@ -57,7 +66,10 @@
           new_passwd:this.pwd
         }).then((res)=>{
           this.clearsession();
-          this.$router.push('/Login');
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push('/Login');
+            }, 2000);
         }).catch(function (error) {
           alert("网络传输故障!");
         });

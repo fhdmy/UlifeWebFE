@@ -114,6 +114,11 @@
   a:hover{
     color:#E03636;
   }
+  .container{
+    margin: 0!important;
+    width: 1063px;
+    max-width: 1063px;
+  }
   .choose-content-wrapper{
     width:190px;
     height: 100px;

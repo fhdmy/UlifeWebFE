@@ -16,7 +16,7 @@
       </div>
       <div style="clear:both;"></div>
     </div>
-    <v-btn flat class="fill-inform" v-if="mine">填写组织信息</v-btn>
+    <router-link to="/Createinform"><v-btn flat class="fill-inform" v-if="mine">填写组织信息</v-btn></router-link>
     <v-btn flat :class="{'fill-inform':true,'fattention':myattention}" v-if="!mine" @click="getattention">关注</v-btn>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的访客</p>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的访客</p>

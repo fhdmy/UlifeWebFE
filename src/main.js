@@ -66,6 +66,8 @@ import Editact from './Editact.vue'
 import Createleft from './create/Createleft.vue'
 import Createright from './create/Createright.vue'
 import Orgactview from './Orgactview.vue'
+import Createinform from './Createinform.vue'
+import Createinformright from './create/Createinformright.vue'
 import Retext from './home/Retext.vue'
 import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify, {
@@ -140,6 +142,8 @@ Vue.component("Editact",Editact)
 Vue.component("Createleft",Createleft)
 Vue.component("Createright",Createright)
 Vue.component("Orgactview",Orgactview)
+Vue.component("Createinform",Createinform)
+Vue.component("Createinformright",Createinformright)
 Vue.component("Retext",Retext)
 const routes = [
   { path: '/', component: Apphome},
@@ -161,15 +165,27 @@ const routes = [
   { path: '/Stuedit/:opt', component: Stuedit,name:'stuedit',props:true},
   { path: '/Createact', component: Createact },
   { path: '/Editact', component: Editact },
+  { path: '/Createinform', component: Createinform},
   { path: '/Orgactview/:opt', component: Orgactview,name:'orgactview',props:true}
 ]
 const router = new VueRouter({
   mode: 'history',
-  routes // (缩写) 相当于 routes: routes
+  routes, // (缩写) 相当于 routes: routes
 })
+// router.beforeEach((to,from,next)=>{
+  
+//   next();
+// })
 Vue.prototype.GLOBAL = global_
 axios.defaults.baseURL=global_.BASE_URL
 Vue.prototype.$http = axios
+// Vue.prototype.$http.interceptors.response.use(config => {
+//   alert("1");
+//   return config
+// }, error => {
+//   alert("2");
+//   return Promise.reject(error)
+// })
 new Vue({
   el: '#app',
   router,

@@ -6,8 +6,8 @@
     </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper">
       <Toolbar v-if="type=='none'"></Toolbar>
-      <Stutoolbar v-if="type=='user'" :avatar="avatarurl" :name="username"></Stutoolbar>
-      <Orgtoolbar v-if="type=='org'" :avatar="avatarurl" :name="username"></Orgtoolbar>
+      <Stutoolbar v-if="type=='user'" :avatar="avatarurl"></Stutoolbar>
+      <Orgtoolbar v-if="type=='org'" :avatar="avatarurl"></Orgtoolbar>
       <!--<Orgtoolbar></Orgtoolbar>
         <Admintoolbar v-if="user.type=='admin'"></Admintoolbar> -->
     </div>
@@ -34,6 +34,50 @@
 
 <script>
   export default {
+    // beforeRouteEnter (to, from, next) {
+    //   // toolbar
+    //   var url0 = localStorage.getItem("user_url");
+    //   var url1 = localStorage.getItem("org_url");
+    //   if (url0 != null) {
+    //     this.type = 'user';
+    //     // 普通用户
+    //     this.$http({
+    //       method: 'get',
+    //       url: url0,
+    //       headers: {
+    //         "Authorization": "Token " + localStorage.getItem("token")
+    //       }
+    //     }).then((res) => {
+    //       next((vm)=>{vm.avatarurl = res.data.avatar;
+    //       vm.username = res.data.nickname;
+    //       if(sessionStorage.getItem("avatar")==null){
+    //         vm.snackbar = true;
+    //       }
+    //       sessionStorage.setItem("avatar", vm.avatarurl)});
+    //     }).catch(function (error) {
+    //       next(error);
+    //     });
+    //   } else if (url1 != null) {
+    //     this.type = 'org';
+    //     // 组织用户
+    //     this.$http({
+    //       method: 'get',
+    //       url: url1,
+    //       headers: {
+    //         "Authorization": "Token " + localStorage.getItem("token")
+    //       }
+    //     }).then((res) => {
+    //       next((vm)=>{vm.avatarurl = res.data.avatar;
+    //       vm.username = res.data.org_name;
+    //       if(sessionStorage.getItem("avatar")==null){
+    //         vm.snackbar = true;
+    //       }
+    //       sessionStorage.setItem("avatar", vm.avatarurl)});
+    //     }).catch(function (error) {
+    //       alert("网络传输故障！");
+    //     });
+    //   }
+    // },
     data: () => ({
       type: 'none',
       avatarurl: '',
@@ -62,9 +106,10 @@
         }).then((res) => {
           this.avatarurl = res.data.avatar;
           this.username = res.data.nickname;
-          sessionStorage.setItem("nickname", this.username);
+          if(sessionStorage.getItem("avatar")==null){
+            this.snackbar = true;
+          }
           sessionStorage.setItem("avatar", this.avatarurl);
-          this.snackbar = true;
         }).catch(function (error) {
           alert("网络传输故障！");
         });
@@ -80,9 +125,10 @@
         }).then((res) => {
           this.avatarurl = res.data.avatar;
           this.username = res.data.org_name;
-          sessionStorage.setItem("nickname", this.username);
+          if(sessionStorage.getItem("avatar")==null){
+            this.snackbar = true;
+          }
           sessionStorage.setItem("avatar", this.avatarurl);
-          this.snackbar = true;
         }).catch(function (error) {
           alert("网络传输故障！");
         });
@@ -97,19 +143,6 @@
         }
       }).then((res) => {
         for (let k = 0; k < 8 && k < res.data.length; k++) {
-          // 获得头像
-          var ownerurl;
-          this.$http({
-            method: 'get',
-            url: res.data[k].owner,
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            }
-          }).then((res) => {
-            ownerurl=res.data.avatar;
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
           // 设置数组
           var computeddate=res.data[k].start_at.split('T');
           this.$set(this.actcontainer, k, {
@@ -117,7 +150,7 @@
             heading: res.data[k].heading,
             date: computeddate[0],
             location: res.data[k].location,
-            orgavatar:ownerurl,
+            orgavatar:res.data[k].owner.avatar,
             isover: false
           });
         }
@@ -127,7 +160,7 @@
 
       //滚播图片
       this.$http({
-          method: 'get',
+          method: 'get', 
           url: '/activity/activities/?is_homepaged=True',
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
@@ -164,6 +197,7 @@
     width: 1063px;
     background: white;
     margin: 25px auto 0 auto;
+    position: relative;
   }
 
   .home-maincontent-wrapper {

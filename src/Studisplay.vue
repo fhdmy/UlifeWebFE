@@ -8,7 +8,7 @@
       <div class="middle-wrapper">
         <Studisplaytoolbar :itembottom="item"></Studisplaytoolbar>
         <v-avatar size="100">
-          <img :src="img" :alt="name">
+          <img :src="img">
         </v-avatar>
       </div>
     </div>

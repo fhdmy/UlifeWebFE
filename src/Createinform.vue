@@ -4,10 +4,6 @@
       保存成功！
       <v-btn color="pink" flat @click="snackbar1 = false">关闭</v-btn>
     </v-snackbar>
-    <v-snackbar v-model="snackbar2" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-      发表成功！
-      <v-btn color="pink" flat @click="snackbar2 = false">关闭</v-btn>
-    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper">
       <Orgtoolbar :avatar="avatar" :name="org"></Orgtoolbar>
     </div>
@@ -18,23 +14,21 @@
         <v-icon size="64" color="secondary" class="add-icon" @click="addimg" :class="{'hidden':havetopimg}">photo</v-icon>
         <input type="file" hidden ref="selectimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="changetopimg" />
         <div class="add-topimgtext" :class="{'hidden':havetopimg}">
-          <span>设置活动头图</span>
+          <span>设置背景图片</span>
           <p>图片建议选择尺寸大于1680px的高清大图，如相机原图</p>
         </div>
         <div style="clear:both;"></div>
       </div>
-      <v-text-field v-model="title" :rules="rules" counter="25" box label="填写活动标题" class="add-acttitle"></v-text-field>
     </div>
     <div class="main-wrapper">
       <Createleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit"></Createleft>
-      <Createright ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
-        @senttext="gettext" @reeditparse="getreeditfromright"></Createright>
+      <Createinformright ref="rightchild" @sentavatar="getavatar" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
+        @senttext="gettext" @reeditparse="getreeditfromright"></Createinformright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
       <v-btn class="preview" flat @click="openpreview">预览</v-btn>
-      <v-btn class="save" flat @click="savetodraft">保存</v-btn>
-      <v-btn class="submit" flat @click="publicact">发表活动</v-btn>
+      <v-btn class="submit" flat @click="savetodraft">保存</v-btn>
     </div>
     <div class="side-slider" :style=" {'left':slide}">
       <v-btn @click="moveleft" class="sort-btn">
@@ -89,13 +83,10 @@
       url1: '',
       parallaxpath: '/src/assets/createdefault.jpg',
       avatar: '',
-      title: '',
+      newavatar:'',
       org: '',
       offsetTop: 0,
       slide: '100%',
-      rules: [
-        v => v.length <= 25 || 'Max 25 characters'
-      ],
       panel: false,
       selectedform: '',
       selectedinterest: '',
@@ -130,8 +121,8 @@
       }
     },
     created: function () {
-      this.url1 = localStorage.getItem("org_url");
       this.img=sessionStorage.getItem("avatar");
+      this.url1 = localStorage.getItem("org_url");
     },
     methods: {
       onScroll(e) {
@@ -246,6 +237,9 @@
         this.cal++;
         this.key++;
       },
+      getavatar:function(d){
+        this.newavatar=d;
+      },
       gettopimg: function (d) {
         this.parallaxpath = d;
       },
@@ -329,10 +323,6 @@
         this.computeddata[this.reedititem].title = d;
       },
       savetodraft: function () {
-        // if(this.title=='' || this.date=='' || this.time=='' || this.place=='' || this.selectedform=='' || this.selectedinterest=='' || this.brieftext==''){
-        //   alert("信息未填写完整！");
-        //   return;
-        // }
         if (this.acturl == '') {//如果创建新活动
           this.$http({
             method: 'post',
@@ -380,76 +370,6 @@
             }
           }).then((res) => {
             this.snackbar1=true;
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
-        }
-      },
-      publicact: function () {
-        if (this.title == '' || this.date == '' || this.time == '' || this.place == '' || this.selectedform == '' ||
-          this.selectedinterest == '' || this.brieftext == '') {
-          alert("信息未填写完整！");
-          return;
-        }
-        if (this.acturl == '') {//如果创建新活动
-          this.$http({
-            method: 'post',
-            url: "/activity/activities/",
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata),
-              want_to_be_allowed_to_publish:true,
-              // 审核已过
-              is_published:true
-            }
-          }).then((res) => {
-            this.acturl=res.data.url;
-            this.snackbar2=true;
-            setTimeout(() => {
-              this.$router.push({ name: 'orgown', params: {opt:'create'}});
-            }, 2000);
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
-        }
-        else{//如果已存在活动（id）
-          this.$http({
-            method: 'patch',
-            url:this.acturl,
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata),
-              want_to_be_allowed_to_publish:true,
-              // 审核已过
-              is_published:true
-            }
-          }).then((res) => {
-            this.snackbar2=true;
-            setTimeout(() => {
-              this.$router.push({ name: 'orgown', params: {opt:'create'}});
-            }, 2000);
           }).catch(function (error) {
             alert("网络传输故障！");
           });
@@ -506,23 +426,13 @@
     border-radius: 50px;
     font-size: 18px;
     color: #FE9246;
-    margin-left: 300px;
-    margin-right: 30px;
-  }
-
-  .save {
-    width: 130px;
-    height: 60px;
-    border: 1px solid #bbbbbb;
-    border-radius: 50px;
-    font-size: 18px;
-    color: #FE9246;
+    margin-left:380px;
     margin-right: 30px;
   }
 
   .submit {
     background: #FE9246 !important;
-    width: 170px;
+    width: 130px;
     height: 60px;
     border: 1px solid #eeeeee;
     border-radius: 50px;
@@ -541,7 +451,7 @@
   .add-topimg-wrapper {
     width: 100%;
     position: absolute;
-    top: 260px;
+    top: 330px;
     height: 390px;
   }
 
@@ -574,20 +484,6 @@
   .add-icon {
     cursor: pointer;
   }
-
-  .add-acttitle {
-    width: 1063px;
-    margin: 235px auto 0 auto;
-  }
-
-  .add-acttitle>>>.v-input__slot {
-    background: white;
-  }
-
-  .add-acttitle>>>input {
-    color: #666 !important;
-  }
-
   .side-slider {
     position: fixed;
     top: 0;

@@ -8,7 +8,7 @@
       <div class="middle-wrapper">
         <Orgowntoolbar :itembottom="item"></Orgowntoolbar>
         <v-avatar size="100">
-          <img :src="img" :alt="name">
+          <img :src="img">
         </v-avatar>
       </div>
     </div>
