@@ -6,9 +6,9 @@
         <div class="attention-col text-md-center text-lg-center text-xl-center" v-for="item in items" :key="item.number" v-if="isdouble(item.number)">
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
             <v-avatar size="40" class="mb-1">
-              <img :src="item.orgavatar" />
+              <img :src="item.avatar" />
             </v-avatar>
-            <p class="attention-name">{{item.orgname}}</p>
+            <p class="attention-name">{{item.name}}</p>
           </router-link>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
             <v-avatar size="40" class="mb-1">

@@ -1,16 +1,16 @@
 <template>
     <v-content style="background: #f3f4f5;" v-scroll="onScroll">
       <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
-        <Toolbar v-if="type=='none'"></Toolbar>
-        <Stutoolbar v-if="type=='user'" :avatar="avatarurl" :name="username"></Stutoolbar>
-        <Orgtoolbar v-if="type=='org'" :avatar="avatarurl" :name="username"></Orgtoolbar>
+        <Toolbar v-if="usertype=='none'"></Toolbar>
+        <Stutoolbar v-if="usertype=='user'" :avatar="avatarurl" :name="username"></Stutoolbar>
+        <Orgtoolbar v-if="usertype=='org'" :avatar="avatarurl" :name="username"></Orgtoolbar>
       </div>
       <img :src="parallaxpath" class="large-img"/>
       <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
         <div class="middle-wrapper">
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}"><v-avatar size="120" v-if="!fixed"><img :src="img" :alt="org"></v-avatar></router-link>
           <p class="act-title display-1" v-if="!fixed">{{title}}</p>
-          <Acttoolbar :org="org" :launchdate="launchdate" :isfinished="isfinished" :stars="stars" :fixed="fixed" :title="title"></Acttoolbar>
+          <Acttoolbar :org="org" :launchdate="launchdate" :isfinished="isfinished" :stars="stars" :fixed="fixed" :title="title" :collected="collected" :participation="participation" :routerid="routerid" :acturl="opt" :collecturl="collecturl"></Acttoolbar>
         </div>
       </div>
       <div v-if="fixed" style="height:70px;"></div>
@@ -28,91 +28,30 @@
 
 <script>
   export default {
+    props:['opt'],
     data:()=>({
+      collecturl:'',
+      routerid:0,
+      participation:false,
+      collected:false,
       username:'',
       avatarurl:'',
-      type:'none',
-      parallaxpath:'/src/assets/stuownbg.jpg',
-      img:'/src/assets/suselogo.jpg',
-      title:'ISHARE',
-      org:'经济学院学生会',
-      launchdate:'2018-02-13',
+      usertype:'none',
+      parallaxpath:'',
+      img:'',
+      title:'',
+      org:'',
+      orgurl:'',
+      launchdate:'',
       isfinished:true,
       stars:4.5,
-      introduction:'这是一个非常棒的活动，帮助大家学习，提升。在活动中认识很多很多朋友，所以一定要参加我们活动哟。ISHARE这是一个非常棒的活动，帮助大家学习，提升。在活动中认识很多很多朋友，所以一定要参加我们活动哟。',
-      date:'2018-02-19',
-      time:'15:00',
-      place:'东区大楼',
-      type:'互动',
-      interest:'全部',
-      lists:[
-        {
-          title:'地图上没有塞舌尔',
-          text:'',
-          img:'',
-          number:0
-        },
-        {
-          title:'',
-          text:'从某种大角度来说，无非是继续完成我们“每年去2个国家”的约定，为彼此平淡无奇的生活充值续命；喧嚣的城市、厌倦的场景、疲惫的心，旅行似乎是我们唯一能抓住的救命稻草。从另一种小角度来说，作为两个资深海岛控，这些年走南闯北，几乎把我们想去的海岛都走了个遍，剩下的也就只有在世界海岛中排名NO.1的 大溪地 、NO.2的 塞舌尔 、NO.5的 斐济 和NO.7的 帕劳 了。',
-          img:'',
-          number:1
-        },
-        {
-          title:'',
-          text:'家里的墙上一直挂着小D送我的世界地图，依稀记得多年前他送给我时兴奋的模样：“你一定会喜欢这个礼物的。”我将它小心翼翼地钉在墙上，颇有一副指点 江山 之意，向小D比划着：“以后我们每去一个国家，就刮开一个，那就先去面积大的国家，例如 俄罗斯 ，这样刮开才有成就感。”可那时的我们又怎么知道，后来去的几乎都是岛国，以至于小到在地图上根本找不到。',
-          img:'',
-          number:2
-        },
-        {
-          title:'',
-          text:'家里的墙上一直挂着小D送我的世界地图，依稀记得多年前他送给我时兴奋的模样：“你一定会喜欢这个礼物的。”我将它小心翼翼地钉在墙上，颇有一副指点 江山 之意，向小D比划着：“以后我们每去一个国家，就刮开一个，那就先去面积大的国家，例如 俄罗斯 ，这样刮开才有成就感。”可那时的我们又怎么知道，后来去的几乎都是岛国，以至于小到在地图上根本找不到。',
-          img:'',
-          number:3
-        },
-        {
-          title:'',
-          text:'',
-          img:'/src/assets/suse.jpg',
-          number:4
-        },
-        {
-          title:'',
-          text:'世界顶级海岛、 英国 皇室的后花园、威廉王子的蜜月地、贝克汉姆的度假地、海岛中的法拉利……世人强行赋予了 塞舌尔 太多的标签，当撕去这个标签时，它其实只是一个无比自然淳朴的地方。',
-          img:'',
-          number:5
-        },
-        {
-          title:'地图上没有塞舌尔',
-          text:'',
-          img:'',
-          number:6
-        },
-        {
-          title:'',
-          text:'对于主岛—— 马埃岛 ，我们并不感兴趣。 马埃岛 的海不如 普拉兰 岛（P岛）和 拉迪格岛 （L岛），而首都 维多利亚 感觉上和 马尔代夫 的首都 马累 、 毛里求斯 的首都 路易港 很像，都是我们不太喜欢的旅行经历。因此我们决定直奔P岛和L岛， 塞舌尔 最美的海和精华也都在这里。',
-          img:'',
-          number:7
-        },
-        {
-          title:'',
-          text:'',
-          img:'/src/assets/g20.jpg',
-          number:8
-        },
-        {
-          title:'',
-          text:'从主岛去P岛可以选择坐船或者是小飞机。因为船票和机票价格差不多，加上很多人说坐船会吐到怀疑人生，所以我们订的内飞往返1166/人。 塞舌尔 航空官网和各大线上平台都可以购票。有人说便宜的时候可以订到400多一张的机票，确实有这样的价格，但是时间都是不好的，要么很早要么很晚，黄金时间的票价不会这么便宜。',
-          img:'',
-          number:9
-        },
-        {
-          title:'',
-          text:'看到很多参加一日游来L岛的都说L岛很小，一天就能玩完、骑车20分钟环岛，我表示他们真的有走完L岛、有get到它的精髓吗？L岛在我看来一点也不小，我们3天都没有骑遍它。德 阿让 、三连滩、Anse severs、Anse Patates、Anse Grosse，每个海滩都很美，都有自己的风格。',
-          img:'',
-          number:10
-        },
-      ],
+      introduction:'',
+      date:'',
+      time:'',
+      place:'',
+      type:'',
+      interest:'',
+      lists:[],
       customlists:[
         {
           name:'Xnick',
@@ -145,15 +84,70 @@
       // toolbar
       var url0 = localStorage.getItem("user_url");
       var url1 = localStorage.getItem("org_url");
+      var user_url = localStorage.getItem("user_url");
+      user_url = user_url.split("/");
+      this.routerid= user_url[3];
       if(url0 != null){
-        this.type='user';
+        this.usertype='user';
       }
       else if(url1 != null){
-        this.type='org';
+        this.usertype='org';
       }
-      this.username=localStorage.getItem("nickname");
-      this.avatarurl=localStorage.getItem("avatar");
-
+      this.avatarurl=sessionStorage.getItem("avatar");
+      
+      // 获取活动内容
+      this.$http({
+          method: 'get', 
+          url: 'activity/activity-demo/'+this.opt+'/',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          var computeddate=res.data.created_at.split('T');
+          var computedstart=res.data.start_at.split('T');
+          var comutedstarttime=computedstart[1].split(':');
+          this.parallaxpath=res.data.head_img;
+          this.img=res.data.owner.avatar;
+          this.org=res.data.owner.org_name;
+          this.title=res.data.heading;
+          this.orgurl=res.data.owner.url;
+          this.launchdate=computeddate[0];
+          this.introduction=res.data.description;
+          this.date=computedstart[0];
+          this.time=comutedstarttime[0]+':'+comutedstarttime[1];
+          this.place=res.data.location;
+          this.type=res.data._type;
+          this.interest=res.data.hobby;
+          this.lists=JSON.parse(res.data.demonstration);
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+        // 是否报名
+        this.$http({
+          method: 'get', 
+          url: 'activity/participation-actdemo/?student='+this.routerid+'&activity='+this.opt,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          this.participation=res.data.length==0?false:true;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+        // 是否收藏
+        this.$http({
+          method: 'get', 
+          url: 'activity/bookmarking-actdemo/?watcher='+this.routerid+'&target='+this.opt,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          this.collected=res.data.length==0?false:true;
+          if(this.collected)
+            this.collecturl=res.data[0].url;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
     },
     computed:{
       toolbaropacity:function(){

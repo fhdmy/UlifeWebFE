@@ -4,8 +4,8 @@
     <div class="carousel-right-btn" @click="carouselrightchange"></div>
     <ul class="carousel-list">
       <li v-for="(imgsrc,i) in carouselcontainer" :key="i" class="carousel-item is-anim" :class="calclass(i)">
-        <a>
-          <router-link to="/Appact"><img :src="imgsrc.head_img" class="carousel-img" /></router-link>
+        <a @click="openact(imgsrc.acturl)">
+          <img :src="imgsrc.head_img" class="carousel-img" />
         </a>
       </li>
     </ul>
@@ -67,6 +67,10 @@
         }
         clearInterval(timer);
         timer=setInterval(this.carouselrightchange, 5000);
+      },
+      openact:function(url){ 
+        let routeData = this.$router.resolve({name:'appact',params:{opt:url}});
+        window.open(routeData.href, '_blank');
       }
     }
   }

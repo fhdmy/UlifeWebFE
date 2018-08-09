@@ -19,16 +19,16 @@
     <router-link :to="{name:'stuedit',params:{opt:'myinform'}}"><v-btn flat class="fill-inform" v-if="mine">填写个人信息</v-btn></router-link>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的关注</p>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的关注</p>
-    <Attention :items="items"></Attention>
+    <Attention :items="watcher"></Attention>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的访客</p>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的访客</p>
-    <Attention :items="items"></Attention>
+    <Visited :items="visits"></Visited>
   </div>
 </template>
 
 <script>
   export default {
-    props:['name','attention','rollin','trust','items','mine'],
+    props:['name','attention','rollin','trust','mine','watcher','visits'],
     data: () => ({
 
     })

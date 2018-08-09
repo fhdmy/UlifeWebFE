@@ -1,9 +1,9 @@
 <template>
   <v-content style="background: #f3f4f5;" v-scroll="onScroll">
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
-      <Stutoolbar></Stutoolbar>
+      <Stutoolbar :avatar="img"></Stutoolbar>
     </div>
-    <img :src="parallaxpath" class="large-img"/>
+    <img :src="parallaxpath" class="large-img" />
     <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
       <div class="middle-wrapper">
         <Stuowntoolbar :itembottom="item"></Stuowntoolbar>
@@ -14,7 +14,8 @@
     </div>
     <div v-if="fixed" style="height:64px;"></div>
     <div class="stuown-mainwrapper">
-      <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="attention" :rollin="rollin" :trust="trust" :items="items" :mine="mine"></Stuinform>
+      <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="attention" :rollin="rollin" :trust="trust" :mine="mine"
+        :watcher="watcher" :visits="visits"></Stuinform>
       <div class="asinform" v-if="fixed"></div>
       <Signup v-show="item=='signup'"></Signup>
       <Trends v-show="item=='trends'"></Trends>
@@ -42,8 +43,10 @@
       offsetTop: 0,
       attention: 10,
       rollin: 15,
-      trust: 70,
-      mine:true,
+      trust: 100,
+      mine: true,
+      watcher: [],
+      visits: [],
       items: [{
           number: 0,
           imgsrc: '/src/assets/suselogo.jpg',
@@ -114,25 +117,76 @@
           this.item = 'stumsg';
           break;
       }
-      this.img=sessionStorage.getItem("avatar");
-      var user_url=localStorage.getItem("user_url");
+      this.img = sessionStorage.getItem("avatar");
+      var user_url = localStorage.getItem("user_url");
       user_url = user_url.split("/");
-      var id=user_url[3];
+      var id = user_url[3];
+      // homepage个人信息
       this.$http({
+        method: 'get',
+        url: '/account/student-homepage/' + id + '/',
+        headers: {
+          "Authorization": "Token " + localStorage.getItem("token")
+        }
+      }).then((res) => {
+        this.parallaxpath = res.data.bg_img;
+        this.name = res.data.nickname;
+        this.trust = res.data.credit;
+        // 访客
+        var user=res.data.user;
+        user=user.split("/");
+        this.$http({
           method: 'get',
-          url: '/account/student-homepages/' + id + '/',
+          url: '/message/visitings/?watcher=' + user[5],
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
-          console.log(res.data);
-          this.name=res.data.nickname;
-          this.parallaxpath=res.data.bg_img;
-          this.trust=res.data.credit;
-          
+          for (let k = 0; k < res.data.length; k++) {
+            // 是学生
+            if(res.data[k].target.student!=null){
+              this.$set(this.visits, k, {
+                avatar: res.data[k].target.student.avatar,
+                name: res.data[k].target.student.nickname,
+                url: res.data[k].target.student.url,
+                number: k
+              });
+            }
+            // 是组织
+            if(res.data[k].target.org!=null){
+              this.$set(this.visits, k, {
+                avatar: res.data[k].target.org.avatar,
+                name: res.data[k].target.org.org_name,
+                url: res.data[k].target.org.url,
+                number: k
+              });
+            }
+          }
         }).catch(function (error) {
           alert("网络传输故障！");
         });
+      }).catch(function (error) {
+        alert("网络传输故障！");
+      });
+      // 关注
+      this.$http({
+        method: 'get',
+        url: '/account/watchings/?watcher=' + id,
+        headers: {
+          "Authorization": "Token " + localStorage.getItem("token")
+        }
+      }).then((res) => {
+        for (let k = 0; k < res.data.length; k++) {
+          this.$set(this.watcher, k, {
+            orgavatar: res.data[k].target.avatar,
+            orgname: res.data[k].target.org_name,
+            orgurl: res.data[k].target.url,
+            number: k
+          });
+        }
+      }).catch(function (error) {
+        alert("网络传输故障！");
+      });
     },
     watch: {
       '$route' (to, from) {
@@ -151,18 +205,16 @@
       },
       fixed: function () {
         var k = this.offsetTop;
-        if (k >=664) {
+        if (k >= 664) {
           return true;
-        }
-        else
+        } else
           return false;
       },
-      display:function(){
+      display: function () {
         var k = this.offsetTop;
-        if(k<589){
+        if (k < 589) {
           return 'block';
-        }
-        else
+        } else
           return 'none';
       }
     },
@@ -249,15 +301,18 @@
     margin: 0 auto 150px auto;
     position: relative;
   }
-  .large-img{
+
+  .large-img {
     margin-top: 64px;
     width: 100%;
     height: 600px;
-    max-height:100%;
-    max-width:100%;
+    max-height: 100%;
+    max-width: 100%;
   }
-  .owntoolbar-wrapper{
+
+  .owntoolbar-wrapper {
     margin-top: -6px;
-    width:100%;
+    width: 100%;
   }
+
 </style>

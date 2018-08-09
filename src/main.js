@@ -30,6 +30,7 @@ import Appstuown from './Appstuown.vue'
 import Stuowntoolbar from './own/Stuowntoolbar.vue'
 import Stuinform from './own/Stuinform.vue'
 import Attention from './own/Attention.vue'
+import Visited from './own/Visited.vue'
 import Signup from './own/Signup.vue'
 import Trends from './own/Trends.vue'
 import Collect from './own/Collect.vue'
@@ -106,6 +107,7 @@ Vue.component("Appstuown",Appstuown)
 Vue.component("Stuowntoolbar",Stuowntoolbar)
 Vue.component("Stuinform",Stuinform)
 Vue.component("Attention",Attention)
+Vue.component("Visited",Visited)
 Vue.component("Signup",Signup)
 Vue.component("Trends",Trends)
 Vue.component("Collect",Collect)
@@ -158,7 +160,7 @@ const routes = [
   { path: '/Appsearch/:target/:time/:type/:interest', component: Appsearch,name:'search',props:true},
   { path: '/Changeaccount', component: Changeaccount },
   { path: '/Appstuown/:opt', component: Appstuown,name:'stuown',props: true},
-  { path: '/Appact', component: Appact },
+  { path: '/Appact/:opt', component: Appact,name:'appact',props: true },
   { path: '/Studisplay/:opt', component: Studisplay,name:'studisplay',props: true},
   { path: '/Orgdisplay/:opt', component: Orgdisplay,name:'orgdisplay',props: true},
   { path: '/Apporgown/:opt', component: Apporgown,name:'orgown',props: true},

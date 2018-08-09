@@ -144,6 +144,8 @@
       }).then((res) => {
         for (let k = 0; k < 8 && k < res.data.length; k++) {
           // 设置数组
+          var actid=res.data[k].url;
+          actid=actid.split("/");
           var computeddate=res.data[k].start_at.split('T');
           this.$set(this.actcontainer, k, {
             head_img: res.data[k].head_img,
@@ -151,7 +153,8 @@
             date: computeddate[0],
             location: res.data[k].location,
             orgavatar:res.data[k].owner.avatar,
-            isover: false
+            isover: false,
+            acturl:actid[5]
           });
         }
       }).catch(function (error) {
@@ -167,9 +170,12 @@
           }
         }).then((res) => {
           for (let k = 0;k < res.data.length; k++) {
+            var actid=res.data[k].url;
+            actid=actid.split("/");
             this.$set(this.carouselcontainer, k, {
               head_img: res.data[k].head_img,
-              number:k
+              number:k,
+              acturl:actid[5]
             });
           }
         }).catch(function (error) {
