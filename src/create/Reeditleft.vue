@@ -8,7 +8,11 @@
           <v-icon class="imgreediticon" @click="rotateimg(i)">refresh</v-icon>
           <v-icon class="imgclearicon" @click="sentdeletetext(i)">delete_outline</v-icon>
         </div>
-        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" v-if="d.img=='' && d.title==''" placeholder="从这里开始你的活动正文"></div>
+        <div class="text-wrapper" v-if="d.img=='' && d.title==''">
+          <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" placeholder="从这里开始你的活动正文"></div>
+          <div class="text-display">{{d.text}}</div>
+          <div style="clear:both;"></div>
+        </div>
         <img :src="d.img" class="img" v-if="d.img!=''"/>
         <p class="title" v-if="d.title!=''">{{d.title}}</p>
       </div>
@@ -90,7 +94,9 @@
     font-size: 15px;
     color: #444;
     overflow: hidden;
-    padding: 20px 0;
+    padding: 0 0 25px 0;
+    position: absolute;
+    top: 0;
   }
 
   div[contenteditable]:empty:before {
@@ -108,7 +114,7 @@
   .img{
     width: 100%;
     height: auto;
-    padding: 20px 0;
+    padding: 0 0 25px 0;
   }
   /* .rotate90{
     transform:rotate(90deg);
@@ -121,7 +127,7 @@
     color: #222;
     font-size: 24px!important;
     font-weight:400;
-    padding: 20px 0;
+    padding: 0 0 25px 0;
     margin-bottom: 0;
   }
   .imgeidtdiv{
@@ -143,5 +149,18 @@
     font-size: 20px;
     margin-right: 10px;
     margin-left: 10px;
+  }
+  .text-wrapper{
+    width: 100%;
+    outline: none;
+    line-height: 1.8;
+    font-size: 15px;
+    color: #444;
+    overflow: hidden;
+    padding: 0 0 25px 0;
+    position: relative;
+  }
+  .text-display{
+
   }
 </style>

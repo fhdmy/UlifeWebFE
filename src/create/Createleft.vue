@@ -90,7 +90,7 @@
     font-size: 15px;
     color: #444;
     overflow: hidden;
-    padding: 20px 0;
+    padding: 0 0 25px 0;
   }
 
   div[contenteditable]:empty:before {
@@ -108,7 +108,7 @@
   .img{
     width: 100%;
     height: auto;
-    padding: 20px 0;
+    padding: 0 0 25px 0;
   }
   /* .rotate90{
     transform:rotate(90deg);
@@ -121,7 +121,7 @@
     color: #222;
     font-size: 24px!important;
     font-weight:400;
-    padding: 20px 0;
+    padding: 0 0 25px 0;
     margin-bottom: 0;
   }
   .imgeidtdiv{

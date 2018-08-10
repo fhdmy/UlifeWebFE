@@ -69,7 +69,7 @@ import Createleft from './create/Createleft.vue'
 import Createright from './create/Createright.vue'
 import Orgactview from './Orgactview.vue'
 import Createinform from './Createinform.vue'
-import Reeditleft from './create/Createleft.vue'
+import Reeditleft from './create/Reeditleft.vue'
 import Createinformright from './create/Createinformright.vue'
 import Retext from './home/Retext.vue'
 import 'vuetify/dist/vuetify.min.css'
@@ -148,7 +148,7 @@ Vue.component("Createleft",Createleft)
 Vue.component("Createright",Createright)
 Vue.component("Orgactview",Orgactview)
 Vue.component("Createinform",Createinform)
-Vue.component("Reeditleft",Createleft)
+Vue.component("Reeditleft",Reeditleft)
 Vue.component("Createinformright",Createinformright)
 Vue.component("Retext",Retext)
 const routes = [

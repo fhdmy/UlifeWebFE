@@ -21,7 +21,7 @@
       <Trends v-show="item=='trends'"></Trends>
       <Collect v-show="item=='collect'" :mine="mine"></Collect>
       <Historyview v-show="item=='historyview'"></Historyview>
-      <Historyattend v-show="item=='historyattend'" :mine="mine"></Historyattend>
+      <Historyattend v-show="item=='historyattend'" :mine="mine" :acts="historyatt"></Historyattend>
       <Stumsg v-show="item=='stumsg'"></Stumsg>
       <div style="clear:both;"></div>
     </div>
@@ -47,6 +47,7 @@
       mine: true,
       watcher: [],
       visits: [],
+      historyatt:[],
       items: [{
           number: 0,
           imgsrc: '/src/assets/suselogo.jpg',
@@ -133,8 +134,8 @@
         this.name = res.data.nickname;
         this.trust = res.data.credit;
         // 访客
-        var user=res.data.user;
-        user=user.split("/");
+        var user = res.data.user;
+        user = user.split("/");
         this.$http({
           method: 'get',
           url: '/message/visitings/?watcher=' + user[5],
@@ -144,7 +145,7 @@
         }).then((res) => {
           for (let k = 0; k < res.data.length; k++) {
             // 是学生
-            if(res.data[k].target.student!=null){
+            if (res.data[k].target.student != null) {
               this.$set(this.visits, k, {
                 avatar: res.data[k].target.student.avatar,
                 name: res.data[k].target.student.nickname,
@@ -153,7 +154,7 @@
               });
             }
             // 是组织
-            if(res.data[k].target.org!=null){
+            if (res.data[k].target.org != null) {
               this.$set(this.visits, k, {
                 avatar: res.data[k].target.org.avatar,
                 name: res.data[k].target.org.org_name,
@@ -187,6 +188,10 @@
       }).catch(function (error) {
         alert("网络传输故障！");
       });
+
+      // 报名
+      this.axiossignup(id);
+      this.axioshistoryattend(id);
     },
     watch: {
       '$route' (to, from) {
@@ -219,6 +224,50 @@
       }
     },
     methods: {
+      axiossignup: function (id) {
+        var myDate = new Date();
+        myDate = myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate(),
+        this.$http({
+          method: 'get',
+          url: '/activity/participations/?student=' + id + '&activity__start_at__lt=' + myDate,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          console.log(res.data);
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      axioshistoryattend:function(id){
+        var myDate = new Date();
+        myDate = myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate(),
+        this.$http({
+          method: 'get',
+          url: '/activity/participations/?student=' + id + '&activity__start_at__gt=' + myDate,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < 8 && k < res.data.length; k++) {
+          // 设置数组
+          var actid=res.data[k].url;
+          actid=actid.split("/");
+          var computeddate=res.data[k].start_at.split('T');
+          this.$set(this.historyatt , k, {
+            head_img: res.data[k].head_img,
+            heading: res.data[k].heading,
+            date: computeddate[0],
+            location: res.data[k].location,
+            orgavatar:res.data[k].owner.avatar,
+            isover: false,
+            acturl:actid[5]
+          });
+        }
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
       chooseitem: function (e) {
         switch (e) {
           case 'signup':
