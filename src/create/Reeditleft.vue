@@ -1,0 +1,147 @@
+<template>
+  <div class="Homemaincontent-wrapper">
+    <div class="textarea-wrapper">
+      <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.key" @mouseover="mouseoverbox(i)"  @mouseout="mouseoutbox(i)">
+        <v-icon class="reediticon" v-if="texticon[i] && d.title!=''" @click="sentreedit(i)">colorize</v-icon>
+        <v-icon class="clearicon" v-if="texticon[i] && d.img==''" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <div class="imgeidtdiv" v-if="texticon[i] && d.img!=''">
+          <v-icon class="imgreediticon" @click="rotateimg(i)">refresh</v-icon>
+          <v-icon class="imgclearicon" @click="sentdeletetext(i)">delete_outline</v-icon>
+        </div>
+        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" v-if="d.img=='' && d.title==''" placeholder="从这里开始你的活动正文"></div>
+        <img :src="d.img" class="img" v-if="d.img!=''"/>
+        <p class="title" v-if="d.title!=''">{{d.title}}</p>
+      </div>
+      <!-- <div class="text-box" contenteditable="true" @input="handleInput" placeholder="从这里开始你的活动正文" v-if="gotdata.length==0" ref="content"></div>
+      <div class="text-box" contenteditable="true" @input="handleInput" v-if="gotdata.length!=0" ref="content"></div> -->
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    props:['gotdata'],
+    data: () => ({
+      oldcontent:'',
+      texticon:[]
+      // content:''
+    }),
+    methods: {
+      handleInput($event) {
+        this.content = $event.target.innerText;
+        // this.$emit("senttext",this.content);
+      },
+      oldhandleInput($event,i,k) {
+        this.oldcontent=$event.target.innerText;
+        this.$emit("sentoldtext",this.oldcontent,i,k);
+      },
+      mouseoverbox:function(i){
+        this.$set(this.texticon,i,true);
+      },
+      mouseoutbox:function(i){
+        this.$set(this.texticon,i,false);
+      },
+      sentdeletetext:function(i){
+        this.$emit("sentdeletetext",i);
+      },
+      sentreedit:function(i){
+        this.$emit("sentreedit",i);
+      },
+      rotateimg:function(i){
+        
+      }
+    }
+  }
+
+</script>
+
+<style scoped>
+  .Homemaincontent-wrapper {
+    margin-top: 25px;
+    width: 761.19px;
+    background: white;
+    float: left;
+    z-index: 0;
+  }
+  .textarea-inner{
+    position: relative;
+    z-index: 3;
+  }
+  .clearicon{
+    position: absolute;
+    top: 20px;
+    right: 0;
+    cursor: pointer;
+    color:#aaa;
+    font-size: 30px;
+  }
+  .reediticon{
+    position: absolute;
+    top: 20px;
+    right:40px;
+    cursor: pointer;
+    color:#aaa;
+    font-size: 30px;
+  }
+  .text-box {
+    width: 100%;
+    outline: none;
+    line-height: 1.8;
+    font-size: 15px;
+    color: #444;
+    overflow: hidden;
+    padding: 20px 0;
+  }
+
+  div[contenteditable]:empty:before {
+    content: attr(placeholder);
+    color: #aaa;
+  }
+
+  div[contenteditable]:focus {
+    content: none;
+  }
+  .textarea-wrapper{
+    width: 100%;
+    height: auto;
+  }
+  .img{
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+  }
+  /* .rotate90{
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg); 	
+    -moz-transform:rotate(90deg); 	
+    -webkit-transform:rotate(90deg);
+    -o-transform:rotate(90deg); 
+  } */
+  .title{
+    color: #222;
+    font-size: 24px!important;
+    font-weight:400;
+    padding: 20px 0;
+    margin-bottom: 0;
+  }
+  .imgeidtdiv{
+    position: absolute;
+    background: rgba(2,2,2,0.6);
+    top: 20px;
+    right: 0;
+    width: 80px;
+    padding: 5px;
+  }
+  .imgclearicon{
+    cursor: pointer;
+    color:#ddd;
+    font-size: 20px;
+  }
+  .imgreediticon{
+    cursor: pointer;
+    color:#ddd;
+    font-size: 20px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+</style>

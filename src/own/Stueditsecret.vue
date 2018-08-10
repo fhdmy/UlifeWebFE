@@ -8,7 +8,7 @@
     <v-divider class="mb-4"></v-divider>
     <form>
       <dl>
-        <dt>是否公开个人信息:</dt>
+        <dt>是否公开访客记录:</dt>
         <dd>
           <v-switch v-model="isfavpublic"></v-switch>
         </dd>

@@ -15,7 +15,7 @@
 
 <script>
   export default {
-    props:['introduction','date','time','place','type','interest','lists','customlists','mine'],
+    props:['lists','mine'],
     data: () => ({
 
     }),
@@ -46,6 +46,8 @@
     font-weight: 400;
     line-height: 50px;
     font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 25px;
   }
   .content-text{
     margin:25px 0;
@@ -54,9 +56,13 @@
     font-size: 15px;
     line-height: 28px;
     color: #444;
+    margin-top: 0;
+    margin-bottom: 25px;
   }
   .content-img{
     width: 711.19px;
     max-width: 100%;
+    margin-top: 0;
+    margin-bottom: 25px;
   }
 </style>

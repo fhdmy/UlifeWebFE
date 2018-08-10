@@ -5,7 +5,7 @@
       <v-btn color="pink" flat @click="snackbar1 = false">关闭</v-btn>
     </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper">
-      <Orgtoolbar :avatar="avatar" :name="org"></Orgtoolbar>
+      <Orgtoolbar :avatar="avatar"></Orgtoolbar>
     </div>
     <img :src="parallaxpath" class="large-img" ref="topimgreader" />
     <!-- <div :style="{'background':'url('+parallaxpath+')'}" class="large-img" ref="topimgreader"/></div> -->
@@ -21,13 +21,12 @@
       </div>
     </div>
     <div class="main-wrapper">
-      <Createleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit"></Createleft>
+      <Reeditleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit"></Reeditleft>
       <Createinformright ref="rightchild" @sentavatar="getavatar" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
-        @senttext="gettext" @reeditparse="getreeditfromright"></Createinformright>
+        @senttext="gettext" @reeditparse="getreeditfromright" :avatar0="avatar"></Createinformright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
-      <v-btn class="preview" flat @click="openpreview">预览</v-btn>
       <v-btn class="submit" flat @click="savetodraft">保存</v-btn>
     </div>
     <div class="side-slider" :style=" {'left':slide}">
@@ -72,6 +71,7 @@
 <script>
   // import Vue from 'vue'
   export default {
+    props:['opt'],
     data: () => ({
       y: 'top',
       snackbar1: false,
@@ -79,23 +79,15 @@
       color: '#E03636',
       mode: '',
       timeout: 2000,
-      acturl: '',
       url1: '',
       parallaxpath: '/src/assets/createdefault.jpg',
       avatar: '',
-      newavatar:'',
+      newavatar: '',
       org: '',
       offsetTop: 0,
       slide: '100%',
       panel: false,
-      selectedform: '',
-      selectedinterest: '',
-      place: '',
-      time: '00:00',
-      brieftext: '',
       selectedparsetext: '',
-      date: '2018-08-05',
-      requires: [],
       parse: '',
       text: '',
       cal: 0,
@@ -121,8 +113,10 @@
       }
     },
     created: function () {
-      this.img=sessionStorage.getItem("avatar");
+      this.avatar= sessionStorage.getItem("avatar");
       this.url1 = localStorage.getItem("org_url");
+      this.computeddata=JSON.parse(sessionStorage.getItem("lists"));
+      this.parallaxpath=sessionStorage.getItem("bg_img");
     },
     methods: {
       onScroll(e) {
@@ -237,8 +231,8 @@
         this.cal++;
         this.key++;
       },
-      getavatar:function(d){
-        this.newavatar=d;
+      getavatar: function (d) {
+        this.newavatar = d;
       },
       gettopimg: function (d) {
         this.parallaxpath = d;
@@ -323,76 +317,25 @@
         this.computeddata[this.reedititem].title = d;
       },
       savetodraft: function () {
-        if (this.acturl == '') {//如果创建新活动
-          this.$http({
-            method: 'post',
-            url: "/activity/activities/",
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata)
-            }
-          }).then((res) => {
-            this.acturl=res.data.url;
-            this.snackbar1=true;
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
-        }
-        else{//如果已存在活动（id）
-          this.$http({
-            method: 'patch',
-            url:this.acturl,
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata)
-            }
-          }).then((res) => {
-            this.snackbar1=true;
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
-        }
-      },
-      openpreview:function(){
-        var myDate = new Date();
-        this.$router.push({ name: 'orgactview', params:{ opt: {
-          parallaxpath:this.parallaxpath,
-          avatar:this.avatar,
-          name:this.org,
-          title:this.title,
-          launchdate:myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate(),
-          isfinished:false,
-          stars:5,
-          introduction:this.brieftext,
-          date:this.date,
-          time:this.time,
-          place:this.place,
-          type:this.selectedform,
-          interest:this.selectedinterest,
-          lists:this.computeddata
-      }}});
+        this.$http({
+          method: 'patch',
+          url: '/account/orgs/'+this.opt+'/',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          },
+          data: {
+            bg_img: this.parallaxpath,
+            demonstration: JSON.stringify(this.computeddata),
+            avatar:this.newavatar
+          }
+        }).then((res) => {
+          this.snackbar1 = true;
+          setTimeout(() => {
+            this.$router.push({ name: 'orgown', params: {opt:'inform'}});
+          }, 2000);
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
       }
     }
   }
@@ -419,17 +362,6 @@
     height: 70px;
   }
 
-  .preview {
-    width: 130px;
-    height: 60px;
-    border: 1px solid #bbbbbb;
-    border-radius: 50px;
-    font-size: 18px;
-    color: #FE9246;
-    margin-left:380px;
-    margin-right: 30px;
-  }
-
   .submit {
     background: #FE9246 !important;
     width: 130px;
@@ -438,6 +370,7 @@
     border-radius: 50px;
     font-size: 18px;
     color: white;
+    margin-left: 460px;
   }
 
   .large-img {
@@ -484,6 +417,7 @@
   .add-icon {
     cursor: pointer;
   }
+
   .side-slider {
     position: fixed;
     top: 0;

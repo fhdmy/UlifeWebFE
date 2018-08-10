@@ -8,7 +8,7 @@
         <div class="middle-wrapper">
           <v-avatar size="120" v-if="!fixed"><img :src="opt.avatar"></v-avatar>
           <p class="act-title display-1" v-if="!fixed">{{opt.title}}</p>
-          <Acttoolbar :org="opt.name" :launchdate="opt.launchdate" :isfinished="opt.isfinished" :stars="opt.stars" :fixed="fixed" :title="opt.title"></Acttoolbar>
+          <Actviewtoolbar :org="opt.name" :launchdate="opt.launchdate" :isfinished="opt.isfinished" :stars="opt.stars" :fixed="fixed" :title="opt.title"></Actviewtoolbar>
         </div>
       </div>
       <div v-if="fixed" style="height:70px;"></div>

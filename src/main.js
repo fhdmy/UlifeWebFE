@@ -39,6 +39,7 @@ import Historyattend from './own/Historyattend.vue'
 import Stumsg from './own/Stumsg.vue'
 import Appact from './Appact.vue'
 import Acttoolbar from './act/Acttoolbar.vue'
+import Actviewtoolbar from './act/Actviewtoolbar.vue'
 import Related from './act/Related.vue'
 import Show from './act/Show.vue'
 import Studisplay from './Studisplay.vue'
@@ -68,6 +69,7 @@ import Createleft from './create/Createleft.vue'
 import Createright from './create/Createright.vue'
 import Orgactview from './Orgactview.vue'
 import Createinform from './Createinform.vue'
+import Reeditleft from './create/Createleft.vue'
 import Createinformright from './create/Createinformright.vue'
 import Retext from './home/Retext.vue'
 import 'vuetify/dist/vuetify.min.css'
@@ -116,6 +118,7 @@ Vue.component("Historyattend",Historyattend)
 Vue.component("Stumsg",Stumsg)
 Vue.component("Appact",Appact)
 Vue.component("Acttoolbar",Acttoolbar)
+Vue.component("Actviewtoolbar",Actviewtoolbar)
 Vue.component("Related",Related)
 Vue.component("Show",Show)
 Vue.component("Stuisplay",Studisplay)
@@ -145,6 +148,7 @@ Vue.component("Createleft",Createleft)
 Vue.component("Createright",Createright)
 Vue.component("Orgactview",Orgactview)
 Vue.component("Createinform",Createinform)
+Vue.component("Reeditleft",Createleft)
 Vue.component("Createinformright",Createinformright)
 Vue.component("Retext",Retext)
 const routes = [
@@ -167,7 +171,7 @@ const routes = [
   { path: '/Stuedit/:opt', component: Stuedit,name:'stuedit',props:true},
   { path: '/Createact', component: Createact },
   { path: '/Editact', component: Editact },
-  { path: '/Createinform', component: Createinform},
+  { path: '/Createinform/:opt', component: Createinform,name:'createinform',props:true},
   { path: '/Orgactview/:opt', component: Orgactview,name:'orgactview',props:true}
 ]
 const router = new VueRouter({

@@ -131,7 +131,7 @@
     },
     created: function () {
       this.url1 = localStorage.getItem("org_url");
-      this.img=sessionStorage.getItem("avatar");
+      this.avatar=sessionStorage.getItem("avatar");
     },
     methods: {
       onScroll(e) {

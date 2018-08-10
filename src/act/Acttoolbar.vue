@@ -34,7 +34,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="signin = false">关闭</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="signin = false,answers=[]">关闭</v-btn>
             <v-btn color="blue darken-1" flat @click.native="signin = false" @click="signup">报名</v-btn>
           </v-card-actions>
         </v-card>
@@ -62,12 +62,11 @@
 <script>
   export default {
     props: ['org', 'launchdate', 'isfinished', 'stars', 'fixed', 'title', 'participation', 'collected', 'routerid',
-      'acturl', 'collecturl'
+      'acturl', 'collecturl','requires','participationurl'
     ],
     data: () => ({
       dialog: false,
       signin: false,
-      requires: [],
       answers: [],
       items: [{
           name: 'icon-weibo',
@@ -108,8 +107,9 @@
               target: parseInt(this.acturl)
             }
           }).then((res) => {
-            console.log(res);
+            this.collecturl=res.data.url;
             this.collected = true;
+            alert("收藏成功！");
           }).catch(function (error) {
             alert("网络传输故障！");
           });
@@ -125,7 +125,6 @@
               target: parseInt(this.acturl)
             }
           }).then((res) => {
-            console.log(res);
             this.collected = false;
           }).catch(function (error) {
             alert("网络传输故障！");
@@ -133,10 +132,51 @@
         }
       },
       signup: function () {
-        this.participation=true;
+        if(this.answers.length!=this.requires.length){
+          alert("报名信息不完整！");
+          return;
+        }
+        for(let k=0;k<this.requires.length;k++){
+          if(this.answers[k]==""){
+            alert("报名信息不完整！");
+            return;
+          }
+        }
+        this.$http({
+            method: 'post',
+            url: '/activity/participations/',
+            headers: {
+              "Authorization": "Token " + localStorage.getItem("token")
+            },
+            data: {
+              activity:parseInt(this.acturl),
+              student:parseInt(this.routerid),
+              forms:JSON.stringify(this.answers) 
+            }
+          }).then((res) => {
+            this.participationurl=res.data.url;
+            this.participation=true;
+            alert("报名成功！");
+          }).catch(function (error) {
+            alert("网络传输故障！");
+          });
       },
       cancelsignup: function () {
-        this.participation=false;
+        this.$http({
+            method: 'delete',
+            url: this.participationurl,
+            headers: {
+              "Authorization": "Token " + localStorage.getItem("token")
+            },
+            data: {
+              activity:parseInt(this.acturl),
+              student:parseInt(this.routerid)
+            }
+          }).then((res) => {
+            this.participation=false;
+          }).catch(function (error) {
+            alert("网络传输故障！");
+          });
       },
       chooseshare: function (i) {
         // 微博

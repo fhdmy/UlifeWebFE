@@ -62,9 +62,9 @@
 
 <script>
   export default {
+    props:['avatar0'],
     data: () => ({
       avatar:'',
-      avatar0:'',
       openavatar:false,
       insertphase:false,
       selectedparsetext:'',
@@ -97,9 +97,15 @@
         }
       ]
     }),
+    created:function(){
+      this.avatar=this.avatar0;
+    },
     methods:{
       changeavatar:function(){
-        this.avatar0=this.avatar;
+        if(this.avatar0=="")
+          this.avatar0=this.avatar;
+        else
+          return;
       },
       addimg: function () {
         this.$refs.selectimg.click();
@@ -114,7 +120,9 @@
         this.$refs.menu.save(date)
       },
       deleteavatar:function(){
-        this.avatar0='';
+        setTimeout(() => {
+          this.avatar0='';
+        }, 100);
       },
       deleteparsedata:function(){
         this.selectedparsetext='';

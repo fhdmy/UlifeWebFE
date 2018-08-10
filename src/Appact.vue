@@ -2,15 +2,15 @@
     <v-content style="background: #f3f4f5;" v-scroll="onScroll">
       <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
         <Toolbar v-if="usertype=='none'"></Toolbar>
-        <Stutoolbar v-if="usertype=='user'" :avatar="avatarurl" :name="username"></Stutoolbar>
-        <Orgtoolbar v-if="usertype=='org'" :avatar="avatarurl" :name="username"></Orgtoolbar>
+        <Stutoolbar v-if="usertype=='user'" :avatar="avatarurl"></Stutoolbar>
+        <Orgtoolbar v-if="usertype=='org'" :avatar="avatarurl"></Orgtoolbar>
       </div>
       <img :src="parallaxpath" class="large-img"/>
       <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
         <div class="middle-wrapper">
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}"><v-avatar size="120" v-if="!fixed"><img :src="img" :alt="org"></v-avatar></router-link>
           <p class="act-title display-1" v-if="!fixed">{{title}}</p>
-          <Acttoolbar :org="org" :launchdate="launchdate" :isfinished="isfinished" :stars="stars" :fixed="fixed" :title="title" :collected="collected" :participation="participation" :routerid="routerid" :acturl="opt" :collecturl="collecturl"></Acttoolbar>
+          <Acttoolbar :org="org" :launchdate="launchdate" :isfinished="isfinished" :stars="stars" :fixed="fixed" :title="title" :collected="collected" :participation="participation" :routerid="routerid" :acturl="opt" :collecturl="collecturl" :participationurl="participationurl" :requires="requires"></Acttoolbar>
         </div>
       </div>
       <div v-if="fixed" style="height:70px;"></div>
@@ -33,6 +33,7 @@
       collecturl:'',
       routerid:0,
       participation:false,
+      participationurl:'',
       collected:false,
       username:'',
       avatarurl:'',
@@ -40,6 +41,7 @@
       parallaxpath:'',
       img:'',
       title:'',
+      requires:[],
       org:'',
       orgurl:'',
       launchdate:'',
@@ -84,14 +86,17 @@
       // toolbar
       var url0 = localStorage.getItem("user_url");
       var url1 = localStorage.getItem("org_url");
-      var user_url = localStorage.getItem("user_url");
-      user_url = user_url.split("/");
-      this.routerid= user_url[3];
       if(url0 != null){
         this.usertype='user';
+        var user_url = localStorage.getItem("user_url");
+        user_url = user_url.split("/");
+        this.routerid= user_url[3];
       }
       else if(url1 != null){
         this.usertype='org';
+        var user_url = localStorage.getItem("org_url");
+        user_url = user_url.split("/");
+        this.routerid= user_url[3];
       }
       this.avatarurl=sessionStorage.getItem("avatar");
       
@@ -119,6 +124,7 @@
           this.type=res.data._type;
           this.interest=res.data.hobby;
           this.lists=JSON.parse(res.data.demonstration);
+          this.requires=JSON.parse(res.data.requirement);
         }).catch(function (error) {
           alert("网络传输故障！");
         });
@@ -131,6 +137,8 @@
           }
         }).then((res) => {
           this.participation=res.data.length==0?false:true;
+          if(this.participation)
+            this.participationurl=res.data[0].url;
         }).catch(function (error) {
           alert("网络传输故障！");
         });

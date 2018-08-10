@@ -16,17 +16,17 @@
       </div>
       <div style="clear:both;"></div>
     </div>
-    <router-link to="/Createinform"><v-btn flat class="fill-inform" v-if="mine">填写组织信息</v-btn></router-link>
+    <a @click="fillorginform"><v-btn flat class="fill-inform" v-if="mine">填写组织信息</v-btn></a>
     <v-btn flat :class="{'fill-inform':true,'fattention':myattention}" v-if="!mine" @click="getattention">关注</v-btn>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的访客</p>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的访客</p>
-    <Attention :items="items"></Attention>
+    <Attention :items="visits"></Attention>
   </div>
 </template>
 
 <script>
   export default {
-    props:['name','attention','stars','acts','items','mine'],
+    props:['name','attention','stars','acts','visits','mine','orgurl','list','bg_img'],
     data: () => ({
       myattention:false
     }),
@@ -38,6 +38,11 @@
         else{
           this.myattention=true;
         }
+      },
+      fillorginform:function(){
+        sessionStorage.setItem("lists",JSON.stringify(this.list));
+        sessionStorage.setItem("bg_img",this.bg_img);
+        this.$router.push({name:'createinform',params:{opt:this.orgurl}});
       }
     }
   }
