@@ -95,8 +95,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="insertphase = false" @click="deleteparsedata">关闭</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="insertphase = false" @click="sendparsetoparent">保存</v-btn>
+            <v-btn color="blue darken-1" flat @click="deleteparsedata">关闭</v-btn>
+            <v-btn color="blue darken-1" flat @click="sendparsetoparent">保存</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -199,6 +199,7 @@
       deleteparsedata:function(){
         this.selectedparsetext='';
         this.reedit=false;
+        this.insertphase = false;
       },
       sendbrieftoparent:function(){
         this.date=this.date0,
@@ -220,16 +221,22 @@
         this.$emit("sentrequire",this.opts);
       },
       sendparsetoparent:function(){
+        if(this.selectedparsetext.length>20){
+          alert("超过字数啦！");
+          return;
+        }
         if(this.selectedparsetext!=''){
           if(this.reedit){
             this.$emit("reeditparse",this.selectedparsetext);
             this.selectedparsetext="";
             this.reedit=false;
+            this.insertphase = false;
             return;
           }
           this.$emit("sentparse",this.selectedparsetext);
           this.selectedparsetext="";
         }
+        this.insertphase = false;
       },
       imgchange:function(){
         if(typeof(FileReader)!='undefined'){

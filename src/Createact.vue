@@ -9,7 +9,7 @@
       <v-btn color="pink" flat @click="snackbar2 = false">关闭</v-btn>
     </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper">
-      <Orgtoolbar :avatar="avatar" :name="org"></Orgtoolbar>
+      <Orgtoolbar :avatar="avatar"></Orgtoolbar>
     </div>
     <img :src="parallaxpath" class="large-img" ref="topimgreader" />
     <!-- <div :style="{'background':'url('+parallaxpath+')'}" class="large-img" ref="topimgreader"/></div> -->
@@ -78,6 +78,7 @@
 <script>
   // import Vue from 'vue'
   export default {
+    props:['org'],
     data: () => ({
       y: 'top',
       snackbar1: false,
@@ -90,7 +91,6 @@
       parallaxpath: '/src/assets/createdefault.jpg',
       avatar: '',
       title: '',
-      org: '',
       offsetTop: 0,
       slide: '100%',
       rules: [
@@ -456,8 +456,8 @@
         }
       },
       openpreview:function(){
-        var myDate = new Date();
-        this.$router.push({ name: 'orgactview', params:{ opt: {
+      var myDate = new Date();
+      sessionStorage.setItem("preview",JSON.stringify({
           parallaxpath:this.parallaxpath,
           avatar:this.avatar,
           name:this.org,
@@ -472,7 +472,9 @@
           type:this.selectedform,
           interest:this.selectedinterest,
           lists:this.computeddata
-      }}});
+      }));
+      let routeData=this.$router.resolve({path:'/Orgactview'});
+      window.open(routeData.href, '_blank');
       }
     }
   }

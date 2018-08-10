@@ -169,10 +169,10 @@ const routes = [
   { path: '/Orgdisplay/:opt', component: Orgdisplay,name:'orgdisplay',props: true},
   { path: '/Apporgown/:opt', component: Apporgown,name:'orgown',props: true},
   { path: '/Stuedit/:opt', component: Stuedit,name:'stuedit',props:true},
-  { path: '/Createact', component: Createact },
+  { path: '/Createact/:org', component: Createact,name:'createact',props:true},
   { path: '/Editact', component: Editact },
   { path: '/Createinform/:opt', component: Createinform,name:'createinform',props:true},
-  { path: '/Orgactview/:opt', component: Orgactview,name:'orgactview',props:true}
+  { path: '/Orgactview', component: Orgactview}
 ]
 const router = new VueRouter({
   mode: 'history',

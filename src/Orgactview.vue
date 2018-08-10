@@ -25,10 +25,10 @@
 
 <script>
   export default {
-    props:['opt'],
     data:()=>({
       customlists:[],
-      offsetTop:0
+      offsetTop:0,
+      opt:{}
     }),
     computed:{
       toolbaropacity:function(){
@@ -55,6 +55,9 @@
         else
           return 'none';
       }
+    },
+    created:function(){
+      this.opt=JSON.parse(sessionStorage.getItem("preview"));
     },
     methods:{
       onScroll (e) {

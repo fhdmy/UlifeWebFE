@@ -114,6 +114,7 @@
     },
     created: function () {
       this.avatar= sessionStorage.getItem("avatar");
+      this.newavatar= this.avatar;
       this.url1 = localStorage.getItem("org_url");
       this.computeddata=JSON.parse(sessionStorage.getItem("lists"));
       this.parallaxpath=sessionStorage.getItem("bg_img");
@@ -331,6 +332,9 @@
         }).then((res) => {
           this.snackbar1 = true;
           setTimeout(() => {
+            sessionStorage.removeItem("lists");
+            sessionStorage.removeItem("bg_img");
+            sessionStorage.setItem("avatar",this.newavatar);
             this.$router.push({ name: 'orgown', params: {opt:'inform'}});
           }, 2000);
         }).catch(function (error) {

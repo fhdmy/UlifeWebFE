@@ -18,7 +18,7 @@
       <div class="asinform" v-if="fixed"></div>
       <Inform v-show="item=='inform'" :mine="mine" :lists="lists"></Inform>
       <Draft v-show="item=='draft'"></Draft>
-      <Create v-show="item=='create'"></Create>
+      <Create v-show="item=='create'" :org_name="name"></Create>
       <Orgmyact v-show="item=='myact'"></Orgmyact>
       <Mysignup v-show="item=='mysignup'"></Mysignup>
       <Orgmsg v-show="item=='orgmsg'"></Orgmsg>

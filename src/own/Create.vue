@@ -1,11 +1,12 @@
 <template>
   <div class="create-wrapper">
-    <router-link to="/Createact"><v-btn color="primary">创建活动</v-btn></router-link>
+    <router-link :to="{name:'createact',params:{org:org_name}}"><v-btn color="primary">创建活动</v-btn></router-link>
   </div>
 </template>
 
 <script>
   export default {
+    props:['org_name'],
     data: () => ({
        
     }),

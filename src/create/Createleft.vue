@@ -3,7 +3,8 @@
     <div class="textarea-wrapper">
       <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.key" @mouseover="mouseoverbox(i)"  @mouseout="mouseoutbox(i)">
         <v-icon class="reediticon" v-if="texticon[i] && d.title!=''" @click="sentreedit(i)">colorize</v-icon>
-        <v-icon class="clearicon" v-if="texticon[i] && d.img==''" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <v-icon class="clearicon" v-if="texticon[i] && d.title!=''" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <v-icon class="textclearicon" v-if="texticon[i] && d.img=='' && d.title==''" @click="sentdeletetext(i)">delete_outline</v-icon>
         <div class="imgeidtdiv" v-if="texticon[i] && d.img!=''">
           <v-icon class="imgreediticon" @click="rotateimg(i)">refresh</v-icon>
           <v-icon class="imgclearicon" @click="sentdeletetext(i)">delete_outline</v-icon>
@@ -69,7 +70,7 @@
   }
   .clearicon{
     position: absolute;
-    top: 20px;
+    top: 0px;
     right: 0;
     cursor: pointer;
     color:#aaa;
@@ -77,7 +78,7 @@
   }
   .reediticon{
     position: absolute;
-    top: 20px;
+    top: 0px;
     right:40px;
     cursor: pointer;
     color:#aaa;
@@ -127,7 +128,7 @@
   .imgeidtdiv{
     position: absolute;
     background: rgba(2,2,2,0.6);
-    top: 20px;
+    top: 0px;
     right: 0;
     width: 80px;
     padding: 5px;
@@ -143,5 +144,13 @@
     font-size: 20px;
     margin-right: 10px;
     margin-left: 10px;
+  }
+  .textclearicon{
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    cursor: pointer;
+    color:#aaa;
+    font-size: 30px;
   }
 </style>

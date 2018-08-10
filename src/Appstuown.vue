@@ -17,7 +17,7 @@
       <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="attention" :rollin="rollin" :trust="trust" :mine="mine"
         :watcher="watcher" :visits="visits"></Stuinform>
       <div class="asinform" v-if="fixed"></div>
-      <Signup v-show="item=='signup'"></Signup>
+      <Signup v-show="item=='signup'" :acts="signupacts"></Signup>
       <Trends v-show="item=='trends'"></Trends>
       <Collect v-show="item=='collect'" :mine="mine"></Collect>
       <Historyview v-show="item=='historyview'"></Historyview>
@@ -47,6 +47,7 @@
       mine: true,
       watcher: [],
       visits: [],
+      signupacts:[],
       historyatt:[],
       items: [{
           number: 0,
@@ -226,7 +227,7 @@
     methods: {
       axiossignup: function (id) {
         var myDate = new Date();
-        myDate = myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate(),
+        myDate = myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate();
         this.$http({
           method: 'get',
           url: '/activity/participations/?student=' + id + '&activity__start_at__lt=' + myDate,
@@ -234,14 +235,28 @@
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
-          console.log(res.data);
+          for (let k = 0; k < 8 && k < res.data.length; k++) {
+          // 设置数组
+          var actid=res.data[k].url;
+          actid=actid.split("/");
+          var computeddate=res.data[k].activity.start_at.split('T');
+          this.$set(this.signupacts , k, {
+            head_img: res.data[k].activity.head_img,
+            heading: res.data[k].activity.heading,
+            date: computeddate[0],
+            location: res.data[k].activity.location,
+            orgavatar:res.data[k].activity.owner.avatar,
+            isover: false,
+            acturl:actid[5]
+          });
+        }
         }).catch(function (error) {
           alert("网络传输故障！");
         });
       },
       axioshistoryattend:function(id){
         var myDate = new Date();
-        myDate = myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate(),
+        myDate = myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate();
         this.$http({
           method: 'get',
           url: '/activity/participations/?student=' + id + '&activity__start_at__gt=' + myDate,
@@ -253,13 +268,13 @@
           // 设置数组
           var actid=res.data[k].url;
           actid=actid.split("/");
-          var computeddate=res.data[k].start_at.split('T');
+          var computeddate=res.data[k].activity.start_at.split('T');
           this.$set(this.historyatt , k, {
-            head_img: res.data[k].head_img,
-            heading: res.data[k].heading,
+            head_img: res.data[k].activity.head_img,
+            heading: res.data[k].activity.heading,
             date: computeddate[0],
-            location: res.data[k].location,
-            orgavatar:res.data[k].owner.avatar,
+            location: res.data[k].activity.location,
+            orgavatar:res.data[k].activity.owner.avatar,
             isover: false,
             acturl:actid[5]
           });

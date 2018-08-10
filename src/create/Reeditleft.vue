@@ -3,16 +3,13 @@
     <div class="textarea-wrapper">
       <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.key" @mouseover="mouseoverbox(i)"  @mouseout="mouseoutbox(i)">
         <v-icon class="reediticon" v-if="texticon[i] && d.title!=''" @click="sentreedit(i)">colorize</v-icon>
-        <v-icon class="clearicon" v-if="texticon[i] && d.img==''" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <v-icon class="clearicon" v-if="texticon[i] && d.title!=''" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <v-icon class="textclearicon" v-if="texticon[i] && d.img=='' && d.title==''" @click="sentdeletetext(i)">delete_outline</v-icon>
         <div class="imgeidtdiv" v-if="texticon[i] && d.img!=''">
           <v-icon class="imgreediticon" @click="rotateimg(i)">refresh</v-icon>
           <v-icon class="imgclearicon" @click="sentdeletetext(i)">delete_outline</v-icon>
         </div>
-        <div class="text-wrapper" v-if="d.img=='' && d.title==''">
-          <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" placeholder="从这里开始你的活动正文"></div>
-          <div class="text-display">{{d.text}}</div>
-          <div style="clear:both;"></div>
-        </div>
+        <div class="text-box" contenteditable="true" v-if="d.img=='' && d.title==''" placeholder="从这里开始你的活动正文" @input="oldhandleInput($event,i,d.key)">{{d.text}}</div>
         <img :src="d.img" class="img" v-if="d.img!=''"/>
         <p class="title" v-if="d.title!=''">{{d.title}}</p>
       </div>
@@ -37,7 +34,7 @@
       },
       oldhandleInput($event,i,k) {
         this.oldcontent=$event.target.innerText;
-        this.$emit("sentoldtext",this.oldcontent,i,k);
+        // this.$emit("sentoldtext",this.oldcontent,i,k);
       },
       mouseoverbox:function(i){
         this.$set(this.texticon,i,true);
@@ -73,7 +70,7 @@
   }
   .clearicon{
     position: absolute;
-    top: 20px;
+    top: 0px;
     right: 0;
     cursor: pointer;
     color:#aaa;
@@ -81,7 +78,7 @@
   }
   .reediticon{
     position: absolute;
-    top: 20px;
+    top: 0px;
     right:40px;
     cursor: pointer;
     color:#aaa;
@@ -95,8 +92,6 @@
     color: #444;
     overflow: hidden;
     padding: 0 0 25px 0;
-    position: absolute;
-    top: 0;
   }
 
   div[contenteditable]:empty:before {
@@ -133,7 +128,7 @@
   .imgeidtdiv{
     position: absolute;
     background: rgba(2,2,2,0.6);
-    top: 20px;
+    top:0px;
     right: 0;
     width: 80px;
     padding: 5px;
@@ -150,17 +145,12 @@
     margin-right: 10px;
     margin-left: 10px;
   }
-  .text-wrapper{
-    width: 100%;
-    outline: none;
-    line-height: 1.8;
-    font-size: 15px;
-    color: #444;
-    overflow: hidden;
-    padding: 0 0 25px 0;
-    position: relative;
-  }
-  .text-display{
-
+  .textclearicon{
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    cursor: pointer;
+    color:#aaa;
+    font-size: 30px;
   }
 </style>

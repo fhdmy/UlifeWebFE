@@ -2,6 +2,7 @@
   <div class="signup-wrapper">
     <v-icon color="primary" class="mr-2 today-icon iconfont icon-baoming"></v-icon>
     <span class="title">我的报名</span>
+    <p v-if="acts.length==0" style="color:#FE9246;margin:200px 0 0 290px;font-size:30px;">这里空空哒！</p>
     <div class="Homemaincontent-mainwrapper">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <v-dialog v-model="dialog" max-width="290">
@@ -42,47 +43,11 @@
 
 <script>
   export default {
+    props:["acts"],
     data: () => ({
       dialog:false,
       hover:[],
-      i:0,
-       acts: [{
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/suse.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        },
-        {
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/g20.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        },
-        {
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/success.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        },
-        {
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/ISHARE.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        }
-      ]
+      i:0
     }),
     methods: {
       largerimg: function (i) {

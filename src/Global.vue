@@ -1,8 +1,8 @@
 
 <script>
   // const BASE_URL = 'http://192.168.43.253:8000';
-  // const BASE_URL = 'http://127.0.0.1:8000';
-  const BASE_URL = 'http://192.168.101.22:8000';
+  const BASE_URL = 'http://127.0.0.1:8000';
+  // const BASE_URL = 'http://192.168.101.22:8000';
   // const BASE_URL = 'http://222.186.36.156:90';
   // const BASE_URL = 'http://222.186.36.156:8000';
   export default{
