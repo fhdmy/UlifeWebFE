@@ -26,7 +26,7 @@
       <div style="clear:both;"></div>
     </div>
     <div class="text-md-center text-lg-center text-xl-center pt-1 pb-4">
-      <a>显示更多</a>
+      <a @click="getmoreacts">显示更多</a>
     </div>
   </div>
 </template>
@@ -49,6 +49,9 @@
       openact:function(url){ 
         let routeData = this.$router.resolve({name:'appact',params:{opt:url}});
         window.open(routeData.href, '_blank');
+      },
+      getmoreacts:function(){
+        this.$emit("sendmoreacts",true);
       }
     }
   }

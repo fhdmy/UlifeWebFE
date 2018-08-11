@@ -36,6 +36,9 @@
       </v-card>
       <div style="clear:both;"></div>
     </div>
+    <div class="text-md-center text-lg-center text-xl-center pt-1 pb-4">
+      <a @click="getmoreattendacts">显示更多</a>
+    </div>
   </div>
 </template>
 
@@ -54,6 +57,9 @@
       },
       clearall:function(){
         this.acts.splice(0,this.acts.length);
+      },
+      getmoreattendacts:function(){
+        this.$emit("getmoreattendacts",true);
       }
     }
   }

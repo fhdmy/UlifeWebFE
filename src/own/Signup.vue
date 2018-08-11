@@ -38,6 +38,9 @@
       </v-card>
       <div style="clear:both;"></div>
     </div>
+    <div class="text-md-center text-lg-center text-xl-center pt-1 pb-4">
+      <a @click="getmoresignupacts">显示更多</a>
+    </div>
   </div>
 </template>
 
@@ -60,6 +63,9 @@
       },
       deleteitem:function(i){
         this.acts.splice(i,1);
+      },
+      getmoresignupacts:function(){
+        this.$emit("getmoresignupacts",true);
       }
     }
   }

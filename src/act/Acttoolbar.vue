@@ -95,6 +95,10 @@
     },
     methods: {
       collect: function () {
+        if(localStorage.getItem("token")==null){
+          alert("请先登录账号！");
+          return;
+        }
         if (!this.collected) {
           this.$http({
             method: 'post',
@@ -132,6 +136,10 @@
         }
       },
       signup: function () {
+        if(localStorage.getItem("token")==null){
+          alert("请先登录账号！");
+          return;
+        }
         if(this.answers.length!=this.requires.length){
           alert("报名信息不完整！");
           return;

@@ -14,14 +14,14 @@
     </div>
     <div v-if="fixed" style="height:64px;"></div>
     <div class="stuown-mainwrapper">
-      <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="attention" :rollin="rollin" :trust="trust" :mine="mine"
+      <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="attention" :rollin="attmax" :trust="trust" :mine="mine"
         :watcher="watcher" :visits="visits"></Stuinform>
       <div class="asinform" v-if="fixed"></div>
-      <Signup v-show="item=='signup'" :acts="signupacts"></Signup>
+      <Signup v-show="item=='signup'" :acts="signupacts" @getmoresignupacts="getmoresignupacts"></Signup>
       <Trends v-show="item=='trends'"></Trends>
-      <Collect v-show="item=='collect'" :mine="mine"></Collect>
-      <Historyview v-show="item=='historyview'"></Historyview>
-      <Historyattend v-show="item=='historyattend'" :mine="mine" :acts="historyatt"></Historyattend>
+      <Collect v-show="item=='collect'" :mine="mine" :acts="collects" @sendmorecollectacts="sendmorecollectacts"></Collect>
+      <Historyview v-show="item=='historyview'" :acts="historyvi" @sendmoreviewacts="sendmoreviewacts"></Historyview>
+      <Historyattend v-show="item=='historyattend'" :mine="mine" :acts="historyatt" @getmoreattendacts="getmoreattendacts"></Historyattend>
       <Stumsg v-show="item=='stumsg'"></Stumsg>
       <div style="clear:both;"></div>
     </div>
@@ -41,65 +41,27 @@
       name: '',
       item: 'signup',
       offsetTop: 0,
-      attention: 10,
-      rollin: 15,
+      attention: 0,
       trust: 100,
       mine: true,
       watcher: [],
       visits: [],
-      signupacts:[],
-      historyatt:[],
-      items: [{
-          number: 0,
-          imgsrc: '/src/assets/suselogo.jpg',
-          name: '经济学院学生会'
-        },
-        {
-          number: 1,
-          imgsrc: '/src/assets/xnick.jpg',
-          name: 'Xnick'
-        },
-        {
-          number: 2,
-          imgsrc: '/src/assets/suselogo.jpg',
-          name: '经济学院学生会'
-        },
-        {
-          number: 3,
-          imgsrc: '/src/assets/xnick.jpg',
-          name: 'Xnick'
-        },
-        {
-          number: 4,
-          imgsrc: '/src/assets/xnick.jpg',
-          name: 'Xnick'
-        },
-        {
-          number: 5,
-          imgsrc: '/src/assets/suselogo.jpg',
-          name: '经济学院学生会'
-        },
-        {
-          number: 6,
-          imgsrc: '/src/assets/xnick.jpg',
-          name: 'Xnick'
-        },
-        {
-          number: 7,
-          imgsrc: '/src/assets/suselogo.jpg',
-          name: '经济学院学生会'
-        },
-        {
-          number: 8,
-          imgsrc: '/src/assets/xnick.jpg',
-          name: 'Xnick'
-        },
-        {
-          number: 9,
-          imgsrc: '/src/assets/xnick.jpg',
-          name: 'Xnick'
-        }
-      ]
+      signupacts: [],
+      moresignupacts:'',
+      signupmax:0,
+      presentsignup:0,
+      historyatt: [],
+      moreatt:'',
+      attmax:0,
+      presentatt:0,
+      historyvi: [], //历史参加的数组
+      moreview: '',
+      presentview: 0,
+      viewmax: 0,
+      collects: [],
+      morecollects: '',
+      presentcollects:0,
+      collectmax:0
     }),
     created: function () {
       switch (this.opt) {
@@ -186,13 +148,19 @@
             number: k
           });
         }
+        this.attention = res.data.length;
       }).catch(function (error) {
         alert("网络传输故障！");
       });
 
       // 报名
       this.axiossignup(id);
+      // 历史参加
       this.axioshistoryattend(id);
+      // 历史浏览
+      this.axioshistoryview(id);
+      // 收藏
+      this.axioscollect(id);
     },
     watch: {
       '$route' (to, from) {
@@ -227,7 +195,7 @@
     methods: {
       axiossignup: function (id) {
         var myDate = new Date();
-        myDate = myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate();
+        myDate = myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate();
         this.$http({
           method: 'get',
           url: '/activity/participations/?student=' + id + '&activity__start_at__lt=' + myDate,
@@ -235,28 +203,31 @@
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
-          for (let k = 0; k < 8 && k < res.data.length; k++) {
-          // 设置数组
-          var actid=res.data[k].url;
-          actid=actid.split("/");
-          var computeddate=res.data[k].activity.start_at.split('T');
-          this.$set(this.signupacts , k, {
-            head_img: res.data[k].activity.head_img,
-            heading: res.data[k].activity.heading,
-            date: computeddate[0],
-            location: res.data[k].activity.location,
-            orgavatar:res.data[k].activity.owner.avatar,
-            isover: false,
-            acturl:actid[5]
-          });
-        }
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].activity.url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].activity.start_at.split('T');
+            this.$set(this.signupacts, k, {
+              head_img: res.data.results[k].activity.head_img,
+              heading: res.data.results[k].activity.heading,
+              date: computeddate[0],
+              location: res.data.results[k].activity.location,
+              orgavatar: res.data.results[k].activity.owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+          }
+          this.moresignupacts = res.data.next;
+          this.presentsignup=res.data.results.length;
+          this.signupmax = res.data.results.length;
         }).catch(function (error) {
           alert("网络传输故障！");
         });
       },
-      axioshistoryattend:function(id){
+      axioshistoryattend: function (id) {
         var myDate = new Date();
-        myDate = myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate();
+        myDate = myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate();
         this.$http({
           method: 'get',
           url: '/activity/participations/?student=' + id + '&activity__start_at__gt=' + myDate,
@@ -264,21 +235,84 @@
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
-          for (let k = 0; k < 8 && k < res.data.length; k++) {
-          // 设置数组
-          var actid=res.data[k].url;
-          actid=actid.split("/");
-          var computeddate=res.data[k].activity.start_at.split('T');
-          this.$set(this.historyatt , k, {
-            head_img: res.data[k].activity.head_img,
-            heading: res.data[k].activity.heading,
-            date: computeddate[0],
-            location: res.data[k].activity.location,
-            orgavatar:res.data[k].activity.owner.avatar,
-            isover: false,
-            acturl:actid[5]
-          });
-        }
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].activity.url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].activity.start_at.split('T');
+            this.$set(this.historyatt, k, {
+              head_img: res.data.results[k].activity.head_img,
+              heading: res.data.results[k].activity.heading,
+              date: computeddate[0],
+              location: res.data.results[k].activity.location,
+              orgavatar: res.data.results[k].activity.owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+            this.moreatt = res.data.next;
+            this.presentatt=res.data.results.length;
+            this.attmax = res.data.results.length;
+          }
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      axioshistoryview: function (id) {
+        this.$http({
+          method: 'get',
+          url: '/activity/browsering-histories/?watcher=' + id,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].target.url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].target.start_at.split('T');
+            this.$set(this.historyvi, k, {
+              head_img: res.data.results[k].target.head_img,
+              heading: res.data.results[k].target.heading,
+              date: computeddate[0],
+              location: res.data.results[k].target.location,
+              orgavatar: res.data.results[k].target.owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+            this.moreview = res.data.next;
+            this.presentview=res.data.results.length;
+            this.viewmax=res.data.count;
+          }
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      axioscollect: function (id) {
+        this.$http({
+          method: 'get',
+          url: '/activity/bookmarkings/?watcher=' + id,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].target.url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].target.start_at.split('T');
+            this.$set(this.collects, k, {
+              head_img: res.data.results[k].target.head_img,
+              heading: res.data.results[k].target.heading,
+              date: computeddate[0],
+              location: res.data.results[k].target.location,
+              orgavatar: res.data.results[k].target.owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+            this.morecollects = res.data.next;
+            this.presentcollects=res.data.results.length;
+            this.collectmax=res.data.count;
+          }
         }).catch(function (error) {
           alert("网络传输故障！");
         });
@@ -307,7 +341,139 @@
       },
       onScroll(e) {
         this.offsetTop = window.pageYOffset || document.documentElement.scrollTop;
-      }
+      },
+      sendmoreviewacts: function () {
+        if (this.viewmax == this.presentview) {
+          alert("已经没有更多活动啦！");
+          return;
+        }
+        this.$http({
+          method: 'get',
+          url: this.moreview,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].target.url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].target.start_at.split('T');
+            this.$set(this.historyvi, this.presentview + k, {
+              head_img: res.data.results[k].target.head_img,
+              heading: res.data.results[k].target.heading,
+              date: computeddate[0],
+              location: res.data.results[k].target.location,
+              orgavatar: res.data.results[k].target.owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+          }
+          this.moreview=res.data.next;
+          this.presentview += res.data.results.length;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      sendmorecollectacts: function () {
+        if (this.collectmax == this.presentcollects) {
+          alert("已经没有更多活动啦！");
+          return;
+        }
+        this.$http({
+          method: 'get',
+          url: this.morecollects,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].target.url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].target.start_at.split('T');
+            this.$set(this.collects, this.presentcollects + k, {
+              head_img: res.data.results[k].target.head_img,
+              heading: res.data.results[k].target.heading,
+              date: computeddate[0],
+              location: res.data.results[k].target.location,
+              orgavatar: res.data.results[k].target.owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+          }
+          this.morecollects=res.data.next;
+          this.presentcollects += res.data.results.length;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      getmoreattendacts: function () {
+        if (this.attmax == this.presentatt) {
+          alert("已经没有更多活动啦！");
+          return;
+        }
+        this.$http({
+          method: 'get',
+          url: this.moreatt,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].activity.url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].activity.start_at.split('T');
+            this.$set(this.historyatt, this.presentatt + k, {
+              head_img: res.data.results[k].activity.head_img,
+              heading: res.data.results[k].activity.heading,
+              date: computeddate[0],
+              location: res.data.results[k].activity.location,
+              orgavatar: res.data.results[k].activity.owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+          }
+          this.moreatt=res.data.next;
+          this.presentatt+= res.data.results.length;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      getmoresignupacts: function () {
+        if (this.signupmax == this.presentsignup) {
+          alert("已经没有更多活动啦！");
+          return;
+        }
+        this.$http({
+          method: 'get',
+          url: this.moresignupacts,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].activity.url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].activity.start_at.split('T');
+            this.$set(this.signupacts, this.presentsignup + k, {
+              head_img: res.data.results[k].activity.head_img,
+              heading: res.data.results[k].activity.heading,
+              date: computeddate[0],
+              location: res.data.results[k].activity.location,
+              orgavatar: res.data.results[k].activity.owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+          }
+          this.moresignupacts=res.data.next;
+          this.presentsignup+= res.data.results.length;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
     }
   }
 
