@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="main-wrapper">
-      <Reeditleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit"></Reeditleft>
+      <Reeditleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted"></Reeditleft>
       <Createinformright ref="rightchild" @sentavatar="getavatar" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
         @senttext="gettext" @reeditparse="getreeditfromright" :avatar0="avatar"></Createinformright>
       <div style="clear:both;"></div>
@@ -102,7 +102,8 @@
       disX: 0,
       disY: 0,
       slidebtn: [],
-      mousemoveflag: false
+      mousemoveflag: false,
+      deleted:false
     }),
     computed: {
       havetopimg: function () {
@@ -118,6 +119,8 @@
       this.url1 = localStorage.getItem("org_url");
       this.computeddata=JSON.parse(sessionStorage.getItem("lists"));
       this.parallaxpath=sessionStorage.getItem("bg_img");
+      this.cal=this.computeddata.length;
+      this.key=this.cal;
     },
     methods: {
       onScroll(e) {
@@ -309,6 +312,7 @@
           this.computeddata[k].number = k;
         }
         this.cal--;
+        this.deleted=!this.deleted;
       },
       getreedit: function (d) {
         this.reedititem = d;
