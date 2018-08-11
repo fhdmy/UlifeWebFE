@@ -96,7 +96,7 @@
       // 获取活动
       this.$http({
         method: 'get',
-        url: '/activity/activities/?ordering=-created_at',
+        url: '/activity/activities/?ordering=-created_at&is_published=True',
         // headers: {
         //   "Authorization": "Token " + localStorage.getItem("token")
         // }
@@ -113,7 +113,8 @@
             location: res.data.results[k].location,
             orgavatar: res.data.results[k].owner.avatar,
             isover: false,
-            acturl: actid[5]
+            acturl: actid[5],
+            is_ended:res.data.results[k].is_ended
           });
           this.moreacts = res.data.next;
           this.presentacts = res.data.results.length;
@@ -169,7 +170,8 @@
               location: res.data.results[k].location,
               orgavatar: res.data.results[k].owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
+              is_ended:res.data.results[k].is_ended,
             });
           }
           this.moreacts = res.data.next;

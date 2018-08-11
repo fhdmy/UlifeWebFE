@@ -30,6 +30,7 @@
             </div>
           </router-link>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
+          <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
             <img :src="act.orgimgpath" :alt="act.orgname">
           </v-avatar>
@@ -85,6 +86,17 @@
     max-width: 100%;
     max-width: 100%;
     cursor: pointer;
+  }
+
+  .finishedimg{
+    position: absolute;
+    bottom: 0;
+    right: 64px;
+    z-index: 2;
+    height: 80px;
+    width: 80px;
+    max-height: 100%;
+    max-width:100%;
   }
 
   .anim {

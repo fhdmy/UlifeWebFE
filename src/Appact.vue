@@ -14,7 +14,7 @@
           </v-avatar>
         </router-link>
         <p class="act-title display-1" v-if="!fixed">{{title}}</p>
-        <Acttoolbar :org="org" :launchdate="launchdate" :isfinished="isfinished" :stars="stars" :fixed="fixed" :title="title" :collected="collected"
+        <Acttoolbar :org="org" :launchdate="launchdate" :isfinished="is_ended" :stars="stars" :fixed="fixed" :title="title" :collected="collected"
           :participation="participation" :routerid="routerid" :acturl="opt" :collecturl="collecturl" :participationurl="participationurl"
           :requires="requires"></Acttoolbar>
       </div>
@@ -52,8 +52,7 @@
       org: '',
       orgurl: '',
       launchdate: '',
-      isfinished: true,
-      stars: 4.5,
+      stars: 5,
       introduction: '',
       date: '',
       time: '',
@@ -61,6 +60,7 @@
       type: '',
       interest: '',
       lists: [],
+      is_ended:false,
       customlists: [{
           name: 'Xnick',
           img: '/src/assets/xnick.jpg',
@@ -113,6 +113,7 @@
         //   "Authorization": "Token " + localStorage.getItem("token")
         // }
       }).then((res) => {
+        console.log(res.data);
         var computeddate = res.data.created_at.split('T');
         var computedstart = res.data.start_at.split('T');
         var comutedstarttime = computedstart[1].split(':');
@@ -130,6 +131,7 @@
         this.interest = res.data.hobby;
         this.lists = JSON.parse(res.data.demonstration);
         this.requires = JSON.parse(res.data.requirement);
+        this.is_ended=res.data.is_ended;
       }).catch(function (error) {
         alert("网络传输故障！");
       });

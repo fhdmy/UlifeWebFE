@@ -72,7 +72,9 @@ import Createinform from './Createinform.vue'
 import Reeditleft from './create/Reeditleft.vue'
 import Createinformright from './create/Createinformright.vue'
 import Retext from './home/Retext.vue'
+import Draftedit from './Draftedit.vue'
 import 'vuetify/dist/vuetify.min.css'
+import Reeditright from './create/Reeditright.vue'
 Vue.use(Vuetify, {
   theme: {  
     primary: '#E03636',
@@ -151,6 +153,8 @@ Vue.component("Createinform",Createinform)
 Vue.component("Reeditleft",Reeditleft)
 Vue.component("Createinformright",Createinformright)
 Vue.component("Retext",Retext)
+Vue.component("Draftedit",Draftedit)
+Vue.component("Reeditright",Reeditright)
 const routes = [
   { path: '/', component: Apphome},
   { path: '/Login', component: Login },
@@ -172,7 +176,9 @@ const routes = [
   { path: '/Createact/:org', component: Createact,name:'createact',props:true},
   { path: '/Editact', component: Editact },
   { path: '/Createinform/:opt', component: Createinform,name:'createinform',props:true},
-  { path: '/Orgactview', component: Orgactview}
+  { path: '/Orgactview', component: Orgactview},
+  { path: '/Draftedit/:opt/:org', component: Draftedit,name:'draftedit',props:true},
+  { path: '/Reeditright', component: Reeditright},
 ]
 const router = new VueRouter({
   mode: 'history',

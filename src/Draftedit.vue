@@ -26,9 +26,9 @@
       <v-text-field v-model="title" :rules="rules" counter="25" box label="填写活动标题" class="add-acttitle"></v-text-field>
     </div>
     <div class="main-wrapper">
-      <Createleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit"></Createleft>
-      <Createright ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
-        @senttext="gettext" @reeditparse="getreeditfromright"></Createright>
+      <Reeditleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted"></Reeditleft>
+      <Reeditright ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
+        @senttext="gettext" @reeditparse="getreeditfromright"></Reeditright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -78,7 +78,7 @@
 <script>
   // import Vue from 'vue'
   export default {
-    props:['org'],
+    props:['opt','org'],
     data: () => ({
       y: 'top',
       snackbar1: false,
@@ -119,7 +119,8 @@
       disX: 0,
       disY: 0,
       slidebtn: [],
-      mousemoveflag: false
+      mousemoveflag: false,
+      deleted:false
     }),
     computed: {
       havetopimg: function () {
@@ -333,10 +334,6 @@
         //   alert("信息未填写完整！");
         //   return;
         // }
-        if(this.title==''){
-          alert("请填写标题！");
-          return;
-        }
         if (this.acturl == '') {//如果创建新活动
           this.$http({
             method: 'post',

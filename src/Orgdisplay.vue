@@ -1,14 +1,16 @@
 <template>
   <v-content style="background: #f3f4f5;" v-scroll="onScroll">
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
-      <Stutoolbar></Stutoolbar>
+      <Toolbar v-if="type=='none'"></Toolbar>
+      <Stutoolbar v-if="type=='user'" :avatar="avatarurl"></Stutoolbar>
+      <Orgtoolbar v-if="type=='org'" :avatar="avatarurl"></Orgtoolbar>
     </div>
     <img :src="parallaxpath" class="large-img"/>
     <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
       <div class="middle-wrapper">
         <Orgdisplaytoolbar :itembottom="item" :mine="mine"></Orgdisplaytoolbar>
         <v-avatar size="100">
-          <img :src="img">
+          <img :src="org_img">
         </v-avatar>
       </div>
     </div>
@@ -31,8 +33,10 @@
   export default {
     props: ['opt'],
     data: () => ({
+      type:'none',
+      avatarurl:'',
+      org_img:'',
       parallaxpath: '/src/assets/stuownbg.jpg',
-      img: '/src/assets/suselogo.jpg',
       name: '经济学院学生会',
       item: 'inform',
       offsetTop: 0,
@@ -199,6 +203,16 @@
         case 'trends':
           this.item = 'trends';
           break;
+      }
+
+      // toolbar
+      var url0 = localStorage.getItem("user_url");
+      var url1 = localStorage.getItem("org_url");
+      this.avatarurl=sessionStorage.getItem("avatar");
+      if (url0 != null) {
+        this.type = 'user';
+      } else if (url1 != null) {
+        this.type = 'org';
       }
     },
     watch: {

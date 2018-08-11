@@ -28,6 +28,7 @@
             </div>
           </router-link>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
+          <img src="/src/assets/finished.png" class="finishedimg"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
             <img :src="act.orgavatar">
           </v-avatar>
@@ -56,7 +57,17 @@
         this.acts[i].isover=false;
       },
       clearall:function(){
-        this.acts.splice(0,this.acts.length);
+        this.$http({
+          method: 'delete',
+          url: '/activity/activities/'+this.acts[i].acturl+'/',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          this.acts.splice(0,this.acts.length);
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
       },
       getmoreattendacts:function(){
         this.$emit("getmoreattendacts",true);
@@ -80,6 +91,18 @@
     max-width: 100%;
     cursor: pointer;
   }
+
+  .finishedimg{
+    position: absolute;
+    bottom: 0;
+    right: 64px;
+    z-index: 2;
+    height: 80px;
+    width: 80px;
+    max-height: 100%;
+    max-width:100%;
+  }
+
 
   .anim {
     -webkit-transition: all 1200ms ease-out;

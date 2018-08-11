@@ -63,13 +63,13 @@
       },
       nextimg: function (n) {
         if (n + 1 < this.items.length)
-          return this.items[n + 1].imgsrc;
+          return this.items[n + 1].orgavatar;
         else
           return 'none';
       },
       nextname: function (n) {
         if (n + 1 < this.items.length)
-          return this.items[n + 1].name;
+          return this.items[n + 1].orgname;
       },
       leftchange:function(){
         if(this.movejudge==-1 || this.movejudge==0)

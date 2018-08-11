@@ -3,7 +3,7 @@
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Orgtoolbar :avatar="img"></Orgtoolbar>
     </div>
-    <img :src="parallaxpath" class="large-img"/>
+    <img :src="parallaxpath" class="large-img" />
     <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
       <div class="middle-wrapper">
         <Orgowntoolbar :itembottom="item"></Orgowntoolbar>
@@ -14,13 +14,14 @@
     </div>
     <div v-if="fixed" style="height:64px;"></div>
     <div class="stuown-mainwrapper">
-      <Orginform :class="{'informfixed':fixed}" :name="name" :attention="attention" :stars="stars" :acts="acts" :visits="visits" :mine="mine" :orgurl="orgurl" :list="lists" :bg_img="parallaxpath"></Orginform>
+      <Orginform :class="{'informfixed':fixed}" :name="name" :attention="attention" :stars="stars" :acts="myactsmax" :visits="visits"
+        :mine="mine" :orgurl="orgurl" :list="lists" :bg_img="parallaxpath"></Orginform>
       <div class="asinform" v-if="fixed"></div>
       <Inform v-show="item=='inform'" :mine="mine" :lists="lists"></Inform>
-      <Draft v-show="item=='draft'"></Draft>
+      <Draft v-show="item=='draft'" :acts="draft" @getmoredraftacts="getmoredraftacts"></Draft>
       <Create v-show="item=='create'" :org_name="name"></Create>
-      <Orgmyact v-show="item=='myact'"></Orgmyact>
-      <Mysignup v-show="item=='mysignup'"></Mysignup>
+      <Orgmyact v-show="item=='myact'" :acts="myacts" @getmoremyacts="getmoremyacts"></Orgmyact>
+      <Mysignup v-show="item=='mysignup'" :acts="signup" @getmoresignup="getmoresignup"></Mysignup>
       <Orgmsg v-show="item=='orgmsg'"></Orgmsg>
       <div style="clear:both;"></div>
     </div>
@@ -35,18 +36,29 @@
   export default {
     props: ['opt'],
     data: () => ({
-      parallaxpath: '',
-      img: '',
+      parallaxpath: '/src/assets/stuownbg.jpg',
+      img: '/src/assets/defaultavatar.png',
       name: '',
       item: 'inform',
       offsetTop: 0,
       attention: 10,
-      stars:5,
-      acts: 16,
-      mine:true,
-      visits:[],
-      orgurl:'',
-      lists:[],
+      stars: 5,
+      mine: true,
+      visits: [],
+      orgurl: '',
+      lists: [],
+      draft: [],
+      draftmax: 0,
+      moredraft: '',
+      presentdraft: 0,
+      myacts:[],
+      myactsmax:0,
+      presentmyacts:0,
+      moremyacts:'',
+      signup:[],
+      moresignup:'',
+      signupmax:0,
+      presentsignup:0
     }),
     created: function () {
       switch (this.opt) {
@@ -84,14 +96,14 @@
       }).then((res) => {
         this.parallaxpath = res.data.bg_img;
         this.name = res.data.org_name;
-        this.stars=res.data.stars;
-        var url=res.data.url;
-        this.lists=JSON.parse(res.data.demonstration);
-        url=url.split("/");
-        this.orgurl=url[5];
+        this.stars = res.data.stars;
+        var url = res.data.url;
+        this.lists = JSON.parse(res.data.demonstration);
+        url = url.split("/");
+        this.orgurl = url[5];
         // 访客
-        var user=res.data.user;
-        user=user.split("/");
+        var user = res.data.user;
+        user = user.split("/");
         this.$http({
           method: 'get',
           url: '/message/visitings/?watcher=' + user[5],
@@ -101,7 +113,7 @@
         }).then((res) => {
           for (let k = 0; k < res.data.length; k++) {
             // 是学生
-            if(res.data[k].target.student!=null){
+            if (res.data[k].target.student != null) {
               this.$set(this.visits, k, {
                 avatar: res.data[k].target.student.avatar,
                 name: res.data[k].target.student.nickname,
@@ -110,7 +122,7 @@
               });
             }
             // 是组织
-            if(res.data[k].target.org!=null){
+            if (res.data[k].target.org != null) {
               this.$set(this.visits, k, {
                 avatar: res.data[k].target.org.avatar,
                 name: res.data[k].target.org.org_name,
@@ -125,6 +137,13 @@
       }).catch(function (error) {
         alert("网络传输故障！");
       });
+
+      // 草稿箱
+      this.axiosdraft(id);
+      // 我的活动
+      this.axiosmyacts(id);
+      // 报名
+      this.axiossignup(id);
     },
     watch: {
       '$route' (to, from) {
@@ -143,22 +162,207 @@
       },
       fixed: function () {
         var k = this.offsetTop;
-        if (k >=664) {
+        if (k >= 664) {
           return true;
-        }
-        else
+        } else
           return false;
       },
-      display:function(){
+      display: function () {
         var k = this.offsetTop;
-        if(k<589){
+        if (k < 589) {
           return 'block';
-        }
-        else
+        } else
           return 'none';
       }
     },
     methods: {
+      axiosdraft: function (id) {
+        this.$http({
+          method: 'get',
+          url: '/activity/activities/?owner=' + id + '&is_published=False',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            var actid = res.data.results[k].url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].start_at.split('T');
+            this.$set(this.draft, k, {
+              head_img: res.data.results[k].head_img,
+              heading: res.data.results[k].heading,
+              date: computeddate[0],
+              location: res.data.results[k].location,
+              orgavatar: res.data.results[k].owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+          }
+          this.moredraft = res.data.next;
+          this.presentdraft = res.data.results.length;
+          this.draftmax = res.data.count;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      axiosmyacts: function (id) {
+        this.$http({
+          method: 'get',
+          url: '/activity/activities/?owner=' + id + '&is_published=True',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            var actid = res.data.results[k].url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].start_at.split('T');
+            this.$set(this.myacts, k, {
+              head_img: res.data.results[k].head_img,
+              heading: res.data.results[k].heading,
+              date: computeddate[0],
+              location: res.data.results[k].location,
+              orgavatar: res.data.results[k].owner.avatar,
+              isover: false,
+              acturl: actid[5],
+              is_ended:res.data.results[k].is_ended,
+            });
+          }
+          this.moremyacts = res.data.next;
+          this.presentmyacts = res.data.results.length;
+          this.myactsmax = res.data.count;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      axiossignup: function (id) {
+        this.$http({
+          method: 'get',
+          url: '/activity/activities/?owner=' + id + '&is_ended=False&is_published=True',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            var actid = res.data.results[k].url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].start_at.split('T');
+            this.$set(this.signup, k, {
+              head_img: res.data.results[k].head_img,
+              heading: res.data.results[k].heading,
+              date: computeddate[0],
+              location: res.data.results[k].location,
+              orgavatar: res.data.results[k].owner.avatar,
+              isover: false,
+              acturl: actid[5],
+            });
+          }
+          this.moresignup = res.data.next;
+          this.presentsignup = res.data.results.length;
+          this.signupmax = res.data.count;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      getmoredraftacts: function () {
+        if (this.draftmax == this.presentdraft) {
+          alert("已经没有更多活动啦！");
+          return;
+        }
+        this.$http({
+          method: 'get',
+          url: this.moredraft,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].start_at.split('T');
+            this.$set(this.draft, this.presentdraft + k, {
+              head_img: res.data.results[k].head_img,
+              heading: res.data.results[k].heading,
+              date: computeddate[0],
+              location: res.data.results[k].location,
+              orgavatar: res.data.results[k].owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+          }
+          this.moredraft = res.data.next;
+          this.presentdraft += res.data.results.length;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      getmoremyacts: function () {
+        if (this.myactsmax == this.presentmyacts) {
+          alert("已经没有更多活动啦！");
+          return;
+        }
+        this.$http({
+          method: 'get',
+          url: this.moremyacts,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].start_at.split('T');
+            this.$set(this.myacts, this.presentmyacts + k, {
+              head_img: res.data.results[k].head_img,
+              heading: res.data.results[k].heading,
+              date: computeddate[0],
+              location: res.data.results[k].location,
+              orgavatar: res.data.results[k].owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+          }
+          this.moremyacts = res.data.next;
+          this.presentmyacts += res.data.results.length;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      getmoresignup: function () {
+        if (this.signupmax == this.presentsignup) {
+          alert("已经没有更多活动啦！");
+          return;
+        }
+        this.$http({
+          method: 'get',
+          url: this.moresignup,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].start_at.split('T');
+            this.$set(this.signup, this.presentsignup + k, {
+              head_img: res.data.results[k].head_img,
+              heading: res.data.results[k].heading,
+              date: computeddate[0],
+              location: res.data.results[k].location,
+              orgavatar: res.data.results[k].owner.avatar,
+              isover: false,
+              acturl: actid[5]
+            });
+          }
+          this.moresignup = res.data.next;
+          this.presentsignup += res.data.results.length;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
       chooseitem: function (e) {
         switch (e) {
           case 'inform':
@@ -228,9 +432,9 @@
     position: relative;
   }
 
-  .owntoolbar-wrapper{
+  .owntoolbar-wrapper {
     margin-top: -6px;
-    width:100%;
+    width: 100%;
   }
 
   .v-avatar {
@@ -246,11 +450,13 @@
     margin: 0 auto 150px auto;
     position: relative;
   }
-  .large-img{
+
+  .large-img {
     margin-top: 64px;
     width: 100%;
     height: 600px;
-    max-height:100%;
-    max-width:100%;
+    max-height: 100%;
+    max-width: 100%;
   }
+
 </style>

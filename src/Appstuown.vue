@@ -18,7 +18,7 @@
         :watcher="watcher" :visits="visits"></Stuinform>
       <div class="asinform" v-if="fixed"></div>
       <Signup v-show="item=='signup'" :acts="signupacts" @getmoresignupacts="getmoresignupacts"></Signup>
-      <Trends v-show="item=='trends'"></Trends>
+      <Trends v-show="item=='trends'" :acts="trendacts" @getmoretrendsacts="getmoretrendsacts"></Trends>
       <Collect v-show="item=='collect'" :mine="mine" :acts="collects" @sendmorecollectacts="sendmorecollectacts"></Collect>
       <Historyview v-show="item=='historyview'" :acts="historyvi" @sendmoreviewacts="sendmoreviewacts"></Historyview>
       <Historyattend v-show="item=='historyattend'" :mine="mine" :acts="historyatt" @getmoreattendacts="getmoreattendacts"></Historyattend>
@@ -36,8 +36,8 @@
   export default {
     props: ['opt'],
     data: () => ({
-      parallaxpath: '',
-      img: '',
+      parallaxpath: '/src/assets/stuownbg.jpg',
+      img: '/src/assets/defaultavatar.png',
       name: '',
       item: 'signup',
       offsetTop: 0,
@@ -61,7 +61,11 @@
       collects: [],
       morecollects: '',
       presentcollects:0,
-      collectmax:0
+      collectmax:0,
+      trendacts:[],
+      trendmax:0,
+      presenttrend:0,
+      moretrend:''
     }),
     created: function () {
       switch (this.opt) {
@@ -141,14 +145,20 @@
         }
       }).then((res) => {
         for (let k = 0; k < res.data.length; k++) {
+          var org_url=res.data[k].target.url;
+          var org_id=org_url.split("/");
+          org_id=org_id[5];
           this.$set(this.watcher, k, {
             orgavatar: res.data[k].target.avatar,
             orgname: res.data[k].target.org_name,
-            orgurl: res.data[k].target.url,
-            number: k
+            orgurl: org_url,
+            number: k,
+            orgid:org_id
           });
         }
         this.attention = res.data.length;
+        // 动态
+        this.axiostrends(id);
       }).catch(function (error) {
         alert("网络传输故障！");
       });
@@ -215,12 +225,13 @@
               location: res.data.results[k].activity.location,
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
+              is_ended:res.data.results[k].activity.is_ended,
             });
           }
           this.moresignupacts = res.data.next;
           this.presentsignup=res.data.results.length;
-          this.signupmax = res.data.results.length;
+          this.signupmax = res.data.count;
         }).catch(function (error) {
           alert("网络传输故障！");
         });
@@ -247,11 +258,11 @@
               location: res.data.results[k].activity.location,
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
             });
             this.moreatt = res.data.next;
             this.presentatt=res.data.results.length;
-            this.attmax = res.data.results.length;
+            this.attmax = res.data.count;
           }
         }).catch(function (error) {
           alert("网络传输故障！");
@@ -277,7 +288,8 @@
               location: res.data.results[k].target.location,
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
+              is_ended:res.data.results[k].target.is_ended,
             });
             this.moreview = res.data.next;
             this.presentview=res.data.results.length;
@@ -307,11 +319,52 @@
               location: res.data.results[k].target.location,
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
+              is_ended:res.data.results[k].target.is_ended,
+              bookmarkingurl:res.data.results[k].url
             });
             this.morecollects = res.data.next;
             this.presentcollects=res.data.results.length;
             this.collectmax=res.data.count;
+          }
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      axiostrends: function (id) {
+        var ids="";
+        for(let j=0;j<this.watcher.length;j++){
+          if(j==this.watcher.length-1){
+            ids=ids+this.watcher[j].orgid;
+            break;
+          }
+          ids=ids+this.watcher[j].orgid+',';
+        }
+        this.$http({
+          method: 'get',
+          url: '/activity/activities/?owner__in' + ids,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].start_at.split('T');
+            this.$set(this.trendacts, k, {
+              head_img: res.data.results[k].head_img,
+              heading: res.data.results[k].heading,
+              date: computeddate[0],
+              location: res.data.results[k].location,
+              orgavatar: res.data.results[k].owner.avatar,
+              isover: false,
+              acturl: actid[5],
+              is_ended:res.data.results[k].is_ended,
+            });
+            this.moretrend = res.data.next;
+            this.presenttrend=res.data.results.length;
+            this.trendmax=res.data.count;
           }
         }).catch(function (error) {
           alert("网络传输故障！");
@@ -366,7 +419,8 @@
               location: res.data.results[k].target.location,
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
+              is_ended:res.data.results[k].target.is_ended,
             });
           }
           this.moreview=res.data.next;
@@ -399,7 +453,8 @@
               location: res.data.results[k].target.location,
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
+              is_ended:res.data.results[k].target.is_ended,
             });
           }
           this.morecollects=res.data.next;
@@ -465,11 +520,46 @@
               location: res.data.results[k].activity.location,
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
+              is_ended:res.data.results[k].activity.is_ended,
             });
           }
           this.moresignupacts=res.data.next;
           this.presentsignup+= res.data.results.length;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
+      },
+      getmoretrendsacts: function () {
+        if (this.trendmax == this.presenttrend) {
+          alert("已经没有更多活动啦！");
+          return;
+        }
+        this.$http({
+          method: 'get',
+          url: this.moretrend,
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }).then((res) => {
+          for (let k = 0; k < res.data.results.length; k++) {
+            // 设置数组
+            var actid = res.data.results[k].url;
+            actid = actid.split("/");
+            var computeddate = res.data.results[k].start_at.split('T');
+            this.$set(this.trendacts, this.presenttrend + k, {
+              head_img: res.data.results[k].head_img,
+              heading: res.data.results[k].heading,
+              date: computeddate[0],
+              location: res.data.results[k].location,
+              orgavatar: res.data.results[k].owner.avatar,
+              isover: false,
+              acturl: actid[5],
+              is_ended:res.data.results[k].is_ended,
+            });
+          }
+          this.moretrend=res.data.next;
+          this.presenttrend += res.data.results.length;
         }).catch(function (error) {
           alert("网络传输故障！");
         });

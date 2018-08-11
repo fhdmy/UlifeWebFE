@@ -2,71 +2,41 @@
   <div class="signup-wrapper">
     <v-icon color="primary" class="mr-2 today-icon">public</v-icon>
     <span class="title">关注动态</span>
+    <p v-if="acts.length==0" style="color:#FE9246;margin:200px 0 0 290px;font-size:30px;">这里空空哒！</p>
     <div class="Homemaincontent-mainwrapper">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <div class="act-cardd-media">
-          <router-link to="/Appact"><img :src="act.actimgpath" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
+          <router-link to="/Appact"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
         </div>
         <v-card-title primary-title class="pb-2">
           <router-link to="/Appact">
-            <h3 class="title mb-2 actname">{{act.actname}}</h3>
+            <h3 class="title mb-2 actname">{{act.heading}}</h3>
             <div class="headline-leftcontent">
-              <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.acttime}}
-              <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.actplace}}
+              <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.date}}
+              <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
           </router-link>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
+          <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
-            <img :src="act.orgimgpath" :alt="act.orgname">
+            <img :src="act.orgavatar">
           </v-avatar>
           </router-link>
         </v-card-title>
       </v-card>
       <div style="clear:both;"></div>
     </div>
+    <div class="text-md-center text-lg-center text-xl-center pt-1 pb-4">
+      <a @click="getmoretrendsacts">显示更多</a>
+    </div>
   </div>
 </template>
 
 <script>
   export default {
+    props:['acts'],
     data: () => ({
-       acts: [{
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/suse.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        },
-        {
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/g20.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        },
-        {
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/success.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        },
-        {
-          actname: 'ISHARE真人图书馆',
-          orgname: '经济学院学生会',
-          orgimgpath: '/src/assets/suselogo.jpg',
-          actimgpath: '/src/assets/ISHARE.jpg',
-          acttime: '2018年1月5日',
-          actplace: '东区平台',
-          isover:false
-        }
-      ]
+       
     }),
     methods: {
       largerimg: function (i) {
@@ -74,6 +44,9 @@
       },
       smallerimg: function (i) {
         this.acts[i].isover=false;
+      },
+      getmoretrendsacts:function(){
+        this.$emit("getmoretrendsacts",true);
       }
     }
   }
@@ -94,6 +67,18 @@
     max-width: 100%;
     cursor: pointer;
   }
+
+  .finishedimg{
+    position: absolute;
+    bottom: 0;
+    right: 64px;
+    z-index: 2;
+    height: 80px;
+    width: 80px;
+    max-height: 100%;
+    max-width:100%;
+  }
+
 
   .anim {
     -webkit-transition: all 1200ms ease-out;
