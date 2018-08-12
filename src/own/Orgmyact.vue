@@ -17,7 +17,7 @@
         </v-dialog>
         <v-dialog v-model="actstop" max-width="290" v-if="!acts[i].is_ended">
           <v-card>
-            <v-card-text>你确定要删除它？</v-card-text>
+            <v-card-text>你确定要结束这个活动？</v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" flat="flat" @click="actstop = false">点错了</v-btn> 
@@ -30,18 +30,18 @@
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
         <div class="act-cardd-media">
-          <router-link to="/Appact"><img :src="act.head_img" class="anim headimg" :class="{'v-imglarger':act.isover}"/></router-link>
+          <a @click="openact(act.acturl)"><img :src="act.head_img" class="anim headimg" :class="{'v-imglarger':act.isover}"/></a>
         </div>
         <v-card-title primary-title class="pb-2">
-          <router-link to="/Appact">
+          <a @click="openact(act.acturl)">
             <h3 class="title mb-2 actname">{{act.heading}}</h3>
             <div class="headline-leftcontent">
               <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.date}}
               <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
-          </router-link>
-          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
+          </a>
           <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
+          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <v-avatar color="grey lighten-4 ml-3" size="60">
             <img :src="act.orgavatar" >
           </v-avatar>
@@ -105,6 +105,10 @@
       },
       getmoremyacts:function(){
         this.$emit("getmoremyacts",true);
+      },
+      openact:function(url){ 
+        let routeData = this.$router.resolve({name:'appact',params:{opt:url}});
+        window.open(routeData.href, '_blank');
       }
     }
   }

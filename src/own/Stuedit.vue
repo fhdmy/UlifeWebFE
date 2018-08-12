@@ -9,7 +9,7 @@
       <Stueditimg v-show="opt=='myimg'" :userurl="userurl" :imgsrc.sync="img"></Stueditimg>
       <Stueditbg v-show="opt=='mybg'" :userurl="userurl" :imgsrc.sync="bg_img"></Stueditbg>
       <Stueditacc v-show="opt=='accountsecurity'"></Stueditacc>
-      <Stueditsecret v-show="opt=='settings'" :userurl="userurl" :isfavpublic.sync="is_fav_public" :ishistorypublic.sync="is_history_public" :isprofilepublic.sync="is_profile_public"></Stueditsecret>
+      <Stueditsecret v-show="opt=='settings'" :userurl="userurl" :isfavpublic.sync="is_fav_public" :ishistorypublic.sync="is_history_public" :iswatchedorgspublic.sync="is_watched_orgs_public" :isvisitorpublic.sync="is_visitor_public"></Stueditsecret>
       <div style="clear:both;"></div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0, easing)">
@@ -29,9 +29,10 @@
       college:'',
       grade:'',
       gender:'',
+      is_visitor_public:true,
       is_fav_public:true,
       is_history_public:true,
-      is_profile_public:true,
+      is_watched_orgs_public:true,
       bg_img:''
     }),
     created:function(){
@@ -43,14 +44,16 @@
           "Authorization":"Token " + localStorage.getItem("token")
         }
       }).then((res)=>{
+        console.log(res.data);
             this.name=res.data.nickname;
             this.img=res.data.avatar;
             this.college=res.data.college;
             this.grade=res.data.grade;
             this.gender=res.data.gender;
+            this.is_visitor_public=res.data.is_visitor_public;
             this.is_fav_public=res.data.is_fav_public;
             this.is_history_public=res.data.is_history_public;
-            this.is_profile_public=res.data.is_profile_public;
+            this.is_watched_orgs_public=res.data.is_watched_orgs_public;
             this.bg_img=res.data.bg_img;
       }).catch(function (error) {
           alert("传输故障，注册失败！");

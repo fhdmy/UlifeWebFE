@@ -3,8 +3,9 @@
     <v-icon color="primary" class="mr-2 today-icon iconfont icon-shoucang"></v-icon>
     <span class="title" v-if="!mine">TA的收藏</span>
     <span class="title" v-if="mine">我的收藏</span>
-    <p v-if="acts.length==0" style="color:#FE9246;margin:200px 0 0 290px;font-size:30px;">这里空空哒！</p>
-    <div class="Homemaincontent-mainwrapper">
+    <p v-if="acts.length==0 && is_fav_public" style="color:#FE9246;margin:200px 0 0 290px;font-size:30px;">这里空空哒！</p>
+    <p v-if="!is_fav_public" style="color:#FE9246;margin:200px 0 0 245px;font-size:30px;">这是人家的小秘密啦！</p>
+    <div class="Homemaincontent-mainwrapper" :class="{'tohide':!is_fav_public}">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <v-dialog v-model="dialog" max-width="290" v-if="mine">
           <v-card>
@@ -20,18 +21,18 @@
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
         <div class="act-cardd-media">
-          <router-link to="/Appact">
+          <a @click="openact(act.acturl)">
             <img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}" />
-          </router-link>
+          </a>
         </div>
         <v-card-title primary-title class="pb-2">
-          <router-link to="/Appact">
+          <a @click="openact(act.acturl)">
             <h3 class="title mb-2 actname">{{act.heading}}</h3>
             <div class="headline-leftcontent">
               <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.date}}
               <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
-          </router-link>
+          </a>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
             <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended" />
             <v-avatar color="grey lighten-4 ml-3" size="60">
@@ -50,7 +51,7 @@
 
 <script>
   export default {
-    props: ['mine', 'acts'],
+    props: ['mine', 'acts','is_fav_public'],
     data: () => ({
       dialog: false,
       hover: [],
@@ -80,6 +81,10 @@
       },
       getmorecollectacts: function () {
         this.$emit("sendmorecollectacts", true);
+      },
+      openact:function(url){ 
+        let routeData = this.$router.resolve({name:'appact',params:{opt:url}});
+        window.open(routeData.href, '_blank');
       }
     }
   }
@@ -90,7 +95,11 @@
   .act-cardd-media {
     height: 193px;
     width: 343.09px;
-    overflow: hidden;
+    overflow: hidden; 
+  }
+
+  .tohide{
+    visibility: hidden;
   }
 
   .act-cardd-media img {

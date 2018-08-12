@@ -19,16 +19,16 @@
     <router-link :to="{name:'stuedit',params:{opt:'myinform'}}"><v-btn flat class="fill-inform" v-if="mine">填写个人信息</v-btn></router-link>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的关注</p>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的关注</p>
-    <Attention :items="watcher"></Attention>
+    <Attention :items="watcher" :is_watched_orgs_public="is_watched_orgs_public"></Attention>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的访客</p>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的访客</p>
-    <Visited :items="visits"></Visited>
+    <Visited :items="visits" :is_visitor_public="is_visitor_public"></Visited>
   </div>
 </template>
 
 <script>
   export default {
-    props:['name','attention','rollin','trust','mine','watcher','visits'],
+    props:['name','attention','rollin','trust','mine','watcher','visits','is_watched_orgs_public','is_visitor_public'],
     data: () => ({
 
     })
@@ -39,7 +39,7 @@
 <style scoped>
   .inform-wrapper {
     width: 266.41px;
-    height: 840px;
+    height: 810px;
     background: white;
     float:left;
     margin-top: 1px;

@@ -13,20 +13,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <p v-if="acts.length==0" style="color:#FE9246;margin:200px 0 0 290px;font-size:30px;">这里空空哒！</p>
-    <div class="Homemaincontent-mainwrapper">
+    <p v-if="acts.length==0 && is_history_public" style="color:#FE9246;margin:200px 0 0 290px;font-size:30px;">这里空空哒！</p>
+    <p v-if="!is_history_public" style="color:#FE9246;margin:200px 0 0 245px;font-size:30px;">这是人家的小秘密啦！</p>
+    <div class="Homemaincontent-mainwrapper" :class="{'tohide':!is_history_public}">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <div class="act-cardd-media">
-          <router-link to="/Appact"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
+          <a @click="openact(act.acturl)"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></a>
         </div>
         <v-card-title primary-title class="pb-2">
-          <router-link to="/Appact">
+          <a @click="openact(act.acturl)">
             <h3 class="title mb-2 actname">{{act.heading}}</h3>
             <div class="headline-leftcontent">
               <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.date}}
               <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
-          </router-link>
+          </a>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <img src="/src/assets/finished.png" class="finishedimg"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
@@ -45,7 +46,7 @@
 
 <script>
   export default {
-    props:["mine","acts"],
+    props:["mine","acts","stu_id","is_history_public"],
     data: () => ({
       dialog:false  
     }),
@@ -59,9 +60,12 @@
       clearall:function(){
         this.$http({
           method: 'delete',
-          url: '/activity/activities/'+this.acts[i].acturl+'/',
+          url: '/activity/ended-participation-wipe/',
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
+          },
+          data:{
+            'stu_id': this.stu_id
           }
         }).then((res) => {
           this.acts.splice(0,this.acts.length);
@@ -71,6 +75,10 @@
       },
       getmoreattendacts:function(){
         this.$emit("getmoreattendacts",true);
+      },
+      openact:function(url){ 
+        let routeData = this.$router.resolve({name:'appact',params:{opt:url}});
+        window.open(routeData.href, '_blank');
       }
     }
   }
@@ -90,6 +98,10 @@
     max-width: 100%;
     max-width: 100%;
     cursor: pointer;
+  }
+
+  .tohide{
+    visibility: hidden;
   }
 
   .finishedimg{

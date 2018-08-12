@@ -109,23 +109,19 @@
 
 <script>
   export default {
+    props:[
+      "brieftext0","brieftext" ,
+      "selectedinterest0","selectedinterest",
+      "place0","place" ,
+      "date0","date" ,
+      "time0","time" ,
+      "selectedform0","selectedform"
+    ],
     data: () => ({
       brief:false,
-      date: null,
-      date0: null,
       menu: false,
       myrequire:false,
       insertphase:false,
-      selectedform:'',
-      selectedform0:'',
-      selectedinterest:'',
-      selectedinterest0:'',
-      place:'',
-      place0:'',
-      time:'',
-      time0:'',
-      brieftext:'',
-      brieftext0:'',
       selectedparsetext:'',
       reedit:false,
       forms:['比赛', '分享', '互动'],
@@ -163,12 +159,16 @@
     }),
     methods:{
       changedata:function(){
-        this.date0=this.date,
-        this.time0=this.time,
-        this.place0=this.place,
-        this.selectedform0=this.selectedform;
-        this.selectedinterest0=this.selectedinterest;
-        this.brieftext0=this.brieftext;
+        if(this.date0==""){
+          this.date0=this.date,
+          this.time0=this.time,
+          this.place0=this.place,
+          this.selectedform0=this.selectedform;
+          this.selectedinterest0=this.selectedinterest;
+          this.brieftext0=this.brieftext;
+        }
+        else
+          return;
       },
       addimg: function () {
         this.$refs.selectimg.click();

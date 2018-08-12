@@ -1,21 +1,22 @@
 <template>
   <div class="attention">
     <div class="attention-wrapper">
-      <p v-if="items.length==0" style="color:#FE9246;">这里空空哒！</p>
-      <div class="attention-inner" :style="{transform:'translate('+move+'px'+',0)',width:w+'px'}">
+      <p v-if="items.length==0 && is_visitor_public" style="color:#FE9246;">这里空空哒！</p>
+      <p v-if="!is_visitor_public" style="color:#FE9246;">这是人家的小秘密啦！</p>
+      <div class="attention-inner" :style="{transform:'translate('+move+'px'+',0)',width:w+'px'}" v-show="is_visitor_public">
         <div class="attention-col text-md-center text-lg-center text-xl-center" v-for="item in items" :key="item.number" v-if="isdouble(item.number)">
-          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
+          <a @click="openhomepage(item.url,item.type)">
             <v-avatar size="40" class="mb-1">
               <img :src="item.avatar" />
             </v-avatar>
             <p class="attention-name">{{item.name}}</p>
-          </router-link>
-          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
+          </a>
+          <a @click="openhomepage(item.url,item.type)" v-show="nextname(item.number)!=null">
             <v-avatar size="40" class="mb-1">
               <img :src="nextimg(item.number)" v-if="nextimg(item.number)!='none'" />
             </v-avatar>
             <p class="attention-name">{{nextname(item.number)}}</p>
-          </router-link>
+          </a>
         </div>
       </div>
     </div>
@@ -27,7 +28,7 @@
 
 <script>
   export default {
-    props:['items'],
+    props:['items','is_visitor_public'],
     data: () => ({
       move:0,
       calculate:0
@@ -63,7 +64,7 @@
       },
       nextimg: function (n) {
         if (n + 1 < this.items.length)
-          return this.items[n + 1].imgsrc;
+          return this.items[n + 1].avatar;
         else
           return 'none';
       },
@@ -82,7 +83,19 @@
           return;
         this.move-=71.03;
         this.calculate++;
-      }
+      },
+      openhomepage:function(url,type){ 
+        var id=url.split("/");
+        id=id[5];
+        if(type=='student'){
+          let routeData = this.$router.resolve({name:'studisplay',params:{opt:'inform',stu_id:id}});
+          window.open(routeData.href, '_blank');
+        }
+        else if(type=='org'){
+          let routeData = this.$router.resolve({name:'orgdisplay',params:{opt:'inform',org_id:id}});
+          window.open(routeData.href, '_blank');
+        }
+      },
     }
   }
 

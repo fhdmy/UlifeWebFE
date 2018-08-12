@@ -23,7 +23,7 @@
       <v-icon v-for="j in nostar" :key="j+20" color="primary">star_border</v-icon>
     </div>
     <v-toolbar-items class="hidden-sm-and-down">
-      <v-dialog v-model="signin" persistent max-width="500px" v-if="!participation">
+      <v-dialog v-model="signin" persistent max-width="500px" v-if="!participation && !is_ended">
         <v-btn flat class="subheading toolbar-signinbtn" slot="activator">报名</v-btn>
         <v-card>
           <v-card-title>
@@ -39,6 +39,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-btn flat class="subheading toolbar-signinbtn" v-if="is_ended">报名</v-btn>
       <v-btn flat class="subheading toolbar-signinbtn participation" v-if="participation" @click.stop="dialog = true">已报名</v-btn>
       <v-btn flat class="subheading toolbar-btn" @click="collect">
         <v-icon :class="{'toolbar-icon':true,'iconfont':true,'icon-wujiaoxing':!collected,'icon-star_full':collected}" color="primary"></v-icon>
@@ -62,7 +63,7 @@
 <script>
   export default {
     props: ['org', 'launchdate', 'isfinished', 'stars', 'fixed', 'title', 'participation', 'collected', 'routerid',
-      'acturl', 'collecturl','requires','participationurl'
+      'acturl', 'collecturl','requires','participationurl','is_ended'
     ],
     data: () => ({
       dialog: false,

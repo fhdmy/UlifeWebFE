@@ -1,6 +1,6 @@
 <template>
   <div class="create-wrapper">
-    <router-link :to="{name:'createact',params:{org:org_name}}"><v-btn color="primary">创建活动</v-btn></router-link>
+    <v-btn color="primary" @click="create">创建活动</v-btn>
   </div>
 </template>
 
@@ -11,7 +11,10 @@
        
     }),
     methods: {
-     
+     create:function(){
+       sessionStorage.setItem("createactorigin",this.org_name);
+       this.$router.push('/Createact');
+     }
     }
   }
 

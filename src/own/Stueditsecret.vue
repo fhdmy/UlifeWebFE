@@ -8,15 +8,21 @@
     <v-divider class="mb-4"></v-divider>
     <form>
       <dl>
+        <dt>是否公开关注组织:</dt>
+        <dd>
+          <v-switch v-model="iswatchedorgspublic"></v-switch>
+        </dd>
+      </dl>
+      <dl>
         <dt>是否公开访客记录:</dt>
         <dd>
-          <v-switch v-model="isfavpublic"></v-switch>
+          <v-switch v-model="isvisitorpublic"></v-switch>
         </dd>
       </dl>
        <dl>
         <dt>是否公开个人收藏:</dt>
         <dd>
-          <v-switch v-model="isprofilepublic"></v-switch>
+          <v-switch v-model="isfavpublic"></v-switch>
         </dd>
       </dl>
       <dl>
@@ -32,7 +38,7 @@
 
 <script>
   export default {
-    props:['userurl','isfavpublic','isprofilepublic','ishistorypublic'],
+    props:['userurl','isfavpublic','iswatchedorgspublic','ishistorypublic','isvisitorpublic'],
     data: () => ({
       y: 'top',
       snackbar: false,
@@ -58,12 +64,15 @@
       isfavpublic:function(val){
         this.$emit("update:isfavpublic",val);
       },
-      isprofilepublic:function(val){
-        this.$emit("update:isprofilepublic",val);
+      iswatchedorgspublic:function(val){
+        this.$emit("update:iswatchedorgspublic",val);
       },
       ishistorypublic:function(val){
         this.$emit("update:ishistorypublic",val);
-      }
+      },
+      isvisitorpublic:function(val){
+        this.$emit("update:isvisitorpublic",val);
+      },
     },
     methods:{
       save:function(){
@@ -76,7 +85,8 @@
           data: {
             is_fav_public: this.isfavpublic,
             is_history_public: this.ishistorypublic,
-            is_profile_public: this.isprofilepublic,
+            is_watched_orgs_public: this.iswatchedorgspublic,
+            is_visitor_public: this.isvisitorpublic
           }
         }).then((res) => {
           this.snackbar=true;

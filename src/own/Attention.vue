@@ -1,8 +1,9 @@
 <template>
   <div class="attention">
     <div class="attention-wrapper">
-      <p v-if="items.length==0" style="color:#FE9246;">这里空空哒！</p>
-      <div class="attention-inner" :style="{transform:'translate('+move+'px'+',0)',width:w+'px'}">
+      <p v-if="items.length==0 && is_watched_orgs_public" style="color:#FE9246;">这里空空哒！</p>
+      <p v-if="!is_watched_orgs_public" style="color:#FE9246;">这是人家的小秘密啦！</p>
+      <div class="attention-inner" :style="{transform:'translate('+move+'px'+',0)',width:w+'px'}" v-show="is_watched_orgs_public">
         <div class="attention-col text-md-center text-lg-center text-xl-center" v-for="item in items" :key="item.number" v-if="isdouble(item.number)">
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
             <v-avatar size="40" class="mb-1">
@@ -10,7 +11,7 @@
             </v-avatar>
             <p class="attention-name">{{item.orgname}}</p>
           </router-link>
-          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
+          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" v-show="nextname(item.number)!=null">
             <v-avatar size="40" class="mb-1">
               <img :src="nextimg(item.number)" v-if="nextimg(item.number)!='none'" />
             </v-avatar>
@@ -27,7 +28,7 @@
 
 <script>
   export default {
-    props:['items'],
+    props:['items','is_watched_orgs_public'],
     data: () => ({
       move:0,
       calculate:0

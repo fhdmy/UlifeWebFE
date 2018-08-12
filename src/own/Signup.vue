@@ -19,20 +19,20 @@
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
         <div class="act-cardd-media">
-          <router-link to="/Appact"><img :src="act.actimgpath" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
+          <a @click="openact(act.acturl)"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></a>
         </div>
         <v-card-title primary-title class="pb-2">
-          <router-link to="/Appact">
-            <h3 class="title mb-2 actname">{{act.actname}}</h3>
+          <a @click="openact(act.acturl)">
+            <h3 class="title mb-2 actname">{{act.heading}}</h3>
             <div class="headline-leftcontent">
-              <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.acttime}}
-              <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.actplace}}
+              <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.date}}
+              <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
-          </router-link>
+          </a>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
-            <img :src="act.orgimgpath" :alt="act.orgname">
+            <img :src="act.orgavatar">
           </v-avatar>
           </router-link>
         </v-card-title>
@@ -67,7 +67,11 @@
       },
       getmoresignupacts:function(){
         this.$emit("getmoresignupacts",true);
-      }
+      },
+      openact:function(url){ 
+        let routeData = this.$router.resolve({name:'appact',params:{opt:url}});
+        window.open(routeData.href, '_blank');
+      } 
     }
   }
 

@@ -1,23 +1,12 @@
 <template>
   <div class="signup-wrapper">
-    <v-icon color="primary" class="mr-2 today-icon">query_builder</v-icon>
-    <span class="title">历史浏览</span>
-    <span class="clear" @click.stop="dialog = true">清空</span>
-    <v-dialog v-model="dialog" max-width="290">
-      <v-card>
-        <v-card-text>你确定要清空吗？</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat="flat" @click="dialog = false">点错了</v-btn> 
-          <v-btn color="green darken-1" flat="flat" @click="dialog = false,clearall()">清空</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <v-icon color="primary" class="mr-2 today-icon">public</v-icon>
+    <span class="title">TA的动态</span>
     <p v-if="acts.length==0" style="color:#FE9246;margin:200px 0 0 290px;font-size:30px;">这里空空哒！</p>
     <div class="Homemaincontent-mainwrapper">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <div class="act-cardd-media">
-          <a @click="openact(act.acturl)"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></a>
+          <a @click="openact(act.acturl)"><img :src="act.head_img" class="anim headimg" :class="{'v-imglarger':act.isover}"/></a>
         </div>
         <v-card-title primary-title class="pb-2">
           <a @click="openact(act.acturl)">
@@ -30,7 +19,7 @@
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
-            <img :src="act.orgavatar">
+            <img :src="act.orgavatar" >
           </v-avatar>
           </router-link>
         </v-card-title>
@@ -38,16 +27,16 @@
       <div style="clear:both;"></div>
     </div>
     <div class="text-md-center text-lg-center text-xl-center pt-1 pb-4">
-      <a @click="getmoreviewacts">显示更多</a>
+      <a @click="getmoretrends">显示更多</a>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    props:['acts','stu_id'],
+    props:['acts'],
     data: () => ({
-      dialog:false,
+
     }),
     methods: {
       largerimg: function (i) {
@@ -56,24 +45,8 @@
       smallerimg: function (i) {
         this.acts[i].isover=false;
       },
-      clearall:function(){
-        this.$http({
-          method: 'delete',
-          url: '/activity/browsering-history-wipe/',
-          headers: {
-            "Authorization": "Token " + localStorage.getItem("token")
-          },
-          data:{
-            'stu_id':this.stu_id
-          }
-        }).then((res) => {
-          this.acts.splice(0,this.acts.length);
-        }).catch(function (error) {
-          alert("网络传输故障！");
-        });
-      },
-      getmoreviewacts:function(){
-        this.$emit("sendmoreviewacts",true);
+      getmoretrends:function(){
+        this.$emit("getmoretrends",true);
       },
       openact:function(url){ 
         let routeData = this.$router.resolve({name:'appact',params:{opt:url}});
@@ -166,16 +139,5 @@
     background: white;
     margin-top: 25px;
   }
-  .clear{
-    color: #2196f3;
-    cursor: pointer;
-    float: right;
-    margin-top: 25px;
-    margin-right: 34px;
-  }
-  .v-dialog__content>>>.v-dialog .v-card{
-    width: 100%;
-    height: 100%;
-    margin: 0;
-  }
+
 </style>

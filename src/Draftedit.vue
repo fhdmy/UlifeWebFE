@@ -28,7 +28,9 @@
     <div class="main-wrapper">
       <Reeditleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted"></Reeditleft>
       <Reeditright ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
-        @senttext="gettext" @reeditparse="getreeditfromright"></Reeditright>
+        @senttext="gettext" @reeditparse="getreeditfromright" :brieftext="brieftext" :brieftext0="brieftext" :selectedinterest="selectedinterest"
+        :selectedinterest0="selectedinterest" :place="place" :place0="place" :date="date" :date0="date" :time="time" :time0="time"
+        :selectedform="selectedform" :selectedform0="selectedform" :opts="requires"></Reeditright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -78,7 +80,7 @@
 <script>
   // import Vue from 'vue'
   export default {
-    props:['opt','org'],
+    props: ['opt'],
     data: () => ({
       y: 'top',
       snackbar1: false,
@@ -86,7 +88,6 @@
       color: '#E03636',
       mode: '',
       timeout: 2000,
-      acturl: '',
       url1: '',
       parallaxpath: '/src/assets/createdefault.jpg',
       avatar: '',
@@ -120,7 +121,9 @@
       disY: 0,
       slidebtn: [],
       mousemoveflag: false,
-      deleted:false
+      deleted: false,
+      org: '',
+      actid: 0
     }),
     computed: {
       havetopimg: function () {
@@ -132,7 +135,35 @@
     },
     created: function () {
       this.url1 = localStorage.getItem("org_url");
-      this.avatar=sessionStorage.getItem("avatar");
+      this.avatar = sessionStorage.getItem("avatar");
+      this.org = sessionStorage.getItem("editactorigin");
+      // 获得信息
+      this.$http({
+        method: 'get',
+        url: '/activity/activities/' + this.opt + '/',
+        headers: {
+          "Authorization": "Token " + localStorage.getItem("token")
+        }
+      }).then((res) => {
+        var acturl = res.data.url;
+        acturl = acturl.split("/");
+        this.actid = acturl[5];
+        var computeddate = res.data.created_at.split('T');
+        var computedstart = res.data.start_at.split('T');
+        var comutedstarttime = computedstart[1].split(':');
+        this.parallaxpath = res.data.head_img;
+        this.computeddata = JSON.parse(res.data.demonstration);
+        this.brieftext = res.data.description;
+        this.title = res.data.heading;
+        this.selectedinterest = res.data.hobby;
+        this.place = res.data.location;
+        this.date = computedstart[0];
+        this.time = comutedstarttime[0] + ':' + comutedstarttime[1];
+        this.selectedform = res.data._type;
+        this.requires = JSON.parse(res.data.requirement);
+      }).catch(function (error) {
+        alert("网络传输故障！");
+      });
     },
     methods: {
       onScroll(e) {
@@ -330,61 +361,33 @@
         this.computeddata[this.reedititem].title = d;
       },
       savetodraft: function () {
-        // if(this.title=='' || this.date=='' || this.time=='' || this.place=='' || this.selectedform=='' || this.selectedinterest=='' || this.brieftext==''){
-        //   alert("信息未填写完整！");
-        //   return;
-        // }
-        if (this.acturl == '') {//如果创建新活动
-          this.$http({
-            method: 'post',
-            url: "/activity/activities/",
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata)
-            }
-          }).then((res) => {
-            this.acturl=res.data.url;
-            this.snackbar1=true;
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
+        if (this.title == '') {
+          alert("请填写标题！");
+          return;
         }
-        else{//如果已存在活动（id）
-          this.$http({
-            method: 'patch',
-            url:this.acturl,
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata)
-            }
-          }).then((res) => {
-            this.snackbar1=true;
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
-        }
+        this.$http({
+          method: 'put',
+          url: "/activity/activities/" + this.actid + '/',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          },
+          data: {
+            start_at: this.date + 'T' + this.time + ':00.000000Z',
+            location: this.place,
+            _type: this.selectedform,
+            hobby: this.selectedinterest,
+            description: this.brieftext,
+            owner: this.url1,
+            heading: this.title,
+            requirement: JSON.stringify(this.requires),
+            head_img: this.parallaxpath,
+            demonstration: JSON.stringify(this.computeddata)
+          }
+        }).then((res) => {
+          this.snackbar1 = true;
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
       },
       publicact: function () {
         if (this.title == '' || this.date == '' || this.time == '' || this.place == '' || this.selectedform == '' ||
@@ -392,90 +395,64 @@
           alert("信息未填写完整！");
           return;
         }
-        if (this.acturl == '') {//如果创建新活动
-          this.$http({
-            method: 'post',
-            url: "/activity/activities/",
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata),
-              want_to_be_allowed_to_publish:true,
-              // 审核已过
-              is_published:true
-            }
-          }).then((res) => {
-            this.acturl=res.data.url;
-            this.snackbar2=true;
-            setTimeout(() => {
-              this.$router.push({ name: 'orgown', params: {opt:'create'}});
-            }, 2000);
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
-        }
-        else{//如果已存在活动（id）
-          this.$http({
-            method: 'patch',
-            url:this.acturl,
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata),
-              want_to_be_allowed_to_publish:true,
-              // 审核已过
-              is_published:true
-            }
-          }).then((res) => {
-            this.snackbar2=true;
-            setTimeout(() => {
-              this.$router.push({ name: 'orgown', params: {opt:'create'}});
-            }, 2000);
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
-        }
+        this.$http({
+          method: 'put',
+          url: "/activity/activities/" + this.actid + '/',
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token")
+          },
+          data: {
+            start_at: this.date + 'T' + this.time + ':00.000000Z',
+            location: this.place,
+            _type: this.selectedform,
+            hobby: this.selectedinterest,
+            description: this.brieftext,
+            owner: this.url1,
+            heading: this.title,
+            requirement: JSON.stringify(this.requires),
+            head_img: this.parallaxpath,
+            demonstration: JSON.stringify(this.computeddata),
+            want_to_be_allowed_to_publish: true,
+            // 审核已过
+            is_published: true
+          }
+        }).then((res) => {
+          this.snackbar2 = true;
+          sessionStorage.removeItem("editactorigin");
+          setTimeout(() => {
+            this.$router.push({
+              name: 'orgown',
+              params: {
+                opt: 'create'
+              }
+            });
+          }, 2000);
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
       },
-      openpreview:function(){
-      var myDate = new Date();
-      sessionStorage.setItem("preview",JSON.stringify({
-          parallaxpath:this.parallaxpath,
-          avatar:this.avatar,
-          name:this.org,
-          title:this.title,
-          launchdate:myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate(),
-          isfinished:false,
-          stars:5,
-          introduction:this.brieftext,
-          date:this.date,
-          time:this.time,
-          place:this.place,
-          type:this.selectedform,
-          interest:this.selectedinterest,
-          lists:this.computeddata
-      }));
-      let routeData=this.$router.resolve({path:'/Orgactview'});
-      window.open(routeData.href, '_blank');
+      openpreview: function () {
+        var myDate = new Date();
+        sessionStorage.setItem("preview", JSON.stringify({
+          parallaxpath: this.parallaxpath,
+          avatar: this.avatar,
+          name: this.org,
+          title: this.title,
+          launchdate: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate(),
+          isfinished: false,
+          stars: 5,
+          introduction: this.brieftext,
+          date: this.date,
+          time: this.time,
+          place: this.place,
+          type: this.selectedform,
+          interest: this.selectedinterest,
+          lists: this.computeddata
+        }));
+        let routeData = this.$router.resolve({
+          path: '/Orgactview'
+        });
+        window.open(routeData.href, '_blank');
       }
     }
   }

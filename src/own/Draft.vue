@@ -19,16 +19,16 @@
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
         <div class="act-cardd-media">
-          <router-link to="/Appact"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
+          <a @click="edit(act.acturl)"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></a>
         </div>
         <v-card-title primary-title class="pb-2">
-          <router-link to="/Appact">
+          <a @click="edit(act.acturl)">
             <h3 class="title mb-2 actname">{{act.heading}}</h3>
             <div class="headline-leftcontent">
               <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.date}}
               <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
-          </router-link>
+          </a>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <v-avatar color="grey lighten-4 ml-3" size="60">
             <img :src="act.orgavatar">
@@ -46,7 +46,7 @@
 
 <script>
   export default {
-    props:['acts'],
+    props:['acts','org_name'],
     data: () => ({
       dialog:false,
       i:0,
@@ -76,7 +76,11 @@
       },
       getmoredraftacts:function(){
         this.$emit("getmoredraftacts",true);
-      }
+      },
+      edit:function(url){
+       sessionStorage.setItem("editactorigin",this.org_name);
+       this.$router.push({name:'draftedit',params:{opt:url}});
+     }
     }
   }
 

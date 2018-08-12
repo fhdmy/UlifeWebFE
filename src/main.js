@@ -45,6 +45,7 @@ import Show from './act/Show.vue'
 import Studisplay from './Studisplay.vue'
 import Studisplaytoolbar from './own/Studisplaytoolbar.vue'
 import Orgdisplay from './Orgdisplay.vue'
+import Orgtrends from './own/Orgtrends.vue'
 import Inform from './own/Inform.vue'
 import Orginform from './own/Orginform.vue'
 import Orgdisplaytoolbar from './own/Orgdisplaytoolbar.vue'
@@ -126,6 +127,7 @@ Vue.component("Show",Show)
 Vue.component("Stuisplay",Studisplay)
 Vue.component("Studisplaytoolbar",Studisplaytoolbar)
 Vue.component("Orgdisplay",Orgdisplay)
+Vue.component("Orgtrends",Orgtrends)
 Vue.component("Inform",Inform)
 Vue.component("Orginform",Orginform)
 Vue.component("Orgdisplaytoolbar",Orgdisplaytoolbar)
@@ -169,15 +171,15 @@ const routes = [
   { path: '/Changeaccount', component: Changeaccount },
   { path: '/Appstuown/:opt', component: Appstuown,name:'stuown',props: true},
   { path: '/Appact/:opt', component: Appact,name:'appact',props: true },
-  { path: '/Studisplay/:opt', component: Studisplay,name:'studisplay',props: true},
-  { path: '/Orgdisplay/:opt', component: Orgdisplay,name:'orgdisplay',props: true},
+  { path: '/Studisplay/:opt/:stu_id', component: Studisplay,name:'studisplay',props: true},
+  { path: '/Orgdisplay/:opt/:org_id', component: Orgdisplay,name:'orgdisplay',props: true},
   { path: '/Apporgown/:opt', component: Apporgown,name:'orgown',props: true},
   { path: '/Stuedit/:opt', component: Stuedit,name:'stuedit',props:true},
-  { path: '/Createact/:org', component: Createact,name:'createact',props:true},
+  { path: '/Createact', component: Createact},
   { path: '/Editact', component: Editact },
   { path: '/Createinform/:opt', component: Createinform,name:'createinform',props:true},
   { path: '/Orgactview', component: Orgactview},
-  { path: '/Draftedit/:opt/:org', component: Draftedit,name:'draftedit',props:true},
+  { path: '/Draftedit/:opt', component: Draftedit,name:'draftedit',props:true},
   { path: '/Reeditright', component: Reeditright},
 ]
 const router = new VueRouter({

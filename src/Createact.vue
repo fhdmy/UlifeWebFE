@@ -78,7 +78,6 @@
 <script>
   // import Vue from 'vue'
   export default {
-    props:['org'],
     data: () => ({
       y: 'top',
       snackbar1: false,
@@ -119,7 +118,8 @@
       disX: 0,
       disY: 0,
       slidebtn: [],
-      mousemoveflag: false
+      mousemoveflag: false,
+      org:''
     }),
     computed: {
       havetopimg: function () {
@@ -132,6 +132,7 @@
     created: function () {
       this.url1 = localStorage.getItem("org_url");
       this.avatar=sessionStorage.getItem("avatar");
+      this.org=sessionStorage.getItem("createactorigin");
     },
     methods: {
       onScroll(e) {
@@ -420,6 +421,7 @@
           }).then((res) => {
             this.acturl=res.data.url;
             this.snackbar2=true;
+            sessionStorage.removeItem("createactorigin");
             setTimeout(() => {
               this.$router.push({ name: 'orgown', params: {opt:'create'}});
             }, 2000);
@@ -451,6 +453,7 @@
             }
           }).then((res) => {
             this.snackbar2=true;
+            sessionStorage.removeItem("createactorigin");
             setTimeout(() => {
               this.$router.push({ name: 'orgown', params: {opt:'create'}});
             }, 2000);

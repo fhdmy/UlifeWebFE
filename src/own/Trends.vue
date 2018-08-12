@@ -6,16 +6,16 @@
     <div class="Homemaincontent-mainwrapper">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <div class="act-cardd-media">
-          <router-link to="/Appact"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
+          <a @click="openact(act.acturl)"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></a>
         </div>
         <v-card-title primary-title class="pb-2">
-          <router-link to="/Appact">
+          <a @click="openact(act.acturl)">
             <h3 class="title mb-2 actname">{{act.heading}}</h3>
             <div class="headline-leftcontent">
               <v-icon class="mr-1 iconfont icon-time subheading"></v-icon>{{act.date}}
               <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
-          </router-link>
+          </a>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
@@ -47,6 +47,10 @@
       },
       getmoretrendsacts:function(){
         this.$emit("getmoretrendsacts",true);
+      },
+      openact:function(url){ 
+        let routeData = this.$router.resolve({name:'appact',params:{opt:url}});
+        window.open(routeData.href, '_blank');
       }
     }
   }

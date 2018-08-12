@@ -17,10 +17,10 @@
       <div style="clear:both;"></div>
     </div>
     <a @click="fillorginform"><v-btn flat class="fill-inform" v-if="mine">填写组织信息</v-btn></a>
-    <v-btn flat :class="{'fill-inform':true,'fattention':myattention}" v-if="!mine" @click="getattention">关注</v-btn>
+    <v-btn flat :class="{'fill-inform':true,'fattention':myattention}" v-if="!mine" @click="getattention(),payattention()">关注</v-btn>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="mine">我的访客</p>
     <p class="text-md-center text-lg-center text-xl-center mt-5 subheading mb-2" v-if="!mine">TA的访客</p>
-    <Attention :items="visits"></Attention>
+    <Visited :items="visits" :is_visitor_public="true"></Visited>
   </div>
 </template>
 
@@ -43,6 +43,9 @@
         sessionStorage.setItem("lists",JSON.stringify(this.list));
         sessionStorage.setItem("bg_img",this.bg_img);
         this.$router.push({name:'createinform',params:{opt:this.orgurl}});
+      },
+      payattention:function(){
+
       }
     }
   }

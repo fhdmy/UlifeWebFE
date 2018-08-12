@@ -63,6 +63,9 @@
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
+          var userurl=res.data.user;
+          userurl=userurl.split("/");
+          localStorage.setItem("uid",userurl[5]);
           this.avatarurl = res.data.avatar;
           this.username = res.data.nickname;
           if (sessionStorage.getItem("avatar") == null) {
@@ -82,6 +85,9 @@
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
+          var userurl=res.data.user;
+          userurl=userurl.split("/");
+          localStorage.setItem("uid",userurl[5]);
           this.avatarurl = res.data.avatar;
           this.username = res.data.org_name;
           if (sessionStorage.getItem("avatar") == null) {

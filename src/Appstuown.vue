@@ -14,14 +14,15 @@
     </div>
     <div v-if="fixed" style="height:64px;"></div>
     <div class="stuown-mainwrapper">
-      <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="attention" :rollin="attmax" :trust="trust" :mine="mine"
-        :watcher="watcher" :visits="visits"></Stuinform>
+      <Stuinform :class="{'informfixed':fixed}" :name="name" :attention="watching_count" :rollin="participation_count" :trust="trust" :mine="mine"
+        :watcher="watcher" :visits="visits" :is_visitor_public="true" :is_watched_orgs_public="true"
+      ></Stuinform>
       <div class="asinform" v-if="fixed"></div>
       <Signup v-show="item=='signup'" :acts="signupacts" @getmoresignupacts="getmoresignupacts"></Signup>
       <Trends v-show="item=='trends'" :acts="trendacts" @getmoretrendsacts="getmoretrendsacts"></Trends>
-      <Collect v-show="item=='collect'" :mine="mine" :acts="collects" @sendmorecollectacts="sendmorecollectacts"></Collect>
-      <Historyview v-show="item=='historyview'" :acts="historyvi" @sendmoreviewacts="sendmoreviewacts"></Historyview>
-      <Historyattend v-show="item=='historyattend'" :mine="mine" :acts="historyatt" @getmoreattendacts="getmoreattendacts"></Historyattend>
+      <Collect v-show="item=='collect'" :mine="mine" :acts="collects" @sendmorecollectacts="sendmorecollectacts" :is_fav_public="true"></Collect>
+      <Historyview v-show="item=='historyview'" :acts="historyvi" @sendmoreviewacts="sendmoreviewacts" :stu_id="stu_id"></Historyview>
+      <Historyattend v-show="item=='historyattend'" :mine="mine" :acts="historyatt" @getmoreattendacts="getmoreattendacts" :stu_id="stu_id" :is_history_public="true"></Historyattend>
       <Stumsg v-show="item=='stumsg'"></Stumsg>
       <div style="clear:both;"></div>
     </div>
@@ -47,57 +48,75 @@
       watcher: [],
       visits: [],
       signupacts: [],
-      moresignupacts:'',
-      signupmax:0,
-      presentsignup:0,
+      moresignupacts: '',
+      signupmax: 0,
+      presentsignup: 0,
       historyatt: [],
-      moreatt:'',
-      attmax:0,
-      presentatt:0,
+      moreatt: '',
+      attmax: 0,
+      presentatt: 0,
       historyvi: [], //历史参加的数组
       moreview: '',
       presentview: 0,
       viewmax: 0,
       collects: [],
       morecollects: '',
-      presentcollects:0,
-      collectmax:0,
-      trendacts:[],
-      trendmax:0,
-      presenttrend:0,
-      moretrend:''
+      presentcollects: 0,
+      collectmax: 0,
+      trendacts: [],
+      trendmax: 0,
+      presenttrend: 0,
+      moretrend: '',
+      stu_id: 0,
+      participation_count:0,
+      watching_count:0
     }),
     created: function () {
+      this.img = sessionStorage.getItem("avatar");
+      var user_url = localStorage.getItem("user_url");
+      user_url = user_url.split("/");
+      this.stu_id = user_url[3];
       switch (this.opt) {
         case 'signup':
           this.item = 'signup';
+          // 报名
+          this.axiossignup(this.stu_id);
           break;
         case 'trends':
           this.item = 'trends';
+          // 动态
+          this.axiostrends(this.stu_id);
           break;
         case 'collect':
           this.item = 'collect';
+          // 收藏
+          this.axioscollect(this.stu_id);
           break;
         case 'historyview':
           this.item = 'historyview';
+          // 历史浏览
+          this.axioshistoryview(this.stu_id);
+          break;
+        case 'historyattend':
+          this.item = 'historyattend';
+          // 历史参加
+          this.axioshistoryattend(this.stu_id);
           break;
         case 'stumsg':
           this.item = 'stumsg';
           break;
       }
-      this.img = sessionStorage.getItem("avatar");
-      var user_url = localStorage.getItem("user_url");
-      user_url = user_url.split("/");
-      var id = user_url[3];
       // homepage个人信息
       this.$http({
         method: 'get',
-        url: '/account/student-homepage/' + id + '/',
+        url: '/account/student-homepage/' + this.stu_id + '/',
         headers: {
           "Authorization": "Token " + localStorage.getItem("token")
         }
       }).then((res) => {
         this.parallaxpath = res.data.bg_img;
+        this.participation_count=res.data.participation_count;
+        this.watching_count=res.data.watching_count;
         this.name = res.data.nickname;
         this.trust = res.data.credit;
         // 访客
@@ -105,28 +124,30 @@
         user = user.split("/");
         this.$http({
           method: 'get',
-          url: '/message/visitings/?watcher=' + user[5],
+          url: '/message/visitings/?target=' + user[5],
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
           for (let k = 0; k < res.data.length; k++) {
             // 是学生
-            if (res.data[k].target.student != null) {
+            if (res.data[k].watcher.student != null) {
               this.$set(this.visits, k, {
-                avatar: res.data[k].target.student.avatar,
-                name: res.data[k].target.student.nickname,
-                url: res.data[k].target.student.url,
-                number: k
+                avatar: res.data[k].watcher.student.avatar,
+                name: res.data[k].watcher.student.nickname,
+                url: res.data[k].watcher.student.url,
+                number: k,
+                type:'student'
               });
             }
             // 是组织
-            if (res.data[k].target.org != null) {
+            if (res.data[k].watcher.org != null) {
               this.$set(this.visits, k, {
-                avatar: res.data[k].target.org.avatar,
-                name: res.data[k].target.org.org_name,
-                url: res.data[k].target.org.url,
-                number: k
+                avatar: res.data[k].watcher.org.avatar,
+                name: res.data[k].watcher.org.org_name,
+                url: res.data[k].watcher.org.url,
+                number: k,
+                type:'org'
               });
             }
           }
@@ -139,42 +160,60 @@
       // 关注
       this.$http({
         method: 'get',
-        url: '/account/watchings/?watcher=' + id,
+        url: '/account/watchings/?watcher=' + this.stu_id,
         headers: {
           "Authorization": "Token " + localStorage.getItem("token")
         }
       }).then((res) => {
         for (let k = 0; k < res.data.length; k++) {
-          var org_url=res.data[k].target.url;
-          var org_id=org_url.split("/");
-          org_id=org_id[5];
+          var org_url = res.data[k].target.url;
+          var org_id = org_url.split("/");
+          org_id = org_id[5];
           this.$set(this.watcher, k, {
             orgavatar: res.data[k].target.avatar,
             orgname: res.data[k].target.org_name,
             orgurl: org_url,
             number: k,
-            orgid:org_id
+            orgid: org_id
           });
         }
         this.attention = res.data.length;
-        // 动态
-        this.axiostrends(id);
       }).catch(function (error) {
         alert("网络传输故障！");
       });
-
-      // 报名
-      this.axiossignup(id);
-      // 历史参加
-      this.axioshistoryattend(id);
-      // 历史浏览
-      this.axioshistoryview(id);
-      // 收藏
-      this.axioscollect(id);
     },
     watch: {
       '$route' (to, from) {
-        this.item = to.params.opt;
+        switch (to.params.opt) {
+          case 'signup':
+            this.item = 'signup';
+            // 报名
+            this.axiossignup(this.stu_id);
+            break;
+          case 'trends':
+            this.item = 'trends';
+            // 动态
+            this.axiostrends(this.stu_id);
+            break;
+          case 'collect':
+            this.item = 'collect';
+            // 收藏
+            this.axioscollect(this.stu_id);
+            break;
+          case 'historyview':
+            this.item = 'historyview';
+            // 历史浏览
+            this.axioshistoryview(this.stu_id);
+            break;
+          case 'historyattend':
+            this.item = 'historyattend';
+            // 历史参加
+            this.axioshistoryattend(this.stu_id);
+            break;
+          case 'stumsg':
+            this.item = 'stumsg';
+            break;
+        }
       }
     },
     computed: {
@@ -204,11 +243,9 @@
     },
     methods: {
       axiossignup: function (id) {
-        var myDate = new Date();
-        myDate = myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate();
         this.$http({
           method: 'get',
-          url: '/activity/participations/?student=' + id + '&activity__start_at__lt=' + myDate,
+          url: '/activity/participations/?student=' + id + '&activity__is_ended=False',
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           }
@@ -226,22 +263,20 @@
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
-              is_ended:res.data.results[k].activity.is_ended,
+              is_ended: res.data.results[k].activity.is_ended,
             });
           }
           this.moresignupacts = res.data.next;
-          this.presentsignup=res.data.results.length;
+          this.presentsignup = res.data.results.length;
           this.signupmax = res.data.count;
         }).catch(function (error) {
           alert("网络传输故障！");
         });
       },
       axioshistoryattend: function (id) {
-        var myDate = new Date();
-        myDate = myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate();
         this.$http({
           method: 'get',
-          url: '/activity/participations/?student=' + id + '&activity__start_at__gt=' + myDate,
+          url: '/activity/participations/?student=' + id + '&activity__is_ended=True',
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           }
@@ -261,7 +296,7 @@
               acturl: actid[5],
             });
             this.moreatt = res.data.next;
-            this.presentatt=res.data.results.length;
+            this.presentatt = res.data.results.length;
             this.attmax = res.data.count;
           }
         }).catch(function (error) {
@@ -289,11 +324,11 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
-              is_ended:res.data.results[k].target.is_ended,
+              is_ended: res.data.results[k].target.is_ended,
             });
             this.moreview = res.data.next;
-            this.presentview=res.data.results.length;
-            this.viewmax=res.data.count;
+            this.presentview = res.data.results.length;
+            this.viewmax = res.data.count;
           }
         }).catch(function (error) {
           alert("网络传输故障！");
@@ -320,25 +355,25 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
-              is_ended:res.data.results[k].target.is_ended,
-              bookmarkingurl:res.data.results[k].url
+              is_ended: res.data.results[k].target.is_ended,
+              bookmarkingurl: res.data.results[k].url
             });
             this.morecollects = res.data.next;
-            this.presentcollects=res.data.results.length;
-            this.collectmax=res.data.count;
+            this.presentcollects = res.data.results.length;
+            this.collectmax = res.data.count;
           }
         }).catch(function (error) {
           alert("网络传输故障！");
         });
       },
       axiostrends: function (id) {
-        var ids="";
-        for(let j=0;j<this.watcher.length;j++){
-          if(j==this.watcher.length-1){
-            ids=ids+this.watcher[j].orgid;
+        var ids = "";
+        for (let j = 0; j < this.watcher.length; j++) {
+          if (j == this.watcher.length - 1) {
+            ids = ids + this.watcher[j].orgid;
             break;
           }
-          ids=ids+this.watcher[j].orgid+',';
+          ids = ids + this.watcher[j].orgid + ',';
         }
         this.$http({
           method: 'get',
@@ -360,38 +395,38 @@
               orgavatar: res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
-              is_ended:res.data.results[k].is_ended,
+              is_ended: res.data.results[k].is_ended,
             });
             this.moretrend = res.data.next;
-            this.presenttrend=res.data.results.length;
-            this.trendmax=res.data.count;
+            this.presenttrend = res.data.results.length;
+            this.trendmax = res.data.count;
           }
         }).catch(function (error) {
           alert("网络传输故障！");
         });
       },
-      chooseitem: function (e) {
-        switch (e) {
-          case 'signup':
-            this.item = 'signup';
-            break;
-          case 'trends':
-            this.item = 'trends';
-            break;
-          case 'collect':
-            this.item = 'collect';
-            break;
-          case 'historyview':
-            this.item = 'historyview';
-            break;
-          case 'historyattend':
-            this.item = 'historyattend';
-            break;
-          case 'stumsg':
-            this.item = 'stumsg';
-            break;
-        }
-      },
+      // chooseitem: function (e) {
+      //   switch (e) {
+      //     case 'signup':
+      //       this.item = 'signup';
+      //       break;
+      //     case 'trends':
+      //       this.item = 'trends';
+      //       break;
+      //     case 'collect':
+      //       this.item = 'collect';
+      //       break;
+      //     case 'historyview':
+      //       this.item = 'historyview';
+      //       break;
+      //     case 'historyattend':
+      //       this.item = 'historyattend';
+      //       break;
+      //     case 'stumsg':
+      //       this.item = 'stumsg';
+      //       break;
+      //   }
+      // },
       onScroll(e) {
         this.offsetTop = window.pageYOffset || document.documentElement.scrollTop;
       },
@@ -420,10 +455,10 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
-              is_ended:res.data.results[k].target.is_ended,
+              is_ended: res.data.results[k].target.is_ended,
             });
           }
-          this.moreview=res.data.next;
+          this.moreview = res.data.next;
           this.presentview += res.data.results.length;
         }).catch(function (error) {
           alert("网络传输故障！");
@@ -454,10 +489,10 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
-              is_ended:res.data.results[k].target.is_ended,
+              is_ended: res.data.results[k].target.is_ended,
             });
           }
-          this.morecollects=res.data.next;
+          this.morecollects = res.data.next;
           this.presentcollects += res.data.results.length;
         }).catch(function (error) {
           alert("网络传输故障！");
@@ -490,8 +525,8 @@
               acturl: actid[5]
             });
           }
-          this.moreatt=res.data.next;
-          this.presentatt+= res.data.results.length;
+          this.moreatt = res.data.next;
+          this.presentatt += res.data.results.length;
         }).catch(function (error) {
           alert("网络传输故障！");
         });
@@ -521,11 +556,11 @@
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
-              is_ended:res.data.results[k].activity.is_ended,
+              is_ended: res.data.results[k].activity.is_ended,
             });
           }
-          this.moresignupacts=res.data.next;
-          this.presentsignup+= res.data.results.length;
+          this.moresignupacts = res.data.next;
+          this.presentsignup += res.data.results.length;
         }).catch(function (error) {
           alert("网络传输故障！");
         });
@@ -555,10 +590,10 @@
               orgavatar: res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
-              is_ended:res.data.results[k].is_ended,
+              is_ended: res.data.results[k].is_ended,
             });
           }
-          this.moretrend=res.data.next;
+          this.moretrend = res.data.next;
           this.presenttrend += res.data.results.length;
         }).catch(function (error) {
           alert("网络传输故障！");
@@ -586,7 +621,7 @@
 
   .asinform {
     width: 266.41px;
-    height: 840px;
+    height: 810px;
     background: white;
     float: left;
     margin-top: 1px;

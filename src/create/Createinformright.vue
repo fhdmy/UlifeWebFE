@@ -122,7 +122,7 @@
       deleteavatar:function(){
         setTimeout(() => {
           this.avatar0='';
-        }, 100);
+        }, 100);//防止闪烁
       },
       deleteparsedata:function(){
         this.selectedparsetext='';

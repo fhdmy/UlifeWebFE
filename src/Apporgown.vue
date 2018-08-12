@@ -14,11 +14,11 @@
     </div>
     <div v-if="fixed" style="height:64px;"></div>
     <div class="stuown-mainwrapper">
-      <Orginform :class="{'informfixed':fixed}" :name="name" :attention="attention" :stars="stars" :acts="myactsmax" :visits="visits"
+      <Orginform :class="{'informfixed':fixed}" :name="name" :attention="watcher_count" :stars="stars" :acts="activity_count" :visits="visits"
         :mine="mine" :orgurl="orgurl" :list="lists" :bg_img="parallaxpath"></Orginform>
       <div class="asinform" v-if="fixed"></div>
       <Inform v-show="item=='inform'" :mine="mine" :lists="lists"></Inform>
-      <Draft v-show="item=='draft'" :acts="draft" @getmoredraftacts="getmoredraftacts"></Draft>
+      <Draft v-show="item=='draft'" :acts="draft" @getmoredraftacts="getmoredraftacts" :org_name="name"></Draft>
       <Create v-show="item=='create'" :org_name="name"></Create>
       <Orgmyact v-show="item=='myact'" :acts="myacts" @getmoremyacts="getmoremyacts"></Orgmyact>
       <Mysignup v-show="item=='mysignup'" :acts="signup" @getmoresignup="getmoresignup"></Mysignup>
@@ -51,16 +51,23 @@
       draftmax: 0,
       moredraft: '',
       presentdraft: 0,
-      myacts:[],
-      myactsmax:0,
-      presentmyacts:0,
-      moremyacts:'',
-      signup:[],
-      moresignup:'',
-      signupmax:0,
-      presentsignup:0
+      myacts: [],
+      myactsmax: 0,
+      presentmyacts: 0,
+      moremyacts: '',
+      signup: [],
+      moresignup: '',
+      signupmax: 0,
+      presentsignup: 0,
+      org_id: 0,
+      watcher_count:0,
+      activity_count:0
     }),
     created: function () {
+      this.img = sessionStorage.getItem("avatar");
+      var org_url = localStorage.getItem("org_url");
+      org_url = org_url.split("/");
+      this.org_id = org_url[3];
       switch (this.opt) {
         case 'inform':
           this.item = 'inform';
@@ -70,30 +77,31 @@
           break;
         case 'draft':
           this.item = 'draft';
+          // 草稿箱
+          this.axiosdraft(this.org_id);
           break;
         case 'myact':
           this.item = 'myact';
           break;
         case 'mysignup':
           this.item = 'mysignup';
+          // 报名
+          this.axiossignup(this.org_id);
           break;
         case 'orgmsg':
           this.item = 'orgmsg';
           break;
       }
-
-      this.img = sessionStorage.getItem("avatar");
-      var org_url = localStorage.getItem("org_url");
-      org_url = org_url.split("/");
-      var id = org_url[3];
       // homepage个人信息
       this.$http({
         method: 'get',
-        url: '/account/org-homepage/' + id + '/',
+        url: '/account/org-homepage/' + this.org_id + '/',
         headers: {
           "Authorization": "Token " + localStorage.getItem("token")
         }
       }).then((res) => {
+        this.watcher_count=res.data.watcher_count;
+        this.activity_count=res.data.activity_count;
         this.parallaxpath = res.data.bg_img;
         this.name = res.data.org_name;
         this.stars = res.data.stars;
@@ -106,27 +114,27 @@
         user = user.split("/");
         this.$http({
           method: 'get',
-          url: '/message/visitings/?watcher=' + user[5],
+          url: '/message/visitings/?target=' + user[5],
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
           for (let k = 0; k < res.data.length; k++) {
             // 是学生
-            if (res.data[k].target.student != null) {
+            if (res.data[k].watcher.student != null) {
               this.$set(this.visits, k, {
-                avatar: res.data[k].target.student.avatar,
-                name: res.data[k].target.student.nickname,
-                url: res.data[k].target.student.url,
+                avatar: res.data[k].watcher.student.avatar,
+                name: res.data[k].watcher.student.nickname,
+                url: res.data[k].watcher.student.url,
                 number: k
               });
             }
             // 是组织
-            if (res.data[k].target.org != null) {
+            if (res.data[k].watcher.org != null) {
               this.$set(this.visits, k, {
-                avatar: res.data[k].target.org.avatar,
-                name: res.data[k].target.org.org_name,
-                url: res.data[k].target.org.url,
+                avatar: res.data[k].watcher.org.avatar,
+                name: res.data[k].watcher.org.org_name,
+                url: res.data[k].watcher.org.url,
                 number: k
               });
             }
@@ -137,17 +145,35 @@
       }).catch(function (error) {
         alert("网络传输故障！");
       });
-
-      // 草稿箱
-      this.axiosdraft(id);
       // 我的活动
-      this.axiosmyacts(id);
-      // 报名
-      this.axiossignup(id);
+      this.axiosmyacts(this.org_id);
     },
     watch: {
       '$route' (to, from) {
-        this.item = to.params.opt;
+        switch (to.params.opt) {
+          case 'inform':
+            this.item = 'inform';
+            break;
+          case 'create':
+            this.item = 'create';
+            break;
+          case 'draft':
+            this.item = 'draft';
+            // 草稿箱
+            this.axiosdraft(this.org_id);
+            break;
+          case 'myact':
+            this.item = 'myact';
+            break;
+          case 'mysignup':
+            this.item = 'mysignup';
+            // 报名
+            this.axiossignup(this.org_id);
+            break;
+          case 'orgmsg':
+            this.item = 'orgmsg';
+            break;
+        }
       }
     },
     computed: {
@@ -179,7 +205,7 @@
       axiosdraft: function (id) {
         this.$http({
           method: 'get',
-          url: '/activity/activities/?owner=' + id + '&is_published=False',
+          url: '/activity/activities/?owner=' + id + '&is_published=False&ordering=-created_at',
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           }
@@ -225,7 +251,7 @@
               orgavatar: res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
-              is_ended:res.data.results[k].is_ended,
+              is_ended: res.data.results[k].is_ended,
             });
           }
           this.moremyacts = res.data.next;
@@ -363,28 +389,28 @@
           alert("网络传输故障！");
         });
       },
-      chooseitem: function (e) {
-        switch (e) {
-          case 'inform':
-            this.item = 'inform';
-            break;
-          case 'create':
-            this.item = 'create';
-            break;
-          case 'draft':
-            this.item = 'draft';
-            break;
-          case 'myact':
-            this.item = 'myact';
-            break;
-          case 'mysignup':
-            this.item = 'mysignup';
-            break;
-          case 'orgmsg':
-            this.item = 'orgmsg';
-            break;
-        }
-      },
+      // chooseitem: function (e) {
+      //   switch (e) {
+      //     case 'inform':
+      //       this.item = 'inform';
+      //       break;
+      //     case 'create':
+      //       this.item = 'create';
+      //       break;
+      //     case 'draft':
+      //       this.item = 'draft';
+      //       break;
+      //     case 'myact':
+      //       this.item = 'myact';
+      //       break;
+      //     case 'mysignup':
+      //       this.item = 'mysignup';
+      //       break;
+      //     case 'orgmsg':
+      //       this.item = 'orgmsg';
+      //       break;
+      //   }
+      // },
       onScroll(e) {
         this.offsetTop = window.pageYOffset || document.documentElement.scrollTop;
       }
@@ -410,7 +436,7 @@
 
   .asinform {
     width: 266.41px;
-    height: 840px;
+    height: 520px;
     background: white;
     float: left;
     margin-top: 1px;

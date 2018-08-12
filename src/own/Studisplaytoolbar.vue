@@ -19,9 +19,9 @@
         var m=this.itembottom;
         switch(m){
           case 'collect':
-            return 16;
+            return 0;
           case 'historyattend':
-            return 109;
+            return 93;
         }
       }
     },
@@ -51,7 +51,7 @@
     width: 56px;
     background: #E03636;
     top: 60px;
-    left: 0;
+    left: 16px;
     -webkit-transition: all 100ms ease-out;
     -moz-transition: all 100ms ease-out;
     transition: all 100ms ease-out;

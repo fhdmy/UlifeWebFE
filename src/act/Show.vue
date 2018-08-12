@@ -19,11 +19,11 @@
     <div class="comment-wrapper">
       <div class="comment-inner" v-for="(c,i) in customlists" :key="i">
         <div class="comment-top">
-          <router-link :to="{name:'studisplay',params:{opt:'collect'}}">
+          <a @click="openhomepage(item.url,item.type)">
             <v-avatar>
               <img :src="c.img" />
             </v-avatar>
-          </router-link>
+          </a>
           <p class="top-name mr-3 ml-3">{{c.name}}</p>
           <p class="top-date">评论于{{c.date}}</p>
         </div>
@@ -42,7 +42,18 @@
 
     }),
     methods: {
-     
+     openhomepage:function(url,type){ 
+        var id=url.split("/");
+        id=id[5];
+        if(type=='student'){
+          let routeData = this.$router.resolve({name:'studisplay',params:{opt:'inform',stu_id:id}});
+          window.open(routeData.href, '_blank');
+        }
+        else if(type=='org'){
+          let routeData = this.$router.resolve({name:'orgdisplay',params:{opt:'inform',org_id:id}});
+          window.open(routeData.href, '_blank');
+        }
+      }
     }
   }
 

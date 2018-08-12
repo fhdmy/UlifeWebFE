@@ -16,7 +16,7 @@
         <p class="act-title display-1" v-if="!fixed">{{title}}</p>
         <Acttoolbar :org="org" :launchdate="launchdate" :isfinished="is_ended" :stars="stars" :fixed="fixed" :title="title" :collected="collected"
           :participation="participation" :routerid="routerid" :acturl="opt" :collecturl="collecturl" :participationurl="participationurl"
-          :requires="requires"></Acttoolbar>
+          :requires="requires" :is_ended="is_ended"></Acttoolbar>
       </div>
     </div>
     <div v-if="fixed" style="height:70px;"></div>
@@ -113,7 +113,6 @@
         //   "Authorization": "Token " + localStorage.getItem("token")
         // }
       }).then((res) => {
-        console.log(res.data);
         var computeddate = res.data.created_at.split('T');
         var computedstart = res.data.start_at.split('T');
         var comutedstarttime = computedstart[1].split(':');
