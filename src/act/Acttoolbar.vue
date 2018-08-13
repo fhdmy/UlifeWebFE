@@ -1,6 +1,6 @@
 <template>
   <v-toolbar color="white elevation-0" height="70">
-    <v-dialog v-model="dialog" max-width="290">
+    <v-dialog v-model="dialog" max-width="290" v-if="!is_ended">
       <v-card>
         <v-card-text>你确定要取消报名？</v-card-text>
         <v-card-actions>
@@ -39,7 +39,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-btn flat class="subheading toolbar-signinbtn" v-if="is_ended">报名</v-btn>
+      <v-btn flat class="subheading toolbar-signinbtn" v-if="!participation && is_ended">报名</v-btn>
       <v-btn flat class="subheading toolbar-signinbtn participation" v-if="participation" @click.stop="dialog = true">已报名</v-btn>
       <v-btn flat class="subheading toolbar-btn" @click="collect">
         <v-icon :class="{'toolbar-icon':true,'iconfont':true,'icon-wujiaoxing':!collected,'icon-star_full':collected}" color="primary"></v-icon>
