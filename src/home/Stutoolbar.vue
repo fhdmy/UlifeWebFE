@@ -74,14 +74,10 @@
       toAppsearch: function () {
         this.$refs.searchinput.focus();
         this.changecolor();
-        if (this.$refs.searchinput.value.length != 0) {
-          this.$router.push({ name: 'search', params: {target:'act',time:'all',type:'all',interest:'all'}});
-        }
+        this.$router.push({ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'全部',opt:'综合排序',content:(this.value=='')?'无':this.value}});
       },
       keyuptoAppsearch: function () {
-        if (this.value.length != 0) {
-          this.$router.push({ name: 'search', params: {target:'act',time:'all',type:'all',interest:'all'}});
-        }
+        this.$router.push({ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'全部',opt:'综合排序',content:(this.value=='')?'无':this.value}});
       }
     }
   }

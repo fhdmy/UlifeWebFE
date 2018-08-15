@@ -3,7 +3,7 @@
     <p class="text-md-center text-lg-center text-xl-center mt-4 title font-weight-bold mb-0">排行榜</p>
     <v-list>
       <template v-for="(item, index) in items">
-        <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
+        <a @click="openorg(act.org_id)" :key="index">
         <v-list-tile avatar>
           <span>{{item.rank}}-</span>
           <v-list-tile-avatar>
@@ -17,7 +17,7 @@
             <v-icon color="primary" standard class="iconfont icon-star_full"></v-icon>
           </span>
         </v-list-tile>
-        </router-link>
+        </a>
         <v-divider v-if="index + 1 < items.length" :key="item.rank+5"></v-divider>
       </template>
     </v-list>
@@ -26,6 +26,7 @@
 
 <script>
   export default {
+    props:['acts'],
     data: () => ({
       items: [{
           rank: 1,
@@ -58,7 +59,13 @@
           stars: 4.8
         }
       ]
-    })
+    }),
+    methods:{
+      openorg:function(org_id){
+        let routeData = this.$router.resolve({name:'orgdisplay',params:{opt:'inform',org_id:org_id}});
+        window.open(routeData.href, '_blank');
+      }
+    }
   }
 
 </script>

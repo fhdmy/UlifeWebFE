@@ -111,6 +111,9 @@
           // 设置数组
           var actid = res.data.results[k].url;
           actid = actid.split("/");
+          var orgurl=res.data.results[k].owner.url;
+          orgurl=orgurl.split("/");
+          var org_id=orgurl[5];
           var computeddate = res.data.results[k].start_at.split('T');
           this.$set(this.actcontainer, k, {
             head_img: res.data.results[k].head_img,
@@ -120,6 +123,7 @@
             orgavatar: res.data.results[k].owner.avatar,
             isover: false,
             acturl: actid[5],
+            org_id:org_id,
             is_ended:res.data.results[k].is_ended
           });
           this.moreacts = res.data.next;

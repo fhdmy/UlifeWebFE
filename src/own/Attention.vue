@@ -5,18 +5,18 @@
       <p v-if="!is_watched_orgs_public" style="color:#FE9246;">这是人家的小秘密啦！</p>
       <div class="attention-inner" :style="{transform:'translate('+move+'px'+',0)',width:w+'px'}" v-show="is_watched_orgs_public">
         <div class="attention-col text-md-center text-lg-center text-xl-center" v-for="item in items" :key="item.number" v-if="isdouble(item.number)">
-          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
+          <a @click="openorg(item.orgid)">
             <v-avatar size="40" class="mb-1">
               <img :src="item.orgavatar" />
             </v-avatar>
             <p class="attention-name">{{item.orgname}}</p>
-          </router-link>
-          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" v-show="nextname(item.number)!=null">
+          </a>
+          <a @click="openorg(nextorgid(item.number))" v-show="nextname(item.number)!=null">
             <v-avatar size="40" class="mb-1">
               <img :src="nextimg(item.number)" v-if="nextimg(item.number)!='none'" />
             </v-avatar>
             <p class="attention-name">{{nextname(item.number)}}</p>
-          </router-link>
+          </a>
         </div>
       </div>
     </div>
@@ -68,6 +68,10 @@
         else
           return 'none';
       },
+      nextorgid: function (n) {
+        if (n + 1 < this.items.length)
+          return this.items[n + 1].orgid;
+      },
       nextname: function (n) {
         if (n + 1 < this.items.length)
           return this.items[n + 1].orgname;
@@ -83,6 +87,10 @@
           return;
         this.move-=71.03;
         this.calculate++;
+      },
+      openorg:function(org_id){
+        let routeData = this.$router.resolve({name:'orgdisplay',params:{opt:'inform',org_id:org_id}});
+        window.open(routeData.href, '_blank');
       }
     }
   }

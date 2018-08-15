@@ -11,7 +11,7 @@
             </v-avatar>
             <p class="attention-name">{{item.name}}</p>
           </a>
-          <a @click="openhomepage(item.url,item.type)" v-show="nextname(item.number)!=null">
+          <a @click="openhomepage(nexturl(item.number),nexttype(item.number))" v-show="nextname(item.number)!=null">
             <v-avatar size="40" class="mb-1">
               <img :src="nextimg(item.number)" v-if="nextimg(item.number)!='none'" />
             </v-avatar>
@@ -72,6 +72,14 @@
         if (n + 1 < this.items.length)
           return this.items[n + 1].name;
       },
+      nexturl:function(n){
+        if (n + 1 < this.items.length)
+          return this.items[n + 1].url;
+      },
+      nexttype:function(n){
+        if (n + 1 < this.items.length)
+          return this.items[n + 1].type;
+      },
       leftchange:function(){
         if(this.movejudge==-1 || this.movejudge==0)
           return;
@@ -88,14 +96,14 @@
         var id=url.split("/");
         id=id[5];
         if(type=='student'){
-          let routeData = this.$router.resolve({name:'studisplay',params:{opt:'inform',stu_id:id}});
+          let routeData = this.$router.resolve({name:'studisplay',params:{opt:'collect',stu_id:id}});
           window.open(routeData.href, '_blank');
         }
         else if(type=='org'){
           let routeData = this.$router.resolve({name:'orgdisplay',params:{opt:'inform',org_id:id}});
           window.open(routeData.href, '_blank');
         }
-      },
+      }
     }
   }
 

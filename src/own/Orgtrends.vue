@@ -16,12 +16,10 @@
               <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
           </a>
-          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
             <img :src="act.orgavatar" >
           </v-avatar>
-          </router-link>
         </v-card-title>
       </v-card>
       <div style="clear:both;"></div>
@@ -124,7 +122,6 @@
     position: absolute;
     right: 0;
     bottom: 5px;
-    cursor: pointer;
   }
 
   .headline-leftcontent {

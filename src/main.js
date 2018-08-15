@@ -167,7 +167,7 @@ const routes = [
   { path: '/Forgetpwd2', component: Forgetpwd2 },
   { path: '/Changephone1', component: Changephone1 },
   { path: '/Changephone2', component: Changephone2 },
-  { path: '/Appsearch/:target/:time/:type/:interest', component: Appsearch,name:'search',props:true},
+  { path: '/Appsearch/:target/:time/:type/:interest/:opt/:content', component: Appsearch,name:'search',props:true},
   { path: '/Changeaccount', component: Changeaccount },
   { path: '/Appstuown/:opt', component: Appstuown,name:'stuown',props: true},
   { path: '/Appact/:opt', component: Appact,name:'appact',props: true },

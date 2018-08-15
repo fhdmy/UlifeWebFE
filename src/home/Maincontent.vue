@@ -16,12 +16,12 @@
               <v-icon class="ml-2 mr-1 iconfont icon-xiangmudidian subheading"></v-icon>{{act.location}}
             </div>
           </a>
-          <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
-            <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
+          <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
+          <a @click="openorg(act.org_id)">
             <v-avatar color="grey lighten-4 ml-3" size="60">
               <img :src="act.orgavatar">
             </v-avatar>
-          </router-link>
+          </a>
         </v-card-title>
       </v-card>
       <div style="clear:both;"></div>
@@ -53,6 +53,10 @@
       },
       getmoreacts:function(){
         this.$emit("sendmoreacts",true);
+      },
+      openorg:function(org_id){
+        let routeData = this.$router.resolve({name:'orgdisplay',params:{opt:'inform',org_id:org_id}});
+        window.open(routeData.href, '_blank');
       }
     }
   }

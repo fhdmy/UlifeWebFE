@@ -8,24 +8,24 @@
         <div class="choose-content-wrapper ml-3">
         <div class="choose-content-inner mt-3 ml-4">
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'day',type:'all',interest:'all'}}">一天内</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'一天内',type:'全部',interest:'全部',opt:'综合排序',content:'无'}}">一天内</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'week',type:'all',interest:'all'}}">一周内</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'一周内',type:'全部',interest:'全部',opt:'综合排序',content:'无'}}">一周内</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'month',type:'all',interest:'all'}}">一个月内</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'一个月内',type:'全部',interest:'全部',opt:'综合排序',content:'无'}}">一个月内</router-link>
           </div>
         </div>
         <div class="choose-content-inner mt-3 ml-4">
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'weekday',type:'all',interest:'all'}}">休息日</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'weekday',type:'全部',interest:'全部',opt:'综合排序',content:'无'}}">休息日</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'workday',type:'all',interest:'all'}}">工作日</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'workday',type:'全部',interest:'全部',opt:'综合排序',content:'无'}}">工作日</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'holiday',type:'all',interest:'all'}}">寒暑假</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'holiday',type:'全部',interest:'全部',opt:'综合排序',content:'无'}}">寒暑假</router-link>
           </div>
         </div>
         <v-divider vertical class="v-divider-time"></v-divider>
@@ -38,13 +38,13 @@
         <div class="choose-content-wrapper">
         <div class="choose-content-inner mt-3 ml-4">
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'match',interest:'all'}}">比赛</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'比赛',interest:'全部',opt:'综合排序',content:'无'}}">比赛</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'share',interest:'all'}}">分享</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'分享',interest:'全部',opt:'综合排序',content:'无'}}">分享</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'interact',interest:'all'}}">互动</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'互动',interest:'全部',opt:'综合排序',content:'无'}}">互动</router-link>
           </div>
         </div>
         <v-divider vertical class="v-divider-method"></v-divider>
@@ -57,35 +57,35 @@
         <div class="choose-content-bigwrapper">
         <div class="choose-content-inner mt-3 ml-4">
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'game'}}">游戏</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'游戏',opt:'综合排序',content:'无'}}">游戏</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'film'}}">影视</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'影视',opt:'综合排序',content:'无'}}">影视</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'chess'}}">棋牌</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'棋牌',opt:'综合排序',content:'无'}}">棋牌</router-link>
           </div>
         </div>
         <div class="choose-content-inner mt-3 ml-4">
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'culture'}}">文化艺术</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'文化艺术',opt:'综合排序',content:'无'}}">文化艺术</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'exercise'}}">运动/户外</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'运动/户外',opt:'综合排序',content:'无'}}">运动/户外</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'tech'}}">学术科技</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'学术科技',opt:'综合排序',content:'无'}}">学术科技</router-link>
           </div>
         </div>
         <div class="choose-content-inner mt-3 ml-5">
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'social'}}">社会科学</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'社会科学',opt:'综合排序',content:'无'}}">社会科学</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'public'}}">公益</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'公益',opt:'综合排序',content:'无'}}">公益</router-link>
           </div>
           <div class="mb-2">
-            <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'practice'}}">实践</router-link>
+            <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'实践',opt:'综合排序',content:'无'}}">实践</router-link>
           </div>
         </div>
         <v-divider vertical></v-divider>
@@ -94,7 +94,7 @@
       <v-flex xl3 lg3 md3>
         <div class="p-for-search text-md-center text-lg-center text-xl-center title font-weight-bold">详 细 搜 索</div>
         <div class="text-md-center text-lg-center text-xl-center mt-2"><v-icon x-large class="iconfont icon-jiantou"></v-icon></div>
-        <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'all'}}"><div class="text-md-center text-lg-center text-xl-center"><v-btn depressed class="bt-2" color="primary" large>点我</v-btn></div></router-link>
+        <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'全部',opt:'综合排序',content:'无'}}"><div class="text-md-center text-lg-center text-xl-center"><v-btn depressed class="bt-2" color="primary" large>点我</v-btn></div></router-link>
       </v-flex>
     </v-layout>
   </v-container>

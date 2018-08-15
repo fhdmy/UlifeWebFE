@@ -126,7 +126,8 @@
                 avatar: res.data[k].watcher.student.avatar,
                 name: res.data[k].watcher.student.nickname,
                 url: res.data[k].watcher.student.url,
-                number: k
+                number: k,
+                type:'student'
               });
             }
             // 是组织
@@ -135,7 +136,8 @@
                 avatar: res.data[k].watcher.org.avatar,
                 name: res.data[k].watcher.org.org_name,
                 url: res.data[k].watcher.org.url,
-                number: k
+                number: k,
+                type:'org'
               });
             }
           }
@@ -234,7 +236,7 @@
       axiosmyacts: function (id) {
         this.$http({
           method: 'get',
-          url: '/activity/activities/?owner=' + id + '&is_published=True',
+          url: '/activity/activities/?owner=' + id + '&is_published=True&ordering=-created_at',
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           }

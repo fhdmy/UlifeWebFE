@@ -69,14 +69,8 @@
       var url1 = localStorage.getItem("org_url");
       if (url0 != null) {
         this.usertype = 'user';
-        var user_url = localStorage.getItem("user_url");
-        user_url = user_url.split("/");
-        this.routerid = user_url[3];
       } else if (url1 != null) {
         this.usertype = 'org';
-        var user_url = localStorage.getItem("org_url");
-        user_url = user_url.split("/");
-        this.routerid = user_url[3];
       }
       this.avatarurl = sessionStorage.getItem("avatar");
 
@@ -251,6 +245,9 @@
             // 设置数组
             var actid = res.data.results[k].activity.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].activity.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].activity.start_at.split('T');
             this.$set(this.historyatt, k, {
               head_img: res.data.results[k].activity.head_img,
@@ -260,6 +257,7 @@
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id
             });
             this.moreatt = res.data.next;
             this.presentatt = res.data.results.length;
@@ -281,6 +279,9 @@
             // 设置数组
             var actid = res.data.results[k].target.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].target.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].target.start_at.split('T');
             this.$set(this.collects, k, {
               head_img: res.data.results[k].target.head_img,
@@ -290,6 +291,7 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].target.is_ended,
               bookmarkingurl: res.data.results[k].url
             });
@@ -317,6 +319,9 @@
             // 设置数组
             var actid = res.data.results[k].target.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].target.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].target.start_at.split('T');
             this.$set(this.collects, this.presentcollects + k, {
               head_img: res.data.results[k].target.head_img,
@@ -326,6 +331,7 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].target.is_ended,
             });
           }
@@ -351,6 +357,9 @@
             // 设置数组
             var actid = res.data.results[k].activity.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].activity.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].activity.start_at.split('T');
             this.$set(this.historyatt, this.presentatt + k, {
               head_img: res.data.results[k].activity.head_img,
@@ -359,7 +368,8 @@
               location: res.data.results[k].activity.location,
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
+              org_id:org_id
             });
           }
           this.moreatt = res.data.next;

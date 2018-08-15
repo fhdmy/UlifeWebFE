@@ -17,7 +17,7 @@
     <div v-if="fixed" style="height:64px;"></div>
     <div class="stuown-mainwrapper">
       <Orginform :class="{'informfixed':fixed}" :name="name" :attention="attention" :stars="stars" :acts="activity_count" :visits="visits"
-        :mine="false"></Orginform>
+        :mine="false" :org_id="org_id"></Orginform>
       <div class="asinform" v-if="fixed"></div>
       <Inform v-show="item=='inform'" :mine="mine" :lists="lists"></Inform>
       <Orgtrends v-show="item=='trends'" :acts="myacts" @getmoretrends="getmoretrends"></Orgtrends>
@@ -59,14 +59,8 @@
       var url1 = localStorage.getItem("org_url");
       if (url0 != null) {
         this.usertype = 'user';
-        var user_url = localStorage.getItem("user_url");
-        user_url = user_url.split("/");
-        this.routerid = user_url[3];
       } else if (url1 != null) {
         this.usertype = 'org';
-        var user_url = localStorage.getItem("org_url");
-        user_url = user_url.split("/");
-        this.routerid = user_url[3];
       }
       this.avatarurl = sessionStorage.getItem("avatar");
 
@@ -114,7 +108,8 @@
                 avatar: res.data[k].watcher.student.avatar,
                 name: res.data[k].watcher.student.nickname,
                 url: res.data[k].watcher.student.url,
-                number: k
+                number: k,
+                type:'student'
               });
             }
             // 是组织
@@ -123,7 +118,8 @@
                 avatar: res.data[k].watcher.org.avatar,
                 name: res.data[k].watcher.org.org_name,
                 url: res.data[k].watcher.org.url,
-                number: k
+                number: k,
+                type:'org'
               });
             }
           }

@@ -63,7 +63,7 @@
 <script>
   export default {
     props: ['org', 'launchdate', 'isfinished', 'stars', 'fixed', 'title', 'participation', 'collected', 'routerid',
-      'acturl', 'collecturl','requires','participationurl','is_ended'
+      'acturl', 'collecturl','requires','participationurl','is_ended','usertype'
     ],
     data: () => ({
       dialog: false,
@@ -96,8 +96,12 @@
     },
     methods: {
       collect: function () {
-        if(localStorage.getItem("token")==null){
+        if(this.usertype=='none'){
           alert("请先登录账号！");
+          return;
+        }
+        if(this.usertype=='org'){
+          alert("组织用户不能进行此操作！");
           return;
         }
         if (!this.collected) {
@@ -137,8 +141,12 @@
         }
       },
       signup: function () {
-        if(localStorage.getItem("token")==null){
+        if(this.usertype=='none'){
           alert("请先登录账号！");
+          return;
+        }
+        if(this.usertype=='org'){
+          alert("组织用户不能进行此操作！");
           return;
         }
         if(this.answers.length!=this.requires.length){

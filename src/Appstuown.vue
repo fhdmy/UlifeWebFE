@@ -84,8 +84,6 @@
           break;
         case 'trends':
           this.item = 'trends';
-          // 动态
-          this.axiostrends(this.stu_id);
           break;
         case 'collect':
           this.item = 'collect';
@@ -178,6 +176,8 @@
           });
         }
         this.attention = res.data.length;
+        // 动态
+        this.axiostrends(this.stu_id);
       }).catch(function (error) {
         alert("网络传输故障！");
       });
@@ -192,8 +192,6 @@
             break;
           case 'trends':
             this.item = 'trends';
-            // 动态
-            this.axiostrends(this.stu_id);
             break;
           case 'collect':
             this.item = 'collect';
@@ -254,6 +252,9 @@
             // 设置数组
             var actid = res.data.results[k].activity.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].activity.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].activity.start_at.split('T');
             this.$set(this.signupacts, k, {
               head_img: res.data.results[k].activity.head_img,
@@ -263,6 +264,7 @@
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].activity.is_ended,
             });
           }
@@ -285,6 +287,9 @@
             // 设置数组
             var actid = res.data.results[k].activity.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].activity.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].activity.start_at.split('T');
             this.$set(this.historyatt, k, {
               head_img: res.data.results[k].activity.head_img,
@@ -294,6 +299,7 @@
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id
             });
             this.moreatt = res.data.next;
             this.presentatt = res.data.results.length;
@@ -315,6 +321,9 @@
             // 设置数组
             var actid = res.data.results[k].target.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].target.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].target.start_at.split('T');
             this.$set(this.historyvi, k, {
               head_img: res.data.results[k].target.head_img,
@@ -324,6 +333,7 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].target.is_ended,
             });
             this.moreview = res.data.next;
@@ -346,6 +356,9 @@
             // 设置数组
             var actid = res.data.results[k].target.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].target.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].target.start_at.split('T');
             this.$set(this.collects, k, {
               head_img: res.data.results[k].target.head_img,
@@ -355,6 +368,7 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].target.is_ended,
               bookmarkingurl: res.data.results[k].url
             });
@@ -377,7 +391,7 @@
         }
         this.$http({
           method: 'get',
-          url: '/activity/activities/?owner__in' + ids,
+          url: '/activity/activities/?owner__in=' + ids,
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           }
@@ -386,6 +400,9 @@
             // 设置数组
             var actid = res.data.results[k].url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.trendacts, k, {
               head_img: res.data.results[k].head_img,
@@ -395,6 +412,7 @@
               orgavatar: res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].is_ended,
             });
             this.moretrend = res.data.next;
@@ -446,6 +464,9 @@
             // 设置数组
             var actid = res.data.results[k].target.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].target.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].target.start_at.split('T');
             this.$set(this.historyvi, this.presentview + k, {
               head_img: res.data.results[k].target.head_img,
@@ -455,6 +476,7 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].target.is_ended,
             });
           }
@@ -480,6 +502,9 @@
             // 设置数组
             var actid = res.data.results[k].target.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].target.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].target.start_at.split('T');
             this.$set(this.collects, this.presentcollects + k, {
               head_img: res.data.results[k].target.head_img,
@@ -489,6 +514,7 @@
               orgavatar: res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].target.is_ended,
             });
           }
@@ -514,6 +540,9 @@
             // 设置数组
             var actid = res.data.results[k].activity.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].activity.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].activity.start_at.split('T');
             this.$set(this.historyatt, this.presentatt + k, {
               head_img: res.data.results[k].activity.head_img,
@@ -522,7 +551,8 @@
               location: res.data.results[k].activity.location,
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
-              acturl: actid[5]
+              acturl: actid[5],
+              org_id:org_id
             });
           }
           this.moreatt = res.data.next;
@@ -547,6 +577,9 @@
             // 设置数组
             var actid = res.data.results[k].activity.url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].activity.owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].activity.start_at.split('T');
             this.$set(this.signupacts, this.presentsignup + k, {
               head_img: res.data.results[k].activity.head_img,
@@ -556,6 +589,7 @@
               orgavatar: res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].activity.is_ended,
             });
           }
@@ -581,6 +615,9 @@
             // 设置数组
             var actid = res.data.results[k].url;
             actid = actid.split("/");
+            var orgurl=res.data.results[k].owner.url;
+            orgurl=orgurl.split("/");
+            var org_id=orgurl[5];
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.trendacts, this.presenttrend + k, {
               head_img: res.data.results[k].head_img,
@@ -590,6 +627,7 @@
               orgavatar: res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
+              org_id:org_id,
               is_ended: res.data.results[k].is_ended,
             });
           }

@@ -2,15 +2,15 @@
   <div class="searchchoose-wrapper">
     <v-container>
       <div class="mb-3">
-        <router-link :to="{ name: 'search', params: {target:'act',time:'all',type:'all',interest:'all'}}"><span class="ml-4 subheading option" :class="{'isactive':disabled==false}">活动</span></router-link>
+        <router-link :to="{ name: 'search', params: {target:'活动',time:'全部',type:'全部',interest:'全部',opt:rank,content:content}}"><span class="ml-4 subheading option" :class="{'isactive':disabled==false}">活动</span></router-link>
         <span class="mx-3">|</span>
-        <router-link :to="{ name: 'search', params: {target:'org',time:'none',type:'none',interest:'none'}}"><span class="subheading option" :class="{'isactive':disabled==true}">组织</span></router-link>
+        <router-link :to="{ name: 'search', params: {target:'组织',time:'无',type:'无',interest:'无',opt:rank,content:content}}"><span class="subheading option" :class="{'isactive':disabled==true}">组织</span></router-link>
       </div>
       <div class="searchtime">
         <span class="searchchoose-title ml-4 mr-3">时间</span>
         <span class="ml-3">|</span>
         <span class="searchchoose-text ml-3" v-for="ti in times" :key="ti.number">
-          <router-link :to="{ name: 'search', params: {target:'act',time:ti.par,type:chosentype,interest:choseninterest}}" :class="{'isactive':chosentime==ti.par,'isdisabled':disabled}">{{ti.name}}</router-link>
+          <router-link :to="{ name: 'search', params: {target:'活动',time:ti.name,type:chosentype,interest:choseninterest,opt:rank,content:content}}" :class="{'isactive':chosentime==ti.name,'isdisabled':disabled}">{{ti.name}}</router-link>
           <span class="searchchoose-divider ml-3" v-if="ti.number!=6">|</span>
         </span>
       </div>
@@ -18,7 +18,7 @@
         <span class="searchchoose-title ml-4 mr-3">形式</span>
         <span class="ml-3">|</span>
         <span class="searchchoose-text ml-3" v-for="ty in types" :key="ty.number">
-          <router-link :to="{ name: 'search', params: {target:'act',time:chosentime,type:ty.par,interest:choseninterest}}" :class="{'isactive':chosentype==ty.par,'isdisabled':disabled}">{{ty.name}}</router-link>
+          <router-link :to="{ name: 'search', params: {target:'活动',time:chosentime,type:ty.name,interest:choseninterest,opt:rank,content:content}}" :class="{'isactive':chosentype==ty.name,'isdisabled':disabled}">{{ty.name}}</router-link>
           <span class="searchchoose-divider ml-3" v-if="ty.number!=3">|</span>
         </span>
       </div>
@@ -26,9 +26,9 @@
         <span class="searchchoose-title ml-4 mr-3">兴趣</span>
         <span class="ml-3">|</span>
         <span class="searchchoose-text ml-3" v-for="i in interests" :key="i.number">
-          <router-link :to="{ name: 'search', params: {target:'act',time:chosentime,type:chosentype,interest:i.par}}" :class="{'isactive':choseninterest==i.par,'isdisabled':disabled}">{{i.name}}</router-link>
+          <router-link :to="{ name: 'search', params: {target:'活动',time:chosentime,type:chosentype,interest:i.name,opt:rank,content:content}}" :class="{'isactive':choseninterest==i.name,'isdisabled':disabled}">{{i.name}}</router-link>
           <span class="searchchoose-divider ml-3" v-if="i.number!=9">|</span>
-        </span>
+        </span>  
       </div>
     </v-container>
   </div>
@@ -36,7 +36,7 @@
 
 <script>
   export default {
-    props:['target','time','type','interest'],
+    props:['target','time','type','interest','content','rank'],
     data: () => ({
       times: [{
           name: '全部',
@@ -146,9 +146,9 @@
           par:'practice'
         }
       ],
-      chosentime:'all',
-      chosentype:'all',
-      choseninterest:'all',
+      chosentime:'全部',
+      chosentype:'全部',
+      choseninterest:'全部',
       disabled:false
     }),
     created:function(){
@@ -159,14 +159,14 @@
       this.chosentime=ti;
       this.chosentype=ty;
       this.choseninterest=i;
-      if(t=='org')
+      if(t=='组织')
         this.disabled=true;
       else
         this.disabled=false;
     },
     watch:{
       '$route' (to, from) {
-        if(to.params.target=='org')
+        if(to.params.target=='组织')
           this.disabled=true;
         else 
           this.disabled=false;
@@ -176,7 +176,7 @@
       }
     },
     methods: {
-      
+  
     }
   }
 

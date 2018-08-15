@@ -8,15 +8,15 @@
     <img :src="parallaxpath" class="large-img" />
     <div class="elevation-1 white" :class="{'isfixed':fixed,'owntoolbar-wrapper':true}">
       <div class="middle-wrapper">
-        <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
+        <a @click="openorg(org_id)">
           <v-avatar size="120" v-if="!fixed">
             <img :src="img" :alt="org">
           </v-avatar>
-        </router-link>
+        </a>
         <p class="act-title display-1" v-if="!fixed">{{title}}</p>
         <Acttoolbar :org="org" :launchdate="launchdate" :isfinished="is_ended" :stars="stars" :fixed="fixed" :title="title" :collected="collected"
           :participation="participation" :routerid="routerid" :acturl="opt" :collecturl="collecturl" :participationurl="participationurl"
-          :requires="requires" :is_ended="is_ended"></Acttoolbar>
+          :requires="requires" :is_ended="is_ended" :usertype="usertype"></Acttoolbar>
       </div>
     </div>
     <div v-if="fixed" style="height:70px;"></div>
@@ -50,7 +50,7 @@
       title: '',
       requires: [],
       org: '',
-      orgurl: '',
+      org_id: '',
       launchdate: '',
       stars: 5,
       introduction: '',
@@ -120,7 +120,9 @@
         this.img = res.data.owner.avatar;
         this.org = res.data.owner.org_name;
         this.title = res.data.heading;
-        this.orgurl = res.data.owner.url;
+        var orgurl = res.data.owner.url;
+        orgurl=orgurl.split("/");
+        this.org_id=orgurl[5];
         this.launchdate = computeddate[0];
         this.introduction = res.data.description;
         this.date = computedstart[0];
@@ -155,7 +157,7 @@
       }
 
       // 是否报名
-      if (localStorage.getItem("token") != null) {
+      if (this.usertype=='user') {
         this.$http({
           method: 'get',
           url: 'activity/participation-actdemo/?student=' + this.routerid + '&activity=' + this.opt,
@@ -184,7 +186,10 @@
           alert("网络传输故障！");
         });
       }
-
+      if(this.usertype=='org'){
+        this.participation = false;
+        this.collected = false;
+      }
     },
     computed: {
       toolbaropacity: function () {
@@ -213,6 +218,10 @@
     methods: {
       onScroll(e) {
         this.offsetTop = window.pageYOffset || document.documentElement.scrollTop;
+      },
+      openorg:function(org_id){
+        let routeData = this.$router.resolve({name:'orgdisplay',params:{opt:'inform',org_id:org_id}});
+        window.open(routeData.href, '_blank');
       }
     }
   }
