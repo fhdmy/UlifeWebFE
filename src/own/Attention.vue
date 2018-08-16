@@ -7,13 +7,13 @@
         <div class="attention-col text-md-center text-lg-center text-xl-center" v-for="item in items" :key="item.number" v-if="isdouble(item.number)">
           <a @click="openorg(item.orgid)">
             <v-avatar size="40" class="mb-1">
-              <img :src="item.orgavatar" />
+              <img v-lazy="item.orgavatar" />
             </v-avatar>
             <p class="attention-name">{{item.orgname}}</p>
           </a>
           <a @click="openorg(nextorgid(item.number))" v-show="nextname(item.number)!=null">
             <v-avatar size="40" class="mb-1">
-              <img :src="nextimg(item.number)" v-if="nextimg(item.number)!='none'" />
+              <img v-lazy="nextimg(item.number)" v-if="nextimg(item.number)!='none'" />
             </v-avatar>
             <p class="attention-name">{{nextname(item.number)}}</p>
           </a>

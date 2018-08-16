@@ -16,7 +16,7 @@
         </v-dialog>
         <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}">
           <v-avatar size="50">
-            <img :src="item.avatar" />
+            <img v-lazy="item.avatar" />
           </v-avatar>
         </router-link>
         <div class="msg-right">

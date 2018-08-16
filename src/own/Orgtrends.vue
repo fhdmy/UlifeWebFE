@@ -6,7 +6,7 @@
     <div class="Homemaincontent-mainwrapper">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <div class="act-cardd-media">
-          <a @click="openact(act.acturl)"><img :src="act.head_img" class="anim headimg" :class="{'v-imglarger':act.isover}"/></a>
+          <a @click="openact(act.acturl)"><img v-lazy="act.head_img" class="anim headimg" :class="{'v-imglarger':act.isover}"/></a>
         </div>
         <v-card-title primary-title class="pb-2">
           <a @click="openact(act.acturl)">
@@ -18,7 +18,7 @@
           </a>
           <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
-            <img :src="act.orgavatar" >
+            <img v-lazy="act.orgavatar" >
           </v-avatar>
         </v-card-title>
       </v-card>

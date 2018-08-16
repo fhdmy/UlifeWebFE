@@ -6,7 +6,7 @@
     <div class="Homemaincontent-mainwrapper">
       <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <div class="act-cardd-media">
-          <router-link to="/Appact"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
+          <router-link to="/Appact"><img v-lazy="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></router-link>
         </div>
         <v-card-title primary-title class="pb-2">
           <router-link to="/Appact">
@@ -17,7 +17,7 @@
             </div>
           </router-link>
           <v-avatar color="grey lighten-4 ml-3" size="60">
-            <img :src="act.orgavatar">
+            <img v-lazy="act.orgavatar">
           </v-avatar>
         </v-card-title>
       </v-card>

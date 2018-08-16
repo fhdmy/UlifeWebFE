@@ -40,48 +40,48 @@
         this.$refs.myimg.click();
       },
       imgchange: function (e) {
-        if (typeof (FileReader) != 'undefined') {
-          var file = this.$refs.myimg.files[0];
-          var reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = (e) => {
-            // 发送数据到服务器
-            this.$http({
-              method: 'patch',
-              url: this.userurl,
-              headers: {
-                "Authorization": "Token " + localStorage.getItem("token")
-              },
-              data: {
-                avatar:reader.result
-              }
-            }).then((res) => {
-              // 成功则改变本地view
-              this.imgsrc = reader.result;
-              this.snackbar=true;
-              // this.$emit("getimg",reader.result);
-            }).catch(function (error) {
-              alert("网络传输故障!");
-            });
-          }
-        } else {
-          alert("抱歉，你的浏览器不支持 FileReader");
-        }
-
-        // let file = e.target.files[0];
-        // let param = new FormData(); //创建form对象
-        // param.append('file', file); //通过append向form对象添加数据
-        // console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
-        // let config = {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data',
-        //     "Authorization": "Token " + localStorage.getItem("token")
+        // if (typeof (FileReader) != 'undefined') {
+        //   var file = this.$refs.myimg.files[0];
+        //   var reader = new FileReader();
+        //   reader.readAsDataURL(file);
+        //   reader.onload = (e) => {
+        //     // 发送数据到服务器
+        //     this.$http({
+        //       method: 'patch',
+        //       url: this.userurl,
+        //       headers: {
+        //         "Authorization": "Token " + localStorage.getItem("token")
+        //       },
+        //       data: {
+        //         avatar:reader.result
+        //       }
+        //     }).then((res) => {
+        //       // 成功则改变本地view
+        //       this.imgsrc = reader.result;
+        //       this.snackbar=true;
+        //       // this.$emit("getimg",reader.result);
+        //     }).catch(function (error) {
+        //       alert("网络传输故障!");
+        //     });
         //   }
-        // }; //添加请求头
-        // this.$http.post(this.userurl, param, config)
-        //   .then(response => {
-        //     console.log(response.data);
-        //   })
+        // } else {
+        //   alert("抱歉，你的浏览器不支持 FileReader");
+        // }
+
+        let file = e.target.files[0];
+        let param = new FormData(); //创建form对象
+        param.append('file', file); //通过append向form对象添加数据
+        console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            "Authorization": "Token " + localStorage.getItem("token")
+          }
+        }; //添加请求头
+        this.$http.post(this.userurl, param, config)
+          .then(response => {
+            console.log(response.data);
+          })
       }
     }
   }

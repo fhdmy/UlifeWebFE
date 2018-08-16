@@ -10,7 +10,7 @@
           <v-icon class="imgclearicon" @click="sentdeletetext(i)">delete_outline</v-icon>
         </div>
         <div class="text-box" contenteditable="plaintext-only" v-if="d.img=='' && d.title==''" placeholder="从这里开始你的活动正文" @input="oldhandleInput($event,i,d.key)">{{origintext[i]}}</div>
-        <img :src="d.img" class="img" v-if="d.img!=''" />
+        <img v-lazy="d.img" class="img" v-if="d.img!=''" />
         <p class="title" v-if="d.title!=''">{{d.title}}</p>
       </div>
       <!-- <div class="text-box" contenteditable="true" @input="handleInput" placeholder="从这里开始你的活动正文" v-if="gotdata.length==0" ref="content"></div>

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
+import VueLazyload from 'vue-lazyload'
 import axios from 'axios'
 import global_ from './Global.vue'
 import App from './App.vue'
@@ -86,6 +87,9 @@ Vue.use(Vuetify, {
   }
 })
 Vue.use(VueRouter)
+Vue.use(VueLazyload, {
+  error: 'assets/error.png'
+})
 Vue.component("Toolbar",Toolbar)
 Vue.component("Footer",Footer)
 Vue.component("Carousel",Carousel)

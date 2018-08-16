@@ -19,7 +19,7 @@
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
         <div class="act-cardd-media">
-          <a @click="edit(act.acturl)"><img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></a>
+          <a @click="edit(act.acturl)"><img v-lazy="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></a>
         </div>
         <v-card-title primary-title class="pb-2">
           <a @click="edit(act.acturl)">
@@ -31,7 +31,7 @@
           </a>
           <router-link :to="{name:'orgdisplay',params:{opt:'inform'}}" :key="index">
           <v-avatar color="grey lighten-4 ml-3" size="60">
-            <img :src="act.orgavatar">
+            <img v-lazy="act.orgavatar">
           </v-avatar>
           </router-link>
         </v-card-title>

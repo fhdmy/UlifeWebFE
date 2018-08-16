@@ -44,7 +44,6 @@
           "Authorization":"Token " + localStorage.getItem("token")
         }
       }).then((res)=>{
-        console.log(res.data);
             this.name=res.data.nickname;
             this.img=res.data.avatar;
             this.college=res.data.college;

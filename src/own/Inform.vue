@@ -7,7 +7,7 @@
       <div v-for="i in lists" :key="i.number">
         <p v-if="i.title!=''" class="content-title">{{i.title}}</p>
         <p v-if="i.text!=''" class="content-text">{{i.text}}</p>
-        <img v-if="i.img!=''" :src="i.img" class="content-img"/>
+        <img v-if="i.img!=''" v-lazy="i.img" class="content-img"/>
       </div>
     </div>
   </div>
