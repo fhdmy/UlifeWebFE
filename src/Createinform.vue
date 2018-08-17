@@ -21,7 +21,8 @@
       </div>
     </div>
     <div class="main-wrapper">
-      <Reeditleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted" :imglocaldisplay="imglocaldisplay"></Reeditleft>
+      <Reeditleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted"
+        :imglocaldisplay="imglocaldisplay"></Reeditleft>
       <Createinformright ref="rightchild" @sentavatar="getavatar" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
         @senttext="gettext" @reeditparse="getreeditfromright" :avatar0="avatar" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"></Createinformright>
       <div style="clear:both;"></div>
@@ -71,7 +72,7 @@
 <script>
   // import Vue from 'vue'
   export default {
-    props:['opt'],
+    props: ['opt'],
     data: () => ({
       y: 'top',
       snackbar1: false,
@@ -92,7 +93,7 @@
       cal: 0,
       key: 0,
       img: [],
-      computeddata:[],
+      computeddata: [],
       reedititem: 0,
       // slide
       slideinner: '',
@@ -101,9 +102,9 @@
       disY: 0,
       slidebtn: [],
       mousemoveflag: false,
-      deleted:false,
-      imgparam:null,
-      imglocaldisplay:[]
+      deleted: false,
+      imgparam: null,
+      imglocaldisplay: []
     }),
     computed: {
       havetopimg: function () {
@@ -114,17 +115,17 @@
       }
     },
     created: function () {
-      this.avatar= sessionStorage.getItem("avatar");
+      this.avatar = sessionStorage.getItem("avatar");
       this.url1 = localStorage.getItem("org_url");
-      if(JSON.parse(sessionStorage.getItem("lists"))!=null){
-        this.computeddata=JSON.parse(sessionStorage.getItem("lists"));
+      if (JSON.parse(sessionStorage.getItem("lists")) != null) {
+        this.computeddata = JSON.parse(sessionStorage.getItem("lists"));
       }
-      if(sessionStorage.getItem("bg_img")!=null){
-        this.parallaxpath=sessionStorage.getItem("bg_img");
+      if (sessionStorage.getItem("bg_img") != null) {
+        this.parallaxpath = sessionStorage.getItem("bg_img");
       }
-      this.cal=this.computeddata.length;
-      this.key=this.cal;
-      this.imgparam= new FormData(); //创建form对象
+      this.cal = this.computeddata.length;
+      this.key = this.cal;
+      this.imgparam = new FormData(); //创建form对象
     },
     methods: {
       onScroll(e) {
@@ -151,7 +152,7 @@
           },
           data: param
         }).then((res) => {
-          this.parallaxpath=head_img;
+          this.parallaxpath = head_img;
         }).catch(function (error) {
           alert("传输故障，注册失败！");
         });
@@ -170,34 +171,34 @@
       getparse: function (d) {
         this.parse = d;
         this.$set(this.computeddata, this.cal, {
-          type:'title',
+          type: 'title',
           inner: d,
           number: this.cal,
           key: this.key
         });
-        var len=this.imglocaldisplay.length;
-        this.imgparam.append("file"+len,'title');
-        this.$set(this.imglocaldisplay,len,'title');//本地预览;
+        var len = this.imglocaldisplay.length;
+        this.imgparam.append("file" + len, 'title');
+        this.$set(this.imglocaldisplay, len, 'title'); //本地预览;
         this.cal++;
         this.key++;
       },
       gettext: function (d) {
         this.$set(this.computeddata, this.cal, {
-          type:'text',
-          inner:'',
+          type: 'text',
+          inner: '',
           number: this.cal,
           key: this.key
         });
-        var len=this.imglocaldisplay.length;
-        this.imgparam.append("file"+len,'text');
-        this.$set(this.imglocaldisplay,len,'text');//本地预览;
+        var len = this.imglocaldisplay.length;
+        this.imgparam.append("file" + len, 'text');
+        this.$set(this.imglocaldisplay, len, 'text'); //本地预览;
         this.cal++;
         this.key++;
       },
-      getimg: function (d) { 
+      getimg: function (d) {
         this.$set(this.computeddata, this.cal, {
-          type:'img',
-          inner:'',
+          type: 'img',
+          inner: '',
           number: this.cal,
           key: this.key
         });
@@ -212,7 +213,7 @@
       },
       getoldtext: function (d, i, k) {
         this.$set(this.computeddata, i, {
-          type:'text',
+          type: 'text',
           inner: d,
           number: i,
           key: k
@@ -220,15 +221,15 @@
       },
       mouseoverbox: function (i) {
         var target = this.computeddata[i];
-        if (target.type=='title') {
+        if (target.type == 'title') {
           this.slideinner = target.inner;
-          this.slidetype='title';
-        } else if (target.type=='text') {
+          this.slidetype = 'title';
+        } else if (target.type == 'text') {
           this.slideinner = target.inner;
-          this.slidetype='text';
-        } else if (target.type=='img') {
+          this.slidetype = 'text';
+        } else if (target.type == 'img') {
           this.slideinner = this.imglocaldisplay[i];
-          this.slidetype='img';
+          this.slidetype = 'img';
         }
         this.slidebtn[i] = true;
       },
@@ -238,43 +239,43 @@
       slideleftchange: function (i) {
         var temp = {
           type: this.computeddata[i].type,
-          inner:this.computeddata[i].inner,
+          inner: this.computeddata[i].inner,
           number: i,
           key: this.computeddata[i].key,
-          img:this.imglocaldisplay[i],
-          imgparam:this.imgparam.get("file"+i)
+          img: this.imglocaldisplay[i],
+          imgparam: this.imgparam.get("file" + i)
         };
         this.computeddata[i].type = this.computeddata[i - 1].type;
         this.computeddata[i].inner = this.computeddata[i - 1].inner;
-        this.imglocaldisplay[i] = this.imglocaldisplay[i - 1];     //图片本地预览
+        this.imglocaldisplay[i] = this.imglocaldisplay[i - 1]; //图片本地预览
         this.computeddata[i].key = this.computeddata[i - 1].key;
         this.computeddata[i - 1].type = temp.type;
         this.computeddata[i - 1].inner = temp.inner;
-        this.imglocaldisplay[i - 1] = temp.img;//图片本地预览
+        this.imglocaldisplay[i - 1] = temp.img; //图片本地预览
         this.computeddata[i - 1].key = temp.key;
-        this.imgparam.set("file"+i,this.imgparam.get("file"+(i-1)));
-        this.imgparam.set("file"+(i-1),temp.imgparam);
+        this.imgparam.set("file" + i, this.imgparam.get("file" + (i - 1)));
+        this.imgparam.set("file" + (i - 1), temp.imgparam);
         this.mouseoverbox(i);
       },
       sliderightchange: function (i) {
         var temp = {
           type: this.computeddata[i].type,
-          inner:this.computeddata[i].inner,
+          inner: this.computeddata[i].inner,
           number: i,
           key: this.computeddata[i].key,
-          img:this.imglocaldisplay[i],
-          imgparam:this.imgparam.get("file"+i)
+          img: this.imglocaldisplay[i],
+          imgparam: this.imgparam.get("file" + i)
         };
         this.computeddata[i].type = this.computeddata[i + 1].type;
         this.computeddata[i].inner = this.computeddata[i + 1].inner;
-        this.imglocaldisplay[i] = this.imglocaldisplay[i + 1];     //图片本地预览
+        this.imglocaldisplay[i] = this.imglocaldisplay[i + 1]; //图片本地预览
         this.computeddata[i].key = this.computeddata[i + 1].key;
         this.computeddata[i + 1].type = temp.type;
         this.computeddata[i + 1].inner = temp.inner;
-        this.imglocaldisplay[i + 1] = temp.img;//图片本地预览
+        this.imglocaldisplay[i + 1] = temp.img; //图片本地预览
         this.computeddata[i + 1].key = temp.key;
-        this.imgparam.set("file"+i,this.imgparam.get("file"+(i+1)));
-        this.imgparam.set("file"+(i+1),temp.imgparam);
+        this.imgparam.set("file" + i, this.imgparam.get("file" + (i + 1)));
+        this.imgparam.set("file" + (i + 1), temp.imgparam);
         this.mouseoverbox(i);
       },
       getdeletetext: function (d) {
@@ -283,37 +284,61 @@
           this.computeddata[k].number = k;
         }
         this.imglocaldisplay.splice(d, 1);
-        this.imgparam.delete("file"+d);
+        this.imgparam.delete("file" + d);
         this.cal--;
-        this.deleted=!this.deleted;
+        this.deleted = !this.deleted;
       },
       getreedit: function (d) {
         this.reedititem = d;
         this.$refs.rightchild.clickaddparse(this.computeddata[d].inner);
       },
       getreeditfromright: function (d) {
-        this.computeddata[this.reedititem].inner= d;
+        this.computeddata[this.reedititem].inner = d;
       },
       savetodraft: function () {
         this.$http({
-          method: 'patch',
-          url: '/account/orgs/'+this.opt+'/',
+          method: 'post',
+          url: '/account/org-demo-upload/',
           headers: {
-            "Authorization": "Token " + localStorage.getItem("token")
+            "Authorization": "Token " + localStorage.getItem("token"),
+            "Content-Type": 'multipart/form-data'
           },
-          data: {
-            demonstration: JSON.stringify(this.computeddata),
-            img:this.imgparam
-          }
+          data: this.imgparam
         }).then((res) => {
           console.log(res.data);
-          this.snackbar1 = true;
-          setTimeout(() => {
-            sessionStorage.removeItem("lists");
-            sessionStorage.removeItem("bg_img");
-            sessionStorage.setItem("avatar",this.avatar);
-            this.$router.push({ name: 'orgown', params: {opt:'inform'}});
-          }, 2000);
+          var j=0;
+          for(let k=0;k<this.computeddata.length;k++){
+            if(this.computeddata[k].type=="img"){
+              this.computeddata[k].inner="http://222.186.36.156:8000"+res.data.l_img[j++];
+            }
+          }
+          //将数组发送给后端
+          this.$http({
+            method: 'patch',
+            url: this.url1,
+            headers: {
+              "Authorization": "Token " + localStorage.getItem("token")
+            },
+            data:{
+              demonstration:JSON.stringify(this.computeddata)
+            }
+          }).then((res) => {
+            console.log(res.data);
+            this.snackbar1 = true;
+            setTimeout(() => {
+              sessionStorage.removeItem("lists");
+              sessionStorage.removeItem("bg_img");
+              sessionStorage.setItem("avatar", this.avatar);
+              this.$router.push({
+                name: 'orgown',
+                params: {
+                  opt: 'inform'
+                }
+              });
+            }, 2000);
+          }).catch(function (error) {
+            alert("网络传输故障！");
+          });
         }).catch(function (error) {
           alert("网络传输故障！");
         });
