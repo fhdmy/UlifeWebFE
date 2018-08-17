@@ -4,7 +4,7 @@
       更换成功！
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
-    <input type="file" hidden ref="myimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="imgchange" />
+    <input type="file" hidden ref="myimg" accept="image/png, image/jpeg, image/gif, image/jpg" @change="imgchange" multiple/>
     <p class="inform-title">我的头像</p>
     <v-divider class="mb-4"></v-divider>
     <v-avatar size="130">
@@ -40,48 +40,29 @@
         this.$refs.myimg.click();
       },
       imgchange: function (e) {
-        // if (typeof (FileReader) != 'undefined') {
-        //   var file = this.$refs.myimg.files[0];
-        //   var reader = new FileReader();
-        //   reader.readAsDataURL(file);
-        //   reader.onload = (e) => {
-        //     // 发送数据到服务器
-        //     this.$http({
-        //       method: 'patch',
-        //       url: this.userurl,
-        //       headers: {
-        //         "Authorization": "Token " + localStorage.getItem("token")
-        //       },
-        //       data: {
-        //         avatar:reader.result
-        //       }
-        //     }).then((res) => {
-        //       // 成功则改变本地view
-        //       this.imgsrc = reader.result;
-        //       this.snackbar=true;
-        //       // this.$emit("getimg",reader.result);
-        //     }).catch(function (error) {
-        //       alert("网络传输故障!");
-        //     });
-        //   }
-        // } else {
-        //   alert("抱歉，你的浏览器不支持 FileReader");
-        // }
-
-        let file = e.target.files[0];
-        let param = new FormData(); //创建form对象
+        var file = e.target.files[0];
+        var param = new FormData(); //创建form对象
         param.append('file', file); //通过append向form对象添加数据
-        console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
-        let config = {
+        if (!param.get('file')) {
+          alert("打开文件失败！");
+          return;
+        } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+        var winurl=window.URL.createObjectURL(e.target.files[0]);//本地预览
+        this.$http({
+          method: 'post',
+          url: '/account/user-avatar-upload/',
           headers: {
             'Content-Type': 'multipart/form-data',
             "Authorization": "Token " + localStorage.getItem("token")
-          }
-        }; //添加请求头
-        this.$http.post(this.userurl, param, config)
-          .then(response => {
-            console.log(response.data);
-          })
+          },
+          data:param
+        }).then((res) => {
+          this.imgsrc=winurl;
+          this.snackbar = true;
+          sessionStorage.setItem("avatar",this.imgsrc);
+        }).catch(function (error) {
+          alert("传输故障，注册失败！");
+        });
       }
     }
   }

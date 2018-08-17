@@ -37,35 +37,29 @@
       clickbg:function(){
         this.$refs.mybg.click();
       },
-      imgchange:function(){
-        if(typeof(FileReader)!='undefined'){
-          var file=this.$refs.mybg.files[0];
-          var reader=new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload=(e)=>{
-            // 发送数据到服务器
-            this.$http({
-              method: 'patch',
-              url: this.userurl,
-              headers: {
-                "Authorization": "Token " + localStorage.getItem("token")
-              },
-              data: {
-                bg_img:reader.result
-              }
-            }).then((res) => {
-              // 成功则改变本地view
-              this.imgsrc = reader.result;
-              this.snackbar=true;
-              // this.$emit("getbg",reader.result);
-            }).catch(function (error) {
-              alert("网络传输故障!");
-            });
-          }
-        }
-        else{
-          alert("抱歉，你的浏览器不支持 FileReader");
-        }
+      imgchange:function(e){
+        var file = e.target.files[0];
+        var param = new FormData(); //创建form对象
+        param.append('file', file); //通过append向form对象添加数据
+        if (!param.get('file')) {
+          alert("打开文件失败！");
+          return;
+        } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+        var winurl=window.URL.createObjectURL(e.target.files[0]);//本地预览
+        this.$http({
+          method: 'post',
+          url: '/account/user-bg-img-upload/',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            "Authorization": "Token " + localStorage.getItem("token")
+          },
+          data:param
+        }).then((res) => {
+          this.imgsrc=winurl;
+          this.snackbar = true;
+        }).catch(function (error) {
+          alert("传输故障，注册失败！");
+        });
       }
     }
   }

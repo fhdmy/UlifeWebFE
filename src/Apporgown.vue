@@ -102,7 +102,7 @@
       }).then((res) => {
         this.watcher_count=res.data.watcher_count;
         this.activity_count=res.data.activity_count;
-        this.parallaxpath = res.data.bg_img;
+        this.parallaxpath = "http://222.186.36.156:8000"+res.data.bg_img;
         this.name = res.data.org_name;
         this.stars = res.data.stars;
         var url = res.data.url;

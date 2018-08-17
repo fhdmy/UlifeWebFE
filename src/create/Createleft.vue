@@ -2,26 +2,24 @@
   <div class="Homemaincontent-wrapper">
     <div class="textarea-wrapper">
       <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.key" @mouseover="mouseoverbox(i)"  @mouseout="mouseoutbox(i)">
-        <v-icon class="reediticon" v-if="texticon[i] && d.title!=''" @click="sentreedit(i)">colorize</v-icon>
-        <v-icon class="clearicon" v-if="texticon[i] && d.title!=''" @click="sentdeletetext(i)">delete_outline</v-icon>
-        <v-icon class="textclearicon" v-if="texticon[i] && d.img=='' && d.title==''" @click="sentdeletetext(i)">delete_outline</v-icon>
-        <div class="imgeidtdiv" v-if="texticon[i] && d.img!=''">
+        <v-icon class="reediticon" v-if="texticon[i] && d.type=='title'" @click="sentreedit(i)">colorize</v-icon>
+        <v-icon class="clearicon" v-if="texticon[i] && d.type=='title'" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <v-icon class="textclearicon" v-if="texticon[i] && d.type=='text'" @click="sentdeletetext(i)">delete_outline</v-icon>
+        <div class="imgeidtdiv" v-if="texticon[i] && d.type=='img'">
           <v-icon class="imgreediticon" @click="rotateimg(i)">refresh</v-icon>
           <v-icon class="imgclearicon" @click="sentdeletetext(i)">delete_outline</v-icon>
         </div>
-        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" v-if="d.img=='' && d.title==''" placeholder="从这里开始你的活动正文"></div>
-        <img v-lazy="d.img" class="img" v-if="d.img!=''"/>
-        <p class="title" v-if="d.title!=''">{{d.title}}</p>
+        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" v-if="d.type=='text'" placeholder="从这里开始你的活动正文"></div>
+        <img v-lazy="imglocaldisplay[i]" class="img" v-if="d.type=='img'"/>
+        <p class="title" v-if="d.type=='title'">{{d.inner}}</p>
       </div>
-      <!-- <div class="text-box" contenteditable="true" @input="handleInput" placeholder="从这里开始你的活动正文" v-if="gotdata.length==0" ref="content"></div>
-      <div class="text-box" contenteditable="true" @input="handleInput" v-if="gotdata.length!=0" ref="content"></div> -->
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    props:['gotdata'],
+    props:['gotdata','imglocaldisplay'],
     data: () => ({
       oldcontent:'',
       texticon:[]
@@ -130,8 +128,8 @@
     background: rgba(2,2,2,0.6);
     top: 0px;
     right: 0;
-    width: 80px;
-    padding: 5px;
+    width: 70px;
+    padding: 2px;
   }
   .imgclearicon{
     cursor: pointer;
@@ -143,7 +141,7 @@
     color:#ddd;
     font-size: 20px;
     margin-right: 10px;
-    margin-left: 10px;
+    margin-left: 7px;
   }
   .textclearicon{
     position: absolute;

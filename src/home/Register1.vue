@@ -16,51 +16,89 @@
         </v-layout>
       </v-container>
     </div>
-    <p class="text-md-center text-lg-center text-xl-center subheading register-tosignin">已有账号？<router-link to="/Login">  立即登录</router-link></p>
+    <p class="text-md-center text-lg-center text-xl-center subheading register-tosignin">已有账号？
+      <router-link to="/Login"> 立即登录</router-link>
+    </p>
     <router-link to="/">
       <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="clearsession">
         <v-icon>home</v-icon>
       </v-btn>
-    </router-link> 
+    </router-link>
   </div>
 </template>
 
 <script>
-import {SHA256} from '../webtoolkit.sha256.js'
+  import {
+    SHA256
+  } from '../webtoolkit.sha256.js'
   export default {
     data: () => ({
-      number:'',
-      pwd:'',
-      rules:{
-        required:value => !!value || '不能为空！',
-        number:value=>{
+      number: '',
+      pwd: '',
+      rules: {
+        required: value => !!value || '不能为空！',
+        number: value => {
           const pattern = /^[0-9]*$/;
           var t;
-          if(pattern.test(value)==false || value.length!=8)
-            t=false;
+          if (pattern.test(value) == false || value.length != 8)
+            t = false;
           else
-            t=true
+            t = true
           return t || '请输入8位数字的学号！';
         },
-        pwd:value=>{
+        pwd: value => {
           var t;
-          if(value.length<6 || value.length>17)
-            t=false;
+          if (value.length < 6 || value.length > 17)
+            t = false;
           else
-            t=true;
+            t = true;
           return t || '密码长度请大于6位小于18位！';
         }
-      } 
+      }
     }),
-    methods:{
-      confirm:function(){
-        if(this.rules.number(this.number)==true && this.rules.pwd(this.pwd)==true && this.rules.required(this.number)==true && this.rules.required(this.pwd)==true){
+    methods: {
+      confirm: function () {
+        if (this.rules.number(this.number) == true && this.rules.pwd(this.pwd) == true && this.rules.required(this.number) ==
+          true && this.rules.required(this.pwd) == true) {
           // var n=SHA256(this.number);
-          sessionStorage.setItem("number",this.number);
-          this.$router.push('/register2');
+          // 检查是否重复
+          this.$http({
+            method: 'post',
+            url: '/account/sno-check/',
+            data: {
+              j_username: this.number
+            }
+          }).then((res) => {
+            if (res.data == 'SNO already exists') {
+              alert("学号已被注册！");
+              return;
+            } else {
+              // 模拟登录教务处
+              this.$http({
+                method: 'post',
+                url: '/account/sno-verification/',
+                data: {
+                  j_username: this.number,
+                  j_password: this.pwd
+                }
+              }).then((res) => {
+                sessionStorage.setItem("number", this.number);
+                this.$router.push('/register2');
+              }).catch(function (error) {
+                console.log(error);
+                if (error == 'SNO verification failed') {
+                  alert("学号或密码错误，验证失败！");
+                } else
+                  alert("网络传输故障！");
+              });
+            }
+          }).catch(function (error) {
+            alert("网络传输故障！");
+            return;
+          });
         }
       },
-      clearsession:function(){
+      clearsession: function () {
         sessionStorage.removeItem("number");
       }
     }
@@ -75,13 +113,15 @@ import {SHA256} from '../webtoolkit.sha256.js'
     background: url(/src/assets/registerbg.png);
     background-size: cover;
   }
-  .register-ulife{
+
+  .register-ulife {
     color: white;
     opacity: 0.7;
     text-align: center;
     margin-top: 110px;
     margin-bottom: -130px;
   }
+
   .register1-wrapper {
     width: 760px;
     height: 350px;
@@ -109,42 +149,52 @@ import {SHA256} from '../webtoolkit.sha256.js'
     right: 0;
     top: -5px;
   }
-  .input1{
-    width:300px;
+
+  .input1 {
+    width: 300px;
     /* margin: 20px auto 0 auto; */
     margin: 40px auto 0 auto;
   }
-  .input2{
-    width:300px;
+
+  .input2 {
+    width: 300px;
     margin: 10px auto 0 auto;
   }
-  .v-input>>>.v-input__slot{
+
+  .v-input>>>.v-input__slot {
     border-radius: 50px;
-    background:rgba(255, 255, 255, 0.2); 
+    background: rgba(255, 255, 255, 0.2);
   }
-  .v-input>>>.v-icon{
-    color:white;
+
+  .v-input>>>.v-icon {
+    color: white;
   }
-  .v-input>>>.v-input__slot input{
-    color:white;
+
+  .v-input>>>.v-input__slot input {
+    color: white;
     margin-left: 10px;
   }
-  .v-input>>>.v-label{
-    color:#999999;
+
+  .v-input>>>.v-label {
+    color: #999999;
     margin-left: 10px;
   }
-  .register-confirm{
+
+  .register-confirm {
     border-radius: 50px;
     width: 267px;
     margin-left: 62px;
     margin-top: 30px;
   }
-  .register-tosignin{
+
+  .register-tosignin {
     margin-top: 20px;
     color: white;
     opacity: 0.7;
   }
-  .register-tosignin a{
-    color:#FE9246;
+
+  .register-tosignin a {
+    color: #FE9246;
   }
+
 </style>

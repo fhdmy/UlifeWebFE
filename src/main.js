@@ -88,7 +88,7 @@ Vue.use(Vuetify, {
 })
 Vue.use(VueRouter)
 Vue.use(VueLazyload, {
-  error: 'assets/error.png'
+  error: '/src/assets/error.png'
 })
 Vue.component("Toolbar",Toolbar)
 Vue.component("Footer",Footer)

@@ -66,7 +66,7 @@
           var userurl=res.data.user;
           userurl=userurl.split("/");
           localStorage.setItem("uid",userurl[5]);
-          this.avatarurl = res.data.avatar;
+          this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar;
           this.username = res.data.nickname;
           if (sessionStorage.getItem("avatar") == null) {
             this.snackbar = true;
@@ -88,7 +88,7 @@
           var userurl=res.data.user;
           userurl=userurl.split("/");
           localStorage.setItem("uid",userurl[5]);
-          this.avatarurl = res.data.avatar;
+          this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar;
           this.username = res.data.org_name;
           if (sessionStorage.getItem("avatar") == null) {
             this.snackbar = true;
