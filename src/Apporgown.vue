@@ -217,6 +217,7 @@
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
+          console.log(res.data);
           for (let k = 0; k < res.data.results.length; k++) {
             var actid = res.data.results[k].url;
             actid = actid.split("/");
@@ -226,7 +227,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+              orgavatar: res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5]
             });
