@@ -129,7 +129,7 @@
                 heading: res.data.results[k].heading,
                 date: computeddate[0],
                 location: res.data.results[k].location,
-                orgavatar: res.data.results[k].owner.avatar,
+                orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
                 isover: false,
                 acturl: actid[5],
                 org_id: org_id,
@@ -156,7 +156,7 @@
               orgurl = orgurl.split("/");
               var org_id = orgurl[5];
               this.$set(this.searchacts, k, {
-                avatar: res.data[k].avatar,
+                avatar: "http://222.186.36.156:8000"+res.data[k].avatar,
                 org_name: res.data[k].org_name,
                 org_id: org_id,
               });
@@ -194,7 +194,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
               is_ended: res.data.results[k].is_ended,
