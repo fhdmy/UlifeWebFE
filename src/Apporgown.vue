@@ -20,7 +20,7 @@
       <Inform v-show="item=='inform'" :mine="mine" :lists="lists"></Inform>
       <Draft v-show="item=='draft'" :acts="draft" @getmoredraftacts="getmoredraftacts" :org_name="name"></Draft>
       <Create v-show="item=='create'" :org_name="name"></Create>
-      <Orgmyact v-show="item=='myact'" :acts="myacts" @getmoremyacts="getmoremyacts"></Orgmyact>
+      <Orgmyact v-show="item=='myact'" :acts="myacts" @getmoremyacts="getmoremyacts" :org_name="name"></Orgmyact>
       <Mysignup v-show="item=='mysignup'" :acts="signup" @getmoresignup="getmoresignup"></Mysignup>
       <Orgmsg v-show="item=='orgmsg'"></Orgmsg>
       <div style="clear:both;"></div>

@@ -26,6 +26,7 @@
           </v-card>
         </v-dialog>
         <div class="close-div" v-if="hover[index]">
+          <v-icon class="iconfont icon-bianji reedit" @click.stop="reedit(act.acturl,act.is_ended)"></v-icon>
           <v-icon class="close-icon iconfont" :class="{'icon-jieshu':true}" @click.stop="actstop = true,i=index"></v-icon>
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
@@ -107,6 +108,14 @@
       openact:function(url){ 
         let routeData = this.$router.resolve({name:'appact',params:{opt:url}});
         window.open(routeData.href, '_blank');
+      },
+      reedit(url,is_ended){
+        if(is_ended){
+          alert("不能修改已结束的活动！");
+          return;
+        }
+        sessionStorage.setItem("editactorigin",this.org_name);
+        this.$router.push({name:'draftedit',params:{opt:url}});
       }
     }
   }
@@ -203,18 +212,24 @@
     position: absolute;
     z-index: 2;
     right: 0;
-    width:60px;
+    width:90px;
     height: 24px;
     background: rgba(2,2,2,0.1);
   }
   .close-icon{
     color: white;
     float: left;
-    margin-left: 4px;
+    margin-left: 5px;
   }
   .v-dialog__content>>>.v-dialog .v-card{
     width: 100%;
     height: 100%;
     margin: 0;
+  }
+
+  .reedit{
+    color: white;
+    float: left;
+    margin-left: 5px;
   }
 </style>

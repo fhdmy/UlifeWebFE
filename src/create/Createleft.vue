@@ -1,13 +1,13 @@
 <template>
   <div class="Homemaincontent-wrapper">
     <div class="textarea-wrapper">
-      <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.key" @mouseover="mouseoverbox(i)"  @mouseout="mouseoutbox(i)">
-        <v-icon class="reediticon" v-if="texticon[i] && d.type=='title'" @click="sentreedit(i)">colorize</v-icon>
-        <v-icon class="clearicon" v-if="texticon[i] && d.type=='title'" @click="sentdeletetext(i)">delete_outline</v-icon>
-        <v-icon class="textclearicon" v-if="texticon[i] && d.type=='text'" @click="sentdeletetext(i)">delete_outline</v-icon>
+      <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.key" @mouseover="mouseoverbox(i)" @mouseout="mouseoutbox(i)">
+        <v-icon class="reediticon iconfont icon-bianji" v-if="texticon[i] && d.type=='title'" @click="sentreedit(i)"></v-icon>
+        <v-icon class="clearicon iconfont icon-shanchu" v-if="texticon[i] && d.type=='title'" @click="sentdeletetext(i)"></v-icon>
+        <v-icon class="textclearicon iconfont icon-shanchu" v-if="texticon[i] && d.type=='text'" @click="sentdeletetext(i)"></v-icon>
         <div class="imgeidtdiv" v-if="texticon[i] && d.type=='img'">
           <v-icon class="imgreediticon" @click="rotateimg(i)">refresh</v-icon>
-          <v-icon class="imgclearicon" @click="sentdeletetext(i)">delete_outline</v-icon>
+          <v-icon class="imgclearicon iconfont icon-shanchu" @click="sentdeletetext(i)"></v-icon>
         </div>
         <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" v-if="d.type=='text'" placeholder="从这里开始你的活动正文"></div>
         <img v-lazy="imglocaldisplay[i]" class="img" v-if="d.type=='img'"/>
@@ -71,16 +71,16 @@
     top: 0px;
     right: 0;
     cursor: pointer;
-    color:#aaa;
-    font-size: 30px;
+    color:#777;
+    font-size: 26px;
   }
   .reediticon{
     position: absolute;
     top: 0px;
     right:40px;
     cursor: pointer;
-    color:#aaa;
-    font-size: 30px;
+    color:#777;
+    font-size: 26px;
   }
   .text-box {
     width: 100%;
@@ -148,7 +148,7 @@
     bottom: 0px;
     right: 0;
     cursor: pointer;
-    color:#aaa;
-    font-size: 30px;
+    color:#777;
+    font-size: 26px;
   }
 </style>
