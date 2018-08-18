@@ -8,7 +8,7 @@
           <v-icon>{{items[0].iconname}}</v-icon>
           <span>{{items[0].text}}</span>
         </div>
-        <v-card>
+        <v-card @keyup.13="sendbrieftoparent()">
           <v-card-title>
             <span class="headline">活动简介</span>
           </v-card-title>
@@ -41,8 +41,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="brief = false" @click="deletebriefdata">关闭</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="brief = false" @click="sendbrieftoparent">保存</v-btn>
+            <v-btn color="blue darken-1" flat @click="deletebriefdata">关闭</v-btn>
+            <v-btn color="blue darken-1" flat @click="sendbrieftoparent">保存</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -51,7 +51,7 @@
           <v-icon>{{items[1].iconname}}</v-icon>
           <span>{{items[1].text}}</span>
         </div>
-        <v-card>
+        <v-card @keyup.13="sendrequiretoparent()">
           <v-card-title>
             <span class="headline">报名需求</span>
           </v-card-title>
@@ -64,8 +64,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="myrequire = false" @click="deleterequiredata">关闭</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="myrequire = false" @click="sendrequiretoparent">保存</v-btn>
+            <v-btn color="blue darken-1" flat @click="sendrequiretoparent">保存</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -82,7 +81,7 @@
           <v-icon>{{items[4].iconname}}</v-icon>
           <span>{{items[4].text}}</span>
         </div>
-        <v-card>
+        <v-card @keyup.13="sendparsetoparent()">
           <v-card-title>
             <span class="headline">插入标题</span>
           </v-card-title>
@@ -193,9 +192,7 @@
         this.selectedform0='';
         this.selectedinterest0='';
         this.brieftext0='';
-      },
-      deleterequiredata:function(){
-        this.opts=[''];
+        this.brief = false;
       },
       deleteparsedata:function(){
         this.selectedparsetext='';
@@ -217,9 +214,11 @@
           selectedinterest:this.selectedinterest,
           brieftext:this.brieftext
         });
+        this.brief = false;
       },
       sendrequiretoparent:function(){
         this.$emit("sentrequire",this.opts);
+        this.myrequire = false;
       },
       sendparsetoparent:function(){
         if(this.selectedparsetext.length>20){

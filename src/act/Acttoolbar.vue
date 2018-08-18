@@ -25,7 +25,7 @@
     <v-toolbar-items class="hidden-sm-and-down">
       <v-dialog v-model="signin" persistent max-width="500px" v-if="!participation && !is_ended">
         <v-btn flat class="subheading toolbar-signinbtn" slot="activator">报名</v-btn>
-        <v-card>
+        <v-card @keyup.13="signup()">
           <v-card-title>
             <span class="headline">活动报名</span>
           </v-card-title>
@@ -35,7 +35,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" flat @click.native="signin = false,answers=[]">关闭</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="signin = false" @click="signup">报名</v-btn>
+            <v-btn color="blue darken-1" flat @click="signup">报名</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -174,6 +174,7 @@
             this.participationurl=res.data.url;
             this.participation=true;
             alert("报名成功！");
+            this.signin = false;
           }).catch(function (error) {
             alert("网络传输故障！");
           });

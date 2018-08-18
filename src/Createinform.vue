@@ -24,7 +24,9 @@
       <Reeditleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted"
         :imglocaldisplay="imglocaldisplay" :draftflag="true"></Reeditleft>
       <Createinformright ref="rightchild" @sentavatar="getavatar" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
-        @senttext="gettext" @reeditparse="getreeditfromright" :avatar0="avatar" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"></Createinformright>
+        @senttext="gettext" @reeditparse="getreeditfromright" :avatar0="avatar" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"
+        :class="{'isfixed':fixed}"
+        ></Createinformright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -112,6 +114,13 @@
           return false;
         } else
           return true;
+      },
+      fixed: function () {
+        var k = this.offsetTop;
+        if (k >= 599) {
+          return true;
+        } else
+          return false;
       }
     },
     created: function () {
@@ -646,4 +655,11 @@
     height: 30px;
   }
 
+  .isfixed {
+    position: fixed;
+    z-index: 7;
+    top: 68px;
+    margin-left: 796.59px;
+    width: 100%;
+  }
 </style>

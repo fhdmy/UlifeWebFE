@@ -8,7 +8,7 @@
           <v-icon>{{items[0].iconname}}</v-icon>
           <span>{{items[0].text}}</span>
         </div>
-        <v-card>
+        <v-card @keyup.13="sendbrieftoparent()">
           <v-card-title>
             <span class="headline">活动简介</span>
           </v-card-title>
@@ -41,22 +41,22 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="brief = false" @click="deletebriefdata">关闭</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="brief = false" @click="sendbrieftoparent">保存</v-btn>
+            <v-btn color="blue darken-1" flat @click="deletebriefdata">关闭</v-btn>
+            <v-btn color="blue darken-1" flat @click="sendbrieftoparent">保存</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <v-dialog v-model="myrequire" persistent max-width="500px">
-        <div class="menu-div" slot="activator" @click="changerequire">
+        <div class="menu-div" slot="activator">
           <v-icon>{{items[1].iconname}}</v-icon>
           <span>{{items[1].text}}</span>
         </div>
-        <v-card>
+        <v-card @keyup.13="sendrequiretoparent()">
           <v-card-title>
             <span class="headline">报名需求</span>
           </v-card-title>
           <v-card-text>
-              <div class="text-wrapper" v-for="(opt,i) in opts0" :key="i">
+              <div class="text-wrapper" v-for="(opt,i) in opts" :key="i">
                 <v-text-field label="您可以在这里输入额外的报名需求" v-model="opts[i]"></v-text-field>
                 <div class="delete" @click="deleteopt(i)">删除</div>
               </div>
@@ -64,8 +64,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="myrequire = false" @click="deleterequiredata">关闭</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="myrequire = false" @click="sendrequiretoparent">保存</v-btn>
+            <!-- <v-btn color="blue darken-1" flat @click="deleterequiredata">关闭</v-btn> -->
+            <v-btn color="blue darken-1" flat @click="sendrequiretoparent">保存</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -82,7 +82,7 @@
           <v-icon>{{items[4].iconname}}</v-icon>
           <span>{{items[4].text}}</span>
         </div>
-        <v-card>
+        <v-card @keyup.13="sendparsetoparent()">
           <v-card-title>
             <span class="headline">插入标题</span>
           </v-card-title>
@@ -116,7 +116,7 @@
       "date0","date" ,
       "time0","time" ,
       "selectedform0","selectedform",
-      "opts0","opts",
+      "opts",
       'imgparam','imglocaldisplay','head_imgparam'
     ],
     data: () => ({
@@ -171,13 +171,6 @@
         else
           return;
       },
-      changerequire:function(){
-        if(this.opts0==null){
-          this.opts0=this.opts;
-        }
-        else
-          return;
-      },
       addimg: function () {
         this.$refs.selectimg.click();
       },
@@ -200,10 +193,8 @@
         this.selectedform0='';
         this.selectedinterest0='';
         this.brieftext0='';
-      },
-      deleterequiredata:function(){
-        this.opts0=null;
-      },
+        this.brief = false;
+      },  
       deleteparsedata:function(){
         this.selectedparsetext='';
         this.reedit=false;
@@ -224,10 +215,11 @@
           selectedinterest:this.selectedinterest,
           brieftext:this.brieftext
         });
+        this.brief = false;
       },
       sendrequiretoparent:function(){
-        this.opts=this.opts0;
         this.$emit("sentrequire",this.opts);
+        this.myrequire = false;
       },
       sendparsetoparent:function(){
         if(this.selectedparsetext.length>20){

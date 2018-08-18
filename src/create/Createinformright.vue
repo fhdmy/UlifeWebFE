@@ -37,7 +37,7 @@
         <v-icon>{{items[3].iconname}}</v-icon>
         <span>{{items[3].text}}</span>
       </div>
-      <v-card>
+      <v-card @keyup.13="sendparsetoparent()">
         <v-card-title>
           <span class="headline">插入标题</span>
         </v-card-title>

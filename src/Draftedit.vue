@@ -31,8 +31,10 @@
       <Reeditright ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
         @senttext="gettext" @reeditparse="getreeditfromright" :brieftext="brieftext" :brieftext0="brieftext" :selectedinterest="selectedinterest"
         :selectedinterest0="selectedinterest" :place="place" :place0="place" :date="date" :date0="date" :time="time" :time0="time"
-        :selectedform="selectedform" :selectedform0="selectedform" :opts0="requires" :opts="requires" :imgparam="imgparam"
-        :imglocaldisplay="imglocaldisplay" :head_imgparam="head_imgparam"></Reeditright>
+        :selectedform="selectedform" :selectedform0="selectedform" :opts="requires" :imgparam="imgparam"
+        :imglocaldisplay="imglocaldisplay" :head_imgparam="head_imgparam"
+        :class="{'isfixed':fixed}"
+        ></Reeditright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -137,6 +139,13 @@
           return false;
         } else
           return true;
+      },
+      fixed: function () {
+        var k = this.offsetTop;
+        if (k >= 599) {
+          return true;
+        } else
+          return false;
       }
     },
     created: function () {
@@ -866,4 +875,11 @@
     height: 30px;
   }
 
+  .isfixed {
+    position: fixed;
+    z-index: 7;
+    top: 68px;
+    margin-left: 796.59px;
+    width: 100%;
+  }
 </style>

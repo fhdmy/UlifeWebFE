@@ -28,7 +28,9 @@
     <div class="main-wrapper">
       <Createleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :imglocaldisplay="imglocaldisplay"></Createleft>
       <Createright ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
-        @senttext="gettext" @reeditparse="getreeditfromright" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay" :head_imgparam="head_imgparam"></Createright>
+        @senttext="gettext" @reeditparse="getreeditfromright" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay" :head_imgparam="head_imgparam"
+        :class="{'isfixed':fixed}"
+      ></Createright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -69,7 +71,7 @@
       </div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0)">
-      <i class="iconfont icon-jiantou-copy-copy-copy"></i>
+      <i class="iconfont icon-jiantou-copy-copy-copy">{{offsetTop}}</i>
     </v-btn>
     <Footer></Footer>
   </v-content>
@@ -129,6 +131,13 @@
           return false;
         } else
           return true;
+      },
+      fixed: function () {
+        var k = this.offsetTop;
+        if (k >= 599) {
+          return true;
+        } else
+          return false;
       }
     },
     created: function () {
@@ -859,4 +868,11 @@
     height: 30px;
   }
 
+  .isfixed {
+    position: fixed;
+    z-index: 7;
+    top: 68px;
+    margin-left: 796.59px;
+    width: 100%;
+  }
 </style>
