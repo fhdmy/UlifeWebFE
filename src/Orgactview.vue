@@ -28,7 +28,8 @@
     data:()=>({
       customlists:[],
       offsetTop:0,
-      opt:{}
+      opt:{},
+      imglocaldisplay:[]
     }),
     computed:{
       toolbaropacity:function(){
@@ -58,6 +59,12 @@
     },
     created:function(){
       this.opt=JSON.parse(sessionStorage.getItem("preview"));
+      this.imglocaldisplay=JSON.parse(sessionStorage.getItem("previewimg"));
+      for(let k=0;k<this.opt.lists.length;k++){
+        if(this.opt.lists[k].type=="img"){
+          this.opt.lists[k].inner=this.imglocaldisplay[k];
+        }
+      }
     },
     methods:{
       onScroll (e) {

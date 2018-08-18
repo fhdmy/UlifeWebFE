@@ -538,6 +538,7 @@
           interest: this.selectedinterest,
           lists: this.computeddata
         }));
+        sessionStorage.setItem("previewimg", JSON.stringify(this.imglocaldisplay));
         let routeData = this.$router.resolve({
           path: '/Orgactview'
         });

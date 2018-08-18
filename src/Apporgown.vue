@@ -217,7 +217,6 @@
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
-          console.log(res.data);
           for (let k = 0; k < res.data.results.length; k++) {
             var actid = res.data.results[k].url;
             actid = actid.split("/");
