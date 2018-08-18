@@ -136,7 +136,7 @@
             // 是学生
             if (res.data[k].watcher.student != null) {
               this.$set(this.visits, k, {
-                avatar: res.data[k].watcher.student.avatar,
+                avatar: "http://222.186.36.156:8000"+res.data[k].watcher.student.avatar,
                 name: res.data[k].watcher.student.nickname,
                 url: res.data[k].watcher.student.url,
                 number: k,
@@ -146,7 +146,7 @@
             // 是组织
             if (res.data[k].watcher.org != null) {
               this.$set(this.visits, k, {
-                avatar: res.data[k].watcher.org.avatar,
+                avatar:"http://222.186.36.156:8000" + res.data[k].watcher.org.avatar,
                 name: res.data[k].watcher.org.org_name,
                 url: res.data[k].watcher.org.url,
                 number: k,
@@ -173,7 +173,7 @@
           var org_id = org_url.split("/");
           org_id = org_id[5];
           this.$set(this.watcher, k, {
-            orgavatar: res.data[k].target.avatar,
+            orgavatar: "http://222.186.36.156:8000"+res.data[k].target.avatar,
             orgname: res.data[k].target.org_name,
             orgurl: org_url,
             number: k,
@@ -266,7 +266,7 @@
               heading: res.data.results[k].activity.heading,
               date: computeddate[0],
               location: res.data.results[k].activity.location,
-              orgavatar: res.data.results[k].activity.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id,
@@ -301,7 +301,7 @@
               heading: res.data.results[k].activity.heading,
               date: computeddate[0],
               location: res.data.results[k].activity.location,
-              orgavatar: res.data.results[k].activity.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id
@@ -335,7 +335,7 @@
               heading: res.data.results[k].target.heading,
               date: computeddate[0],
               location: res.data.results[k].target.location,
-              orgavatar: res.data.results[k].target.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id,
@@ -370,7 +370,7 @@
               heading: res.data.results[k].target.heading,
               date: computeddate[0],
               location: res.data.results[k].target.location,
-              orgavatar: res.data.results[k].target.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id,
@@ -414,7 +414,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id,
@@ -478,7 +478,7 @@
               heading: res.data.results[k].target.heading,
               date: computeddate[0],
               location: res.data.results[k].target.location,
-              orgavatar: res.data.results[k].target.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id,
@@ -516,7 +516,7 @@
               heading: res.data.results[k].target.heading,
               date: computeddate[0],
               location: res.data.results[k].target.location,
-              orgavatar: res.data.results[k].target.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].target.owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id,
@@ -554,7 +554,7 @@
               heading: res.data.results[k].activity.heading,
               date: computeddate[0],
               location: res.data.results[k].activity.location,
-              orgavatar: res.data.results[k].activity.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id
@@ -591,7 +591,7 @@
               heading: res.data.results[k].activity.heading,
               date: computeddate[0],
               location: res.data.results[k].activity.location,
-              orgavatar: res.data.results[k].activity.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].activity.owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id,
@@ -629,7 +629,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: res.data.results[k].owner.avatar,
+              orgavatar:"http://222.186.36.156:8000"+ res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
               org_id:org_id,

@@ -35,7 +35,7 @@
       is_fav_public: true,
       is_history_public: true,
       is_watched_orgs_public: true,
-      bg_img: ''
+      bg_img: '/src/assets/stuownbg.jpg'
     }),
     created: function () {
       this.userurl = localStorage.getItem("user_url");
@@ -55,7 +55,9 @@
         this.is_fav_public = res.data.is_fav_public;
         this.is_history_public = res.data.is_history_public;
         this.is_watched_orgs_public = res.data.is_watched_orgs_public;
-        this.bg_img = "http://222.186.36.156:8000" + res.data.bg_img;
+        if(res.data.bg_img!=null){
+          this.bg_img = "http://222.186.36.156:8000" + res.data.bg_img;
+        }
       }).catch(function (error) {
         alert("传输故障，注册失败！");
       });

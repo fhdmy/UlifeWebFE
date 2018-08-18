@@ -131,6 +131,12 @@
   .actname {
     color: #323232;
     font-family: Arial, Helvetica, sans-serif !important;
+    height: 20px;
+    width: 270px;
+    display:block;
+    white-space:nowrap;
+    overflow:hidden; 
+    text-overflow:ellipsis;
   }
 
   .v-avatar {

@@ -83,8 +83,8 @@
           "Authorization": "Token " + localStorage.getItem("token")
         }
       }).then((res) => {
-        this.parallaxpath = res.data.bg_img;
-        this.org_img = res.data.avatar;
+        this.parallaxpath = "http://222.186.36.156:8000"+res.data.bg_img;
+        this.org_img = "http://222.186.36.156:8000"+res.data.avatar;
         this.attention = res.data.watcher_count;
         this.name = res.data.org_name;
         this.stars = res.data.stars;
@@ -105,7 +105,7 @@
             // 是学生
             if (res.data[k].watcher.student != null) {
               this.$set(this.visits, k, {
-                avatar: res.data[k].watcher.student.avatar,
+                avatar: "http://222.186.36.156:8000"+res.data[k].watcher.student.avatar,
                 name: res.data[k].watcher.student.nickname,
                 url: res.data[k].watcher.student.url,
                 number: k,
@@ -115,7 +115,7 @@
             // 是组织
             if (res.data[k].watcher.org != null) {
               this.$set(this.visits, k, {
-                avatar: res.data[k].watcher.org.avatar,
+                avatar: "http://222.186.36.156:8000"+res.data[k].watcher.org.avatar,
                 name: res.data[k].watcher.org.org_name,
                 url: res.data[k].watcher.org.url,
                 number: k,
@@ -205,7 +205,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
               is_ended: res.data.results[k].is_ended,

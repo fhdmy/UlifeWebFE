@@ -81,6 +81,8 @@
           if(error.response.data.detail=="Invalid token"){
             this.type="none";
             localStorage.removeItem("token");
+            localStorage.removeItem("user_url");
+            localStorage.removeItem("uid");
           }
           else{
             alert("网络传输故障！");
@@ -114,6 +116,8 @@
           if(error.response.data.detail=="Invalid token"){
             this.type="none";
             localStorage.removeItem("token");
+            localStorage.removeItem("org_url");
+            localStorage.removeItem("uid");
           }
           else{
             alert("网络传输故障！");
