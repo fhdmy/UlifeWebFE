@@ -243,7 +243,7 @@
         var files = e.target.files;
         var len=this.imglocaldisplay.length;
         for(let k=0;k<files.length;k++){
-          this.imgparam.append('file'+(k+len), files[files.length-k-1]); //通过append向form对象添加数据//神tm反向顺序！！
+          this.imgparam.set('file'+(k+len), files[files.length-k-1]); //通过append向form对象添加数据//神tm反向顺序！！
           if (!this.imgparam.get('file'+(k+len))) {
             alert("打开文件失败！");
             return;
@@ -255,7 +255,7 @@
       },
       topimgchange:function(e){
         var file = e.target.files[0];
-        this.head_imgparam.append('file', file); //通过append向form对象添加数据
+        this.head_imgparam.set('file', file); //通过append向form对象添加数据
         if (!this.head_imgparam.get('file')) {
           alert("打开文件失败！");
           return;

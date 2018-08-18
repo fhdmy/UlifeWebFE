@@ -187,7 +187,7 @@
       avatarchange: function (e) {
         var file = e.target.files[0];
         var param = new FormData(); //创建form对象
-        param.append('file', file); //通过append向form对象添加数据
+        param.set('file', file); //通过append向form对象添加数据
         if (!param.get('file')) {
           alert("打开文件失败！");
           return;
@@ -198,7 +198,7 @@
       topimgchange: function (e) {
         var file = e.target.files[0];
         var param = new FormData(); //创建form对象
-        param.append('file', file); //通过append向form对象添加数据
+        param.set('file', file); //通过append向form对象添加数据
         if (!param.get('file')) {
           alert("打开文件失败！");
           return;

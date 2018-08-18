@@ -19,7 +19,7 @@
 
 <script>
   export default {
-    props: ['gotdata', 'deleted','imglocaldisplay'],
+    props: ['gotdata', 'deleted','imglocaldisplay','draftflag'],
     data: () => ({
       oldcontent: '',
       texticon: [],
@@ -29,14 +29,19 @@
       for (let k = 0; k < this.gotdata.length; k++) {
         this.$set(this.origintext, k, this.gotdata[k].inner);
       }
-    },
+    },//组织填写简介
     watch: {
       deleted: function (val) {
         this.origintext=[];//重置数组
         for (let k = 0; k < this.gotdata.length; k++) {
           this.$set(this.origintext, k, this.gotdata[k].inner);
         }
-      }
+      },
+      draftflag:function(val){
+        for (let k = 0; k < this.gotdata.length; k++) {
+          this.$set(this.origintext, k, this.gotdata[k].inner);
+        }
+      }//草稿初始化(发生在请求结束后)
     },
     methods: {
       handleInput($event) {

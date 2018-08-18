@@ -22,7 +22,7 @@
     </div>
     <div class="main-wrapper">
       <Reeditleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted"
-        :imglocaldisplay="imglocaldisplay"></Reeditleft>
+        :imglocaldisplay="imglocaldisplay" :draftflag="true"></Reeditleft>
       <Createinformright ref="rightchild" @sentavatar="getavatar" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
         @senttext="gettext" @reeditparse="getreeditfromright" :avatar0="avatar" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"></Createinformright>
       <div style="clear:both;"></div>

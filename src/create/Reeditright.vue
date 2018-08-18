@@ -47,7 +47,7 @@
         </v-card>
       </v-dialog>
       <v-dialog v-model="myrequire" persistent max-width="500px">
-        <div class="menu-div" slot="activator">
+        <div class="menu-div" slot="activator" @click="changerequire">
           <v-icon>{{items[1].iconname}}</v-icon>
           <span>{{items[1].text}}</span>
         </div>
@@ -56,7 +56,7 @@
             <span class="headline">报名需求</span>
           </v-card-title>
           <v-card-text>
-              <div class="text-wrapper" v-for="(opt,i) in opts" :key="i">
+              <div class="text-wrapper" v-for="(opt,i) in opts0" :key="i">
                 <v-text-field label="您可以在这里输入额外的报名需求" v-model="opts[i]"></v-text-field>
                 <div class="delete" @click="deleteopt(i)">删除</div>
               </div>
@@ -115,7 +115,9 @@
       "place0","place" ,
       "date0","date" ,
       "time0","time" ,
-      "selectedform0","selectedform"
+      "selectedform0","selectedform",
+      "opts0","opts",
+      'imgparam','imglocaldisplay','head_imgparam'
     ],
     data: () => ({
       brief:false,
@@ -125,7 +127,6 @@
       selectedparsetext:'',
       reedit:false,
       forms:['比赛', '分享', '互动'],
-      opts:[''],
       interests:['游戏','影视','棋牌','文化艺术','运动/户外','学术科技','社会科学','公益','实践'],
       items:[
         {
@@ -170,6 +171,13 @@
         else
           return;
       },
+      changerequire:function(){
+        if(this.opts0==null){
+          this.opts0=this.opts;
+        }
+        else
+          return;
+      },
       addimg: function () {
         this.$refs.selectimg.click();
       },
@@ -194,7 +202,7 @@
         this.brieftext0='';
       },
       deleterequiredata:function(){
-        this.opts=[''];
+        this.opts0=null;
       },
       deleteparsedata:function(){
         this.selectedparsetext='';
@@ -218,6 +226,7 @@
         });
       },
       sendrequiretoparent:function(){
+        this.opts=this.opts0;
         this.$emit("sentrequire",this.opts);
       },
       sendparsetoparent:function(){
@@ -238,35 +247,29 @@
         }
         this.insertphase = false;
       },
-      imgchange:function(){
-        if(typeof(FileReader)!='undefined'){
-          var image_holder=this.$refs.imageholder;
-          for(let i=0;i<this.$refs.selectimg.files.length;i++){
-            let reader=new FileReader();
-            let file=this.$refs.selectimg.files[i];
-            reader.readAsDataURL(file);
-            // console.log(file);
-            reader.onload=(e)=>{ 
-              this.$emit("sentimg",reader.result);
-            }
-          }
+      imgchange:function(e){
+        var files = e.target.files;
+        var len=this.imglocaldisplay.length;
+        for(let k=0;k<files.length;k++){
+          this.imgparam.set('file'+(k+len), files[files.length-k-1]); //通过append向form对象添加数据//神tm反向顺序！！
+          if (!this.imgparam.get('file'+(k+len))) {
+            alert("打开文件失败！");
+            return;
+          } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+          this.$set(this.imglocaldisplay,len+k,window.URL.createObjectURL(files[files.length-k-1]));//本地预览;//神tm反向顺序！！
+          this.$emit("sentimg",k);
         }
-        else{
-          alert("抱歉，你的浏览器不支持 FileReader");
-        }
+        e.target.value=null;//解决change无效
       },
-      topimgchange:function(){
-        if(typeof(FileReader)!='undefined'){
-          var file=this.$refs.selecttopimg.files[0];
-          var reader=new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload=(e)=>{
-            this.$emit("senttopimg",reader.result);
-          }
-        }
-        else{
-          alert("抱歉，你的浏览器不支持 FileReader");
-        }
+      topimgchange:function(e){
+        var file = e.target.files[0];
+        this.head_imgparam.set('file', file); //通过append向form对象添加数据
+        if (!this.head_imgparam.get('file')) {
+          alert("打开文件失败！");
+          return;
+        } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+        var head_img = window.URL.createObjectURL(e.target.files[0]); //本地预览;
+        this.$emit("senttopimg", head_img);
       },
       addtext:function(){
         this.$emit("senttext",true);

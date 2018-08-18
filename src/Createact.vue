@@ -30,7 +30,7 @@
       <Createright ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
         @senttext="gettext" @reeditparse="getreeditfromright" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay" :head_imgparam="head_imgparam"></Createright>
       <div style="clear:both;"></div>
-    </div>w
+    </div>
     <div class="previeworsubmit">
       <v-btn class="preview" flat @click="openpreview">预览</v-btn>
       <v-btn class="save" flat @click="savetodraft">保存</v-btn>
@@ -168,9 +168,9 @@
       },
       getbrief: function (d) {
         this.date = d.date,
-          this.time = d.time,
-          this.place = d.place,
-          this.selectedform = d.selectedform;
+        this.time = d.time,
+        this.place = d.place,
+        this.selectedform = d.selectedform;
         this.selectedinterest = d.selectedinterest;
         this.brieftext = d.brieftext;
       },
