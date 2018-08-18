@@ -56,7 +56,7 @@
           <!-- <div class="slide-showbox" :class="{'slide-showbox-active':mouseoverbox}"> -->
           <div class="slide-showbox">
             <p class="slideshow-textbox" v-if="slidetype=='text'">{{slideinner}}</p>
-            <img :src="slideinner" class="slideshow-img" v-if="slidetype=='img'" />
+            <img v-lazy="slideinner" class="slideshow-img" v-if="slidetype=='img'" />
             <p class="slideshow-title" v-if="slidetype=='title'">{{slideinner}}</p>
           </div>
         </div>
@@ -115,17 +115,31 @@
       }
     },
     created: function () {
+      this.imgparam = new FormData(); //创建form对象
       this.avatar = sessionStorage.getItem("avatar");
       this.url1 = localStorage.getItem("org_url");
       if (JSON.parse(sessionStorage.getItem("lists")) != null) {
         this.computeddata = JSON.parse(sessionStorage.getItem("lists"));
+        for(let k=0;k<this.computeddata.length;k++){
+          if(this.computeddata[k].type=='text'){
+            this.imgparam.append("file" + k, 'text');
+            this.$set(this.imglocaldisplay, k, 'text');
+          }
+          else if(this.computeddata[k].type=='title'){
+            this.imgparam.append("file" + k, 'title');
+            this.$set(this.imglocaldisplay, k, 'title');
+          }
+          else{
+            this.imgparam.append("file" + k, 'img');
+            this.$set(this.imglocaldisplay, k,this.computeddata[k].inner);
+          }
+        }
       }
       if (sessionStorage.getItem("bg_img") != null) {
         this.parallaxpath = sessionStorage.getItem("bg_img");
       }
       this.cal = this.computeddata.length;
       this.key = this.cal;
-      this.imgparam = new FormData(); //创建form对象
     },
     methods: {
       onScroll(e) {
@@ -177,7 +191,7 @@
           key: this.key
         });
         var len = this.imglocaldisplay.length;
-        this.imgparam.append("file" + len, 'title');
+        this.imgparam.set("file" + len, 'title');
         this.$set(this.imglocaldisplay, len, 'title'); //本地预览;
         this.cal++;
         this.key++;
@@ -190,7 +204,7 @@
           key: this.key
         });
         var len = this.imglocaldisplay.length;
-        this.imgparam.append("file" + len, 'text');
+        this.imgparam.set("file" + len, 'text');
         this.$set(this.imglocaldisplay, len, 'text'); //本地预览;
         this.cal++;
         this.key++;
@@ -284,7 +298,16 @@
           this.computeddata[k].number = k;
         }
         this.imglocaldisplay.splice(d, 1);
-        this.imgparam.delete("file" + d);
+        this.imgparam.set("file" + d,"none");
+        var len = 0;
+        while(this.imgparam.get("file"+len)){
+          len++;
+        }
+        for(let k=d+1;k<len;k++){
+          var temp=this.imgparam.get("file"+(k-1));
+          this.imgparam.set("file"+(k-1),this.imgparam.get("file"+k));
+          this.imgparam.set("file"+k,temp);
+        }//因为imgparam无法彻底删除key
         this.cal--;
         this.deleted = !this.deleted;
       },
@@ -305,10 +328,9 @@
           },
           data: this.imgparam
         }).then((res) => {
-          console.log(res.data);
           var j=0;
           for(let k=0;k<this.computeddata.length;k++){
-            if(this.computeddata[k].type=="img"){
+            if(this.computeddata[k].type=="img" && this.computeddata[k].inner.length==0){
               this.computeddata[k].inner="http://222.186.36.156:8000"+res.data.l_img[j++];
             }
           }
@@ -323,7 +345,6 @@
               demonstration:JSON.stringify(this.computeddata)
             }
           }).then((res) => {
-            console.log(res.data);
             this.snackbar1 = true;
             setTimeout(() => {
               sessionStorage.removeItem("lists");

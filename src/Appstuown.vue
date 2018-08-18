@@ -37,8 +37,8 @@
   export default {
     props: ['opt'],
     data: () => ({
-      parallaxpath: '/src/assets/stuownbg.jpg',
-      img: '/src/assets/defaultavatar.png',
+      parallaxpath: '',
+      img: '',
       name: '',
       item: 'signup',
       offsetTop: 0,
@@ -112,7 +112,12 @@
           "Authorization": "Token " + localStorage.getItem("token")
         }
       }).then((res) => {
-        this.parallaxpath = res.data.bg_img;
+        if(res.data.bg_img!=null){
+          this.parallaxpath ="http://222.186.36.156:8000" + res.data.bg_img;
+        }
+        else{
+          this.parallaxpath ='/src/assets/stuownbg.jpg';
+        }
         this.participation_count=res.data.participation_count;
         this.watching_count=res.data.watching_count;
         this.name = res.data.nickname;

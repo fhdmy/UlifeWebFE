@@ -66,14 +66,25 @@
           var userurl=res.data.user;
           userurl=userurl.split("/");
           localStorage.setItem("uid",userurl[5]);
-          this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar;
+          if(res.data.avatar!=null){
+            this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar;
+          }
+          else{
+            this.avatarurl ="/src/assets/defaultavatar.png";
+          }
           this.username = res.data.nickname;
           if (sessionStorage.getItem("avatar") == null) {
             this.snackbar = true;
           }
           sessionStorage.setItem("avatar", this.avatarurl);
         }).catch(function (error) {
-          alert("网络传输故障！");
+          if(error.response.data.detail=="Invalid token"){
+            this.type="none";
+            localStorage.removeItem("token");
+          }
+          else{
+            alert("网络传输故障！");
+          }
         });
       } else if (url1 != null) {
         this.type = 'org';
@@ -88,14 +99,25 @@
           var userurl=res.data.user;
           userurl=userurl.split("/");
           localStorage.setItem("uid",userurl[5]);
-          this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar;
+          if(res.data.avatar!=null){
+            this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar;
+          }
+          else{
+            this.avatarurl ="/src/assets/defaultavatar.png";
+          }
           this.username = res.data.org_name;
           if (sessionStorage.getItem("avatar") == null) {
             this.snackbar = true;
           }
           sessionStorage.setItem("avatar", this.avatarurl);
         }).catch(function (error) {
-          alert("网络传输故障！");
+          if(error.response.data.detail=="Invalid token"){
+            this.type="none";
+            localStorage.removeItem("token");
+          }
+          else{
+            alert("网络传输故障！");
+          }
         });
       }
 
@@ -120,7 +142,7 @@
             heading: res.data.results[k].heading,
             date: computeddate[0],
             location: res.data.results[k].location,
-            orgavatar: res.data.results[k].owner.avatar,
+            orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
             isover: false,
             acturl: actid[5],
             org_id:org_id,

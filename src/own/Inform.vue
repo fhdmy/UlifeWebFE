@@ -5,9 +5,9 @@
     <span class="title" v-if="mine">我的简介</span>
     <div class="text-maincontent">
       <div v-for="i in lists" :key="i.number">
-        <p v-if="i.title!=''" class="content-title">{{i.title}}</p>
-        <p v-if="i.text!=''" class="content-text">{{i.text}}</p>
-        <img v-if="i.img!=''" v-lazy="i.img" class="content-img"/>
+        <p v-if="i.type=='title'" class="content-title">{{i.inner}}</p>
+        <p v-if="i.type=='text'" class="content-text">{{i.inner}}</p>
+        <img v-if="i.type=='img'" v-lazy="i.inner" class="content-img"/>
       </div>
     </div>
   </div>

@@ -36,8 +36,8 @@
   export default {
     props: ['opt'],
     data: () => ({
-      parallaxpath: '/src/assets/stuownbg.jpg',
-      img: '/src/assets/defaultavatar.png',
+      parallaxpath: '/src/assets/createdefault.jpg',
+      img: '',
       name: '',
       item: 'inform',
       offsetTop: 0,
@@ -102,7 +102,12 @@
       }).then((res) => {
         this.watcher_count=res.data.watcher_count;
         this.activity_count=res.data.activity_count;
-        this.parallaxpath = "http://222.186.36.156:8000"+res.data.bg_img;
+        if(res.data.bg_img!=null){
+          this.parallaxpath = "http://222.186.36.156:8000"+res.data.bg_img;
+        }
+        else{
+          this.parallaxpath = '/src/assets/stuownbg.jpg';
+        }
         this.name = res.data.org_name;
         this.stars = res.data.stars;
         var url = res.data.url;

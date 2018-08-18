@@ -109,7 +109,7 @@
 
 <script>
   export default {
-    props: ['imgparam','imglocaldisplay'], //用于展示
+    props: ['imgparam','imglocaldisplay','head_imgparam'], //用于展示
     data: () => ({
       brief:false,
       date: null,
@@ -255,9 +255,8 @@
       },
       topimgchange:function(e){
         var file = e.target.files[0];
-        var param = new FormData(); //创建form对象
-        param.append('file', file); //通过append向form对象添加数据
-        if (!param.get('file')) {
+        this.head_imgparam.append('file', file); //通过append向form对象添加数据
+        if (!this.head_imgparam.get('file')) {
           alert("打开文件失败！");
           return;
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去

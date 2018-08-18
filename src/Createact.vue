@@ -28,7 +28,7 @@
     <div class="main-wrapper">
       <Createleft :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :imglocaldisplay="imglocaldisplay"></Createleft>
       <Createright ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
-        @senttext="gettext" @reeditparse="getreeditfromright" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"></Createright>
+        @senttext="gettext" @reeditparse="getreeditfromright" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay" :head_imgparam="head_imgparam"></Createright>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -118,9 +118,10 @@
       disY: 0,
       slidebtn: [],
       mousemoveflag: false,
-      org:'',
-      imgparam:null,
-      imglocaldisplay:[]
+      org: '',
+      imgparam: null,
+      imglocaldisplay: [],
+      head_imgparam:null
     }),
     computed: {
       havetopimg: function () {
@@ -132,9 +133,10 @@
     },
     created: function () {
       this.url1 = localStorage.getItem("org_url");
-      this.avatar=sessionStorage.getItem("avatar");
-      this.org=sessionStorage.getItem("createactorigin");
-      this.imgparam= new FormData(); //创建form对象
+      this.avatar = sessionStorage.getItem("avatar");
+      this.org = sessionStorage.getItem("createactorigin");
+      this.imgparam = new FormData(); //创建form对象
+      this.head_imgparam=new FormData();
     },
     methods: {
       onScroll(e) {
@@ -145,9 +147,8 @@
       },
       changetopimg: function (e) {
         var file = e.target.files[0];
-        var param = new FormData(); //创建form对象
-        param.append('file', file); //通过append向form对象添加数据
-        if (!param.get('file')) {
+        this.head_imgparam.append('file', file); //通过append向form对象添加数据
+        if (!this.head_imgparam.get('file')) {
           alert("打开文件失败！");
           return;
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
@@ -179,34 +180,34 @@
       getparse: function (d) {
         this.parse = d;
         this.$set(this.computeddata, this.cal, {
-          type:'title',
+          type: 'title',
           inner: d,
           number: this.cal,
           key: this.key
         });
-        var len=this.imglocaldisplay.length;
-        this.imgparam.append("file"+len,'title');
-        this.$set(this.imglocaldisplay,len,'title');//本地预览;
+        var len = this.imglocaldisplay.length;
+        this.imgparam.set("file" + len, 'title');
+        this.$set(this.imglocaldisplay, len, 'title'); //本地预览;
         this.cal++;
         this.key++;
       },
       gettext: function (d) {
         this.$set(this.computeddata, this.cal, {
-          type:'text',
-          inner:'',
+          type: 'text',
+          inner: '',
           number: this.cal,
           key: this.key
         });
-        var len=this.imglocaldisplay.length;
-        this.imgparam.append("file"+len,'text');
-        this.$set(this.imglocaldisplay,len,'text');//本地预览;
+        var len = this.imglocaldisplay.length;
+        this.imgparam.set("file" + len, 'text');
+        this.$set(this.imglocaldisplay, len, 'text'); //本地预览;
         this.cal++;
         this.key++;
       },
       getimg: function (d) {
         this.$set(this.computeddata, this.cal, {
-          type:'img',
-          inner:'',
+          type: 'img',
+          inner: '',
           number: this.cal,
           key: this.key
         });
@@ -218,7 +219,7 @@
       },
       getoldtext: function (d, i, k) {
         this.$set(this.computeddata, i, {
-          type:'text',
+          type: 'text',
           inner: d,
           number: i,
           key: k
@@ -226,15 +227,15 @@
       },
       mouseoverbox: function (i) {
         var target = this.computeddata[i];
-        if (target.type=='title') {
+        if (target.type == 'title') {
           this.slideinner = target.inner;
-          this.slidetype='title';
-        } else if (target.type=='text') {
+          this.slidetype = 'title';
+        } else if (target.type == 'text') {
           this.slideinner = target.inner;
-          this.slidetype='text';
-        } else if (target.type=='img') {
+          this.slidetype = 'text';
+        } else if (target.type == 'img') {
           this.slideinner = this.imglocaldisplay[i];
-          this.slidetype='img';
+          this.slidetype = 'img';
         }
         this.slidebtn[i] = true;
       },
@@ -244,43 +245,43 @@
       slideleftchange: function (i) {
         var temp = {
           type: this.computeddata[i].type,
-          inner:this.computeddata[i].inner,
+          inner: this.computeddata[i].inner,
           number: i,
           key: this.computeddata[i].key,
-          img:this.imglocaldisplay[i],
-          imgparam:this.imgparam.get("file"+i)
+          img: this.imglocaldisplay[i],
+          imgparam: this.imgparam.get("file" + i)
         };
         this.computeddata[i].type = this.computeddata[i - 1].type;
         this.computeddata[i].inner = this.computeddata[i - 1].inner;
-        this.imglocaldisplay[i] = this.imglocaldisplay[i - 1];     //图片本地预览
+        this.imglocaldisplay[i] = this.imglocaldisplay[i - 1]; //图片本地预览
         this.computeddata[i].key = this.computeddata[i - 1].key;
         this.computeddata[i - 1].type = temp.type;
         this.computeddata[i - 1].inner = temp.inner;
-        this.imglocaldisplay[i - 1] = temp.img;//图片本地预览
+        this.imglocaldisplay[i - 1] = temp.img; //图片本地预览
         this.computeddata[i - 1].key = temp.key;
-        this.imgparam.set("file"+i,this.imgparam.get("file"+(i-1)));
-        this.imgparam.set("file"+(i-1),temp.imgparam);
+        this.imgparam.set("file" + i, this.imgparam.get("file" + (i - 1)));
+        this.imgparam.set("file" + (i - 1), temp.imgparam);
         this.mouseoverbox(i);
       },
       sliderightchange: function (i) {
         var temp = {
           type: this.computeddata[i].type,
-          inner:this.computeddata[i].inner,
+          inner: this.computeddata[i].inner,
           number: i,
           key: this.computeddata[i].key,
-          img:this.imglocaldisplay[i],
-          imgparam:this.imgparam.get("file"+i)
+          img: this.imglocaldisplay[i],
+          imgparam: this.imgparam.get("file" + i)
         };
         this.computeddata[i].type = this.computeddata[i + 1].type;
         this.computeddata[i].inner = this.computeddata[i + 1].inner;
-        this.imglocaldisplay[i] = this.imglocaldisplay[i + 1];     //图片本地预览
+        this.imglocaldisplay[i] = this.imglocaldisplay[i + 1]; //图片本地预览
         this.computeddata[i].key = this.computeddata[i + 1].key;
         this.computeddata[i + 1].type = temp.type;
         this.computeddata[i + 1].inner = temp.inner;
-        this.imglocaldisplay[i + 1] = temp.img;//图片本地预览
+        this.imglocaldisplay[i + 1] = temp.img; //图片本地预览
         this.computeddata[i + 1].key = temp.key;
-        this.imgparam.set("file"+i,this.imgparam.get("file"+(i+1)));
-        this.imgparam.set("file"+(i+1),temp.imgparam);
+        this.imgparam.set("file" + i, this.imgparam.get("file" + (i + 1)));
+        this.imgparam.set("file" + (i + 1), temp.imgparam);
         this.mouseoverbox(i);
       },
       getdeletetext: function (d) {
@@ -289,9 +290,18 @@
           this.computeddata[k].number = k;
         }
         this.imglocaldisplay.splice(d, 1);
-        this.imgparam.delete("file"+d);
+        this.imgparam.set("file" + d, "none");
+        var len = 0;
+        while (this.imgparam.get("file" + len)) {
+          len++;
+        }
+        for (let k = d + 1; k < len; k++) {
+          var temp = this.imgparam.get("file" + (k - 1));
+          this.imgparam.set("file" + (k - 1), this.imgparam.get("file" + k));
+          this.imgparam.set("file" + k, temp);
+        } //因为imgparam无法彻底删除key
         this.cal--;
-        this.deleted=!this.deleted;
+        this.deleted = !this.deleted;
       },
       getreedit: function (d) {
         this.reedititem = d;
@@ -301,61 +311,100 @@
         this.computeddata[this.reedititem].inner = d;
       },
       savetodraft: function () {
-        if(this.title==''){
+        if (this.title == '') {
           alert("请填写标题！");
           return;
         }
-        if (this.acturl == '') {//如果创建新活动
-          this.$http({
-            method: 'post',
-            url: "/activity/activities/",
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata)
-            }
-          }).then((res) => {
-            this.acturl=res.data.url;
-            this.snackbar1=true;
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
+        // 头图
+        if(this.parallaxpath=="/src/assets/createdefault.jpg"){
+          alert("活动头图未设置！");
+          return;
         }
-        else{//如果已存在活动（id）
-          this.$http({
-            method: 'patch',
-            url:this.acturl,
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata)
+        var head_img_url;
+        this.$http({
+          method: 'post',
+          url: '/activity/act-head-img-upload/',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            "Authorization": "Token " + localStorage.getItem("token")
+          },
+          data: this.head_imgparam
+        }).then((res) => {
+          head_img_url="http://222.186.36.156:8000"+res.data.bg_img;
+        }).catch(function (error) {
+          alert("传输故障，注册失败！");
+        });
+        // 正文、需求、简介
+        this.$http({
+          method: 'post',
+          url: "/activity/act-demo-upload/",
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token"),
+            "Content-Type": 'multipart/form-data'
+          },
+          data: this.imgparam
+        }).then((res) => {
+          var j = 0;
+          for (let k = 0; k < this.computeddata.length; k++) {
+            if (this.computeddata[k].type == "img" && this.computeddata[k].inner.length == 0) {
+              this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++];
             }
-          }).then((res) => {
-            this.snackbar1=true;
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
-        }
+          }
+          if (this.acturl == '') { //如果创建新活动
+            //向后端发送拼接数组
+            this.$http({
+              method: 'post',
+              url: "/activity/activities/",
+              headers: {
+                "Authorization": "Token " + localStorage.getItem("token")
+              },
+              data: {
+                start_at: this.date + 'T' + this.time + ':00.000000Z',
+                location: this.place,
+                _type: this.selectedform,
+                hobby: this.selectedinterest,
+                description: this.brieftext,
+                owner: this.url1,
+                heading: this.title,
+                requirement: JSON.stringify(this.requires),
+                demonstration: JSON.stringify(this.computeddata),
+                head_img:head_img_url
+              }
+            }).then((res) => {
+              this.acturl = res.data.url;
+              this.snackbar1 = true;
+            }).catch(function (error) {
+              alert("网络传输故障！");
+            });
+          } else { //如果已存在活动（id）
+            this.$http({
+              method: 'patch',
+              url: this.acturl,
+              headers: {
+                "Authorization": "Token " + localStorage.getItem("token")
+              },
+              data: {
+                start_at: this.date + 'T' + this.time + ':00.000000Z',
+                location: this.place,
+                _type: this.selectedform,
+                hobby: this.selectedinterest,
+                description: this.brieftext,
+                owner: this.url1,
+                heading: this.title,
+                requirement: JSON.stringify(this.requires),
+                head_img: this.parallaxpath,
+                demonstration: JSON.stringify(this.computeddata),
+                head_img:head_img_url
+              }
+            }).then((res) => {
+              this.snackbar1 = true;
+            }).catch(function (error) {
+              alert("网络传输故障！");
+            });
+          }
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
       },
       publicact: function () {
         if (this.title == '' || this.date == '' || this.time == '' || this.place == '' || this.selectedform == '' ||
@@ -363,92 +412,137 @@
           alert("信息未填写完整！");
           return;
         }
-        if (this.acturl == '') {//如果创建新活动
-          this.$http({
-            method: 'post',
-            url: "/activity/activities/",
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata),
-              want_to_be_allowed_to_publish:true,
-              // 审核已过
-              is_published:true
-            }
-          }).then((res) => {
-            this.acturl=res.data.url;
-            this.snackbar2=true;
-            sessionStorage.removeItem("createactorigin");
-            setTimeout(() => {
-              this.$router.push({ name: 'orgown', params: {opt:'create'}});
-            }, 2000);
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
+        if(this.parallaxpath=="/src/assets/createdefault.jpg"){
+          alert("活动封面未设置！");
+          return;
         }
-        else{//如果已存在活动（id）
-          this.$http({
-            method: 'patch',
-            url:this.acturl,
-            headers: {
-              "Authorization": "Token " + localStorage.getItem("token")
-            },
-            data: {
-              start_at: this.date + 'T' + this.time + ':00.000000Z',
-              location: this.place,
-              _type: this.selectedform,
-              hobby: this.selectedinterest,
-              description: this.brieftext,
-              owner: this.url1,
-              heading: this.title,
-              requirement: JSON.stringify(this.requires),
-              head_img: this.parallaxpath,
-              demonstration: JSON.stringify(this.computeddata),
-              want_to_be_allowed_to_publish:true,
-              // 审核已过
-              is_published:true
+        var head_img_url;
+        this.$http({
+          method: 'post',
+          url: '/activity/act-head-img-upload/',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            "Authorization": "Token " + localStorage.getItem("token")
+          },
+          data: this.head_imgparam
+        }).then((res) => {
+          head_img_url="http://222.186.36.156:8000"+res.data.bg_img;
+        }).catch(function (error) {
+          alert("传输故障，注册失败！");
+        });
+        // 正文、需求、简介
+        this.$http({
+          method: 'post',
+          url: "/activity/act-demo-upload/",
+          headers: {
+            "Authorization": "Token " + localStorage.getItem("token"),
+            "Content-Type": 'multipart/form-data'
+          },
+          data: this.imgparam
+        }).then((res) => {
+          var j = 0;
+          for (let k = 0; k < this.computeddata.length; k++) {
+            if (this.computeddata[k].type == "img" && this.computeddata[k].inner.length == 0) {
+              this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++];
             }
-          }).then((res) => {
-            this.snackbar2=true;
-            sessionStorage.removeItem("createactorigin");
-            setTimeout(() => {
-              this.$router.push({ name: 'orgown', params: {opt:'create'}});
+          }
+          if (this.acturl == '') { //如果创建新活动
+            //向后端发送拼接数组
+            this.$http({
+              method: 'post',
+              url: "/activity/activities/",
+              headers: {
+                "Authorization": "Token " + localStorage.getItem("token")
+              },
+              data: {
+                start_at: this.date + 'T' + this.time + ':00.000000Z',
+                location: this.place,
+                _type: this.selectedform,
+                hobby: this.selectedinterest,
+                description: this.brieftext,
+                owner: this.url1,
+                heading: this.title,
+                requirement: JSON.stringify(this.requires),
+                demonstration: JSON.stringify(this.computeddata),
+                head_img:head_img_url,
+                want_to_be_allowed_to_publish: true,
+                is_published: true  //开挂  以后删除
+              }
+            }).then((res) => {
+              this.snackbar2 = true;
+              setTimeout(() => {
+              this.$router.push({
+                name: 'orgown',
+                params: {
+                  opt: 'create'
+                }
+              });
             }, 2000);
-          }).catch(function (error) {
-            alert("网络传输故障！");
-          });
-        }
+            }).catch(function (error) {
+              alert("网络传输故障！");
+            });
+          } else { //如果已存在活动（id）
+            this.$http({
+              method: 'patch',
+              url: this.acturl,
+              headers: {
+                "Authorization": "Token " + localStorage.getItem("token")
+              },
+              data: {
+                start_at: this.date + 'T' + this.time + ':00.000000Z',
+                location: this.place,
+                _type: this.selectedform,
+                hobby: this.selectedinterest,
+                description: this.brieftext,
+                owner: this.url1,
+                heading: this.title,
+                requirement: JSON.stringify(this.requires),
+                head_img: this.parallaxpath,
+                demonstration: JSON.stringify(this.computeddata),
+                head_img:head_img_url,
+                want_to_be_allowed_to_publish: true,
+                is_published: true  //开挂  以后删除
+              }
+            }).then((res) => {
+              this.snackbar2 = true;
+              setTimeout(() => {
+              this.$router.push({
+                name: 'orgown',
+                params: {
+                  opt: 'create'
+                }
+              });
+            }, 2000);
+            }).catch(function (error) {
+              alert("网络传输故障！");
+            });
+          }
+        }).catch(function (error) {
+          alert("网络传输故障！");
+        });
       },
-      openpreview:function(){
-      var myDate = new Date();
-      sessionStorage.setItem("preview",JSON.stringify({
-          parallaxpath:this.parallaxpath,
-          avatar:this.avatar,
-          name:this.org,
-          title:this.title,
-          launchdate:myDate.getFullYear()+'-'+myDate.getMonth()+'-'+myDate.getDate(),
-          isfinished:false,
-          stars:5,
-          introduction:this.brieftext,
-          date:this.date,
-          time:this.time,
-          place:this.place,
-          type:this.selectedform,
-          interest:this.selectedinterest,
-          lists:this.computeddata
-      }));
-      let routeData=this.$router.resolve({path:'/Orgactview'});
-      window.open(routeData.href, '_blank');
+      openpreview: function () {
+        var myDate = new Date();
+        sessionStorage.setItem("preview", JSON.stringify({
+          parallaxpath: this.parallaxpath,
+          avatar: this.avatar,
+          name: this.org,
+          title: this.title,
+          launchdate: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate(),
+          isfinished: false,
+          stars: 5,
+          introduction: this.brieftext,
+          date: this.date,
+          time: this.time,
+          place: this.place,
+          type: this.selectedform,
+          interest: this.selectedinterest,
+          lists: this.computeddata
+        }));
+        let routeData = this.$router.resolve({
+          path: '/Orgactview'
+        });
+        window.open(routeData.href, '_blank');
       }
     }
   }

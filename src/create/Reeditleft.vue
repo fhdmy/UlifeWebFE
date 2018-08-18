@@ -27,17 +27,14 @@
     }),
     created: function () {
       for (let k = 0; k < this.gotdata.length; k++) {
-        if(this.gotdata[k].type=='text'){
-          this.$set(this.origintext, k, this.gotdata[k].inner);
-        }
+        this.$set(this.origintext, k, this.gotdata[k].inner);
       }
     },
     watch: {
       deleted: function (val) {
+        this.origintext=[];//重置数组
         for (let k = 0; k < this.gotdata.length; k++) {
-          if(this.gotdata[k].type=='text'){
-            this.$set(this.origintext, k, this.gotdata[k].inner);
-          }
+          this.$set(this.origintext, k, this.gotdata[k].inner);
         }
       }
     },

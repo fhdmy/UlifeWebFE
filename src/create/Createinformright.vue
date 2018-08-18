@@ -150,6 +150,9 @@
         this.insertphase = false;
       },
       sendavatartoparent: function () {
+        if(this.avatar0=='/src/assets/defaultavatar.png'){
+          return;
+        }
         this.$http({
           method: 'post',
           url: '/account/user-avatar-upload/',
@@ -169,13 +172,15 @@
         var files = e.target.files;
         var len=this.imglocaldisplay.length;
         for(let k=0;k<files.length;k++){
-          this.imgparam.append('file'+(k+len), files[files.length-k-1]); //通过append向form对象添加数据//神tm反向顺序！！
+          this.imgparam.set('file'+(k+len), files[files.length-k-1]); //通过append向form对象添加数据//神tm反向顺序！！
           if (!this.imgparam.get('file'+(k+len))) {
             alert("打开文件失败！");
             return;
           } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
           this.$set(this.imglocaldisplay,len+k,window.URL.createObjectURL(files[files.length-k-1]));//本地预览;//神tm反向顺序！！
           this.$emit("sentimg",k);
+          for(let k=0;k<5;k++){
+        }
         }
         e.target.value=null;//解决change无效
       },
