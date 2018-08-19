@@ -1,5 +1,9 @@
 <template>
   <v-toolbar color="white elevation-0">
+    <v-snackbar v-model="download_app" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      敬请期待！
+      <v-btn color="pink" flat @click="download_app = false">关闭</v-btn>
+    </v-snackbar>
     <v-toolbar-title>
       <router-link to="/" class="display-1 primary--text">Ulife</router-link>
     </v-toolbar-title>
@@ -62,7 +66,12 @@
           title: '报名',
           opt:'org_signup'
         }
-      ]
+      ],
+      download_app:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 3000
     }),
     created:function(){
       if(this.content=='无' || this.content==undefined){

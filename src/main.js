@@ -3,8 +3,9 @@ import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import VueLazyload from 'vue-lazyload'
 import axios from 'axios'
-import global_ from './Global.vue'
-import App from './App.vue'
+import global_ from './components/Global.vue'
+import App from './components/App.vue'
+import Vuex from 'vuex'
 import 'vuetify/dist/vuetify.min.css'
 
 import Visitor_toolbar from './components/Home/Visitor_toolbar.vue'
@@ -106,6 +107,7 @@ Vue.use(VueRouter)
 Vue.use(VueLazyload, {
   error: '/src/assets/error.png'
 })
+Vue.use(Vuex)
 
 Vue.component("Visitor-toolbar",Visitor_toolbar)
 Vue.component("Footer",Footer)

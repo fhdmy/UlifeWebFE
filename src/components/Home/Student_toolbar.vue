@@ -1,5 +1,9 @@
 <template>
   <v-toolbar color="white elevation-0">
+    <v-snackbar v-model="download_app" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      敬请期待！
+      <v-btn color="pink" flat @click="download_app = false">关闭</v-btn>
+    </v-snackbar>
     <v-toolbar-title>
       <router-link to="/" class="display-1 primary--text">Ulife</router-link>
     </v-toolbar-title>
@@ -7,7 +11,7 @@
       <router-link to="/">
         <v-btn flat class="subheading">首页</v-btn>
       </router-link>
-      <v-btn flat class="subheading">下载APP</v-btn>
+      <v-btn flat class="subheading" @click="download_app=true">下载APP</v-btn>
       <div class="search-wrapper">
         <v-text-field label="搜索" single-line class="my-3 ml-5" @click="changecolor" @blur="backcolor" ref="searchinput" v-model="value"
           @keyup.13="keyuptoAppsearch()"></v-text-field>
@@ -62,7 +66,12 @@
           title: '历史',
           opt:'historyview'
         }
-      ]
+      ],
+      download_app:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 3000
     }),
     created:function(){
       if(this.content=='无' || this.content==undefined){
