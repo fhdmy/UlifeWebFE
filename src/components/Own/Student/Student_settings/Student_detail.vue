@@ -88,17 +88,18 @@
           var bool = false;
           for (let e in err) {
             if (err[e][0] === "This field may not be blank.") {
-              alert("请填满个人信息！");
+              this.$emit("information_valid");
               bool = true;
               break;
             }
           }
           if (err.nickname[0] == "student with this nickname already exists.") {
             bool = true;
-            alert("用户名已存在！");
+            this.$emit("getuser_existed");
           }
           if (bool == false) {
-            alert("网络传输故障!");
+            console.log(error.response);
+            this.$emit("getrequest_failed");
           }
         });
       }

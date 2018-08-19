@@ -83,7 +83,8 @@
         }).then((res) => {
           this.acts.splice(i,1);
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
       },
       stopitem:function(i){
@@ -99,7 +100,8 @@
         }).then((res) => {
           this.acts[i].is_ended=true;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
       },
       getmoremyacts:function(){
@@ -111,7 +113,7 @@
       },
       reedit(url,is_ended){
         if(is_ended){
-          alert("不能修改已结束的活动！");
+          this.$emit("getreedit_rejected");
           return;
         }
         sessionStorage.setItem("editactorigin",this.org_name);

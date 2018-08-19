@@ -1,5 +1,13 @@
 <template>
   <v-content style="background: #f3f4f5;" v-scroll="onScroll">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="no_more_acts" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      已经没有更多活动啦
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Student-toolbar :avatar="img"></Student-toolbar>
     </div>
@@ -20,9 +28,9 @@
       <div class="asinform" v-if="fixed"></div>
       <Student-signup v-show="item=='student_signup'" :acts="signupacts" @getmoresignupacts="getmoresignupacts"></Student-signup>
       <Student-dynamic v-show="item=='dynamatic'" :acts="trendacts" @getmoretrendsacts="getmoretrendsacts"></Student-dynamic>
-      <Student-collect v-show="item=='collect'" :mine="mine" :acts="collects" @sendmorecollectacts="sendmorecollectacts" :is_fav_public="true"></Student-collect>
-      <Student-history-view v-show="item=='historyview'" :acts="historyvi" @sendmoreviewacts="sendmoreviewacts" :stu_id="stu_id"></Student-history-view>
-      <Student-history-attend v-show="item=='historyattend'" :mine="mine" :acts="historyatt" @getmoreattendacts="getmoreattendacts" :stu_id="stu_id" :is_history_public="true"></Student-history-attend>
+      <Student-collect v-show="item=='collect'" :mine="mine" :acts="collects" @sendmorecollectacts="sendmorecollectacts" :is_fav_public="true" @getrequest_failed="getrequest_failed"></Student-collect>
+      <Student-history-view v-show="item=='historyview'" :acts="historyvi" @sendmoreviewacts="sendmoreviewacts" :stu_id="stu_id" @getrequest_failed="getrequest_failed"></Student-history-view>
+      <Student-history-attend v-show="item=='historyattend'" :mine="mine" :acts="historyatt" @getmoreattendacts="getmoreattendacts" :stu_id="stu_id" :is_history_public="true" @getrequest_failed="getrequest_failed"></Student-history-attend>
       <Student-msg v-show="item=='student_msg'"></Student-msg>
       <div style="clear:both;"></div>
     </div>
@@ -37,6 +45,12 @@
   export default {
     props: ['opt'],
     data: () => ({
+      request_failed:false,
+      no_more_acts:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       parallaxpath: '',
       img: '',
       name: '',
@@ -155,10 +169,16 @@
             }
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       }).catch(function (error) {
-        alert("网络传输故障！");
+         console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
       });
       // 关注
       this.$http({
@@ -184,7 +204,10 @@
         // 动态
         this.axiostrends(this.stu_id);
       }).catch(function (error) {
-        alert("网络传输故障！");
+         console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
       });
     },
     watch: {
@@ -277,7 +300,10 @@
           this.presentsignup = res.data.results.length;
           this.signupmax = res.data.count;
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       axioshistoryattend: function (id) {
@@ -311,7 +337,10 @@
             this.attmax = res.data.count;
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       axioshistoryview: function (id) {
@@ -346,7 +375,10 @@
             this.viewmax = res.data.count;
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       axioscollect: function (id) {
@@ -382,7 +414,10 @@
             this.collectmax = res.data.count;
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       axiostrends: function (id) {
@@ -425,7 +460,10 @@
             this.trendmax = res.data.count;
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       onScroll(e) {
@@ -433,7 +471,7 @@
       },
       sendmoreviewacts: function () {
         if (this.viewmax == this.presentview) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts=true;
           return;
         }
         this.$http({
@@ -466,12 +504,15 @@
           this.moreview = res.data.next;
           this.presentview += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       sendmorecollectacts: function () {
         if (this.collectmax == this.presentcollects) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts=true;
           return;
         }
         this.$http({
@@ -504,12 +545,15 @@
           this.morecollects = res.data.next;
           this.presentcollects += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       getmoreattendacts: function () {
         if (this.attmax == this.presentatt) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts=true;
           return;
         }
         this.$http({
@@ -541,12 +585,15 @@
           this.moreatt = res.data.next;
           this.presentatt += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       getmoresignupacts: function () {
         if (this.signupmax == this.presentsignup) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts=true;
           return;
         }
         this.$http({
@@ -579,12 +626,15 @@
           this.moresignupacts = res.data.next;
           this.presentsignup += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       getmoretrendsacts: function () {
         if (this.trendmax == this.presenttrend) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts=true;
           return;
         }
         this.$http({
@@ -617,9 +667,15 @@
           this.moretrend = res.data.next;
           this.presenttrend += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
+      getrequest_failed:function(){
+        this.request_failed=true;
+      }
     }
   }
 

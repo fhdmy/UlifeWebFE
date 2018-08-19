@@ -1,5 +1,29 @@
 <template>
   <v-toolbar color="white elevation-0" height="70">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="not_login" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      请先登录账号！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="org_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      组织用户不能进行此操作！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="collect_success" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      收藏成功！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="signup_valid" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      报名信息不完整！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="signup_success" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      报名成功！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <v-dialog v-model="dialog" max-width="290" v-if="!is_ended">
       <v-card>
         <v-card-text>你确定要取消报名？</v-card-text>
@@ -69,6 +93,16 @@
       dialog: false,
       signin: false,
       answers: [],
+      request_failed:false,
+      not_login:false,
+      org_rejected:false,
+      collect_success:false,
+      signup_valid:false,
+      signup_success:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       items: [{
           name: 'icon-weibo',
           color: 'rgb(249, 110, 118)'
@@ -97,11 +131,11 @@
     methods: {
       collect: function () {
         if(this.usertype=='none'){
-          alert("请先登录账号！");
+          this.not_login=true;
           return;
         }
         if(this.usertype=='org'){
-          alert("组织用户不能进行此操作！");
+          this.org_rejected=true;
           return;
         }
         if (!this.collected) {
@@ -118,9 +152,12 @@
           }).then((res) => {
             this.collecturl=res.data.url;
             this.collected = true;
-            alert("收藏成功！");
+            this.collect_success=true;
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
         } else {
           this.$http({
@@ -136,26 +173,29 @@
           }).then((res) => {
             this.collected = false;
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
         }
       },
       signup: function () {
         if(this.usertype=='none'){
-          alert("请先登录账号！");
+          this.not_login=true;
           return;
         }
         if(this.usertype=='org'){
-          alert("组织用户不能进行此操作！");
+          this.org_rejected=true;
           return;
         }
         if(this.answers.length!=this.requires.length){
-          alert("报名信息不完整！");
+          this.signup_valid=true;
           return;
         }
         for(let k=0;k<this.requires.length;k++){
           if(this.answers[k]==""){
-            alert("报名信息不完整！");
+            this.signup_valid=true;
             return;
           }
         }
@@ -173,10 +213,13 @@
           }).then((res) => {
             this.participationurl=res.data.url;
             this.participation=true;
-            alert("报名成功！");
+            this.signup_success=true;
             this.signin = false;
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
       },
       cancelsignup: function () {
@@ -193,31 +236,34 @@
           }).then((res) => {
             this.participation=false;
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
       },
       chooseshare: function (i) {
-        // 微博
-        if (i == 0) {
+        // // 微博
+        // if (i == 0) {
 
-        }
-        // qq空间
-        else if (i == 1) {
-          this.$http.post('https://graph.qq.com/share/add_share', {
-            title: 'QQ空间',
-            url: 'http://www.qzone.com/ ',
-            site: 'Ulife',
-            fromurl: 'http://baidu.com'
-          }).then((res) => {
-            console.log(res);
-          }).catch(function (error) {
-            alert("网络传输故障!");
-          });
-        }
-        // 微信朋友圈
-        else {
+        // }
+        // // qq空间
+        // else if (i == 1) {
+        //   this.$http.post('https://graph.qq.com/share/add_share', {
+        //     title: 'QQ空间',
+        //     url: 'http://www.qzone.com/ ',
+        //     site: 'Ulife',
+        //     fromurl: 'http://baidu.com'
+        //   }).then((res) => {
+        //     console.log(res);
+        //   }).catch(function (error) {
+        //     alert("网络传输故障!");
+        //   });
+        // }
+        // // 微信朋友圈
+        // else {
 
-        }
+        // }
       }
     }
   }

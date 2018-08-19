@@ -1,5 +1,13 @@
 <template>
-  <v-content style="background: #f3f4f5;" v-scroll="onScroll" v-show="requestok>=2">
+  <v-content style="background: #f3f4f5;" v-scroll="onScroll">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="no_more_acts" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      已经没有更多活动啦
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Visitor-toolbar v-if="usertype=='none'"></Visitor-toolbar>
       <Student-toolbar v-if="usertype=='user'" :avatar="avatarurl"></Student-toolbar>
@@ -35,6 +43,12 @@
   export default {
     props: ['opt', 'stu_id'],
     data: () => ({
+      request_failed:false,
+      no_more_acts:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       avatarurl: '/src/assets/default.png',
       usertype: 'none',
       parallaxpath: '/src/assets/stuownbg.jpg',
@@ -61,7 +75,6 @@
       targetid: 0,
       participation_count: 0,
       watching_count: 0,
-      requestok: 0,
     }),
     created: function () {
       // toolbar
@@ -108,7 +121,6 @@
         this.is_fav_public = res.data.is_fav_public;
         this.is_history_public = res.data.is_history_public;
         this.is_watched_orgs_public = res.data.is_watched_orgs_public;
-        this.requestok++;
         // 访客
         if (this.is_visitor_public) {
           this.$http({
@@ -138,9 +150,11 @@
                 });
               }
             }
-            this.requestok++;
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
         }
         //记录访客
@@ -156,13 +170,18 @@
               'target': this.targetid
             }
           }).then((res) => {
-            this.requestok++;
           }).catch(function (error) {
-            alert("网络传输故障！");
+           console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
         }
       }).catch(function (error) {
-        alert("网络传输故障！");
+        console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
       });
       // 关注
       if (this.is_watched_orgs_public) {
@@ -185,9 +204,11 @@
               orgid: org_id
             });
           }
-          this.requestok++;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       }
     },
@@ -264,7 +285,10 @@
             this.attmax = res.data.count;
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       axioscollect: function (id) {
@@ -300,12 +324,15 @@
             this.collectmax = res.data.count;
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       sendmorecollectacts: function () {
         if (this.collectmax == this.presentcollects) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts=true;
           return;
         }
         this.$http({
@@ -338,12 +365,15 @@
           this.morecollects = res.data.next;
           this.presentcollects += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       getmoreattendacts: function () {
         if (this.attmax == this.presentatt) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts=true;
           return;
         }
         this.$http({
@@ -375,7 +405,10 @@
           this.moreatt = res.data.next;
           this.presentatt += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       onScroll(e) {

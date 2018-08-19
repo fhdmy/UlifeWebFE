@@ -69,7 +69,8 @@
         }).then((res) => {
           this.acts.splice(0,this.acts.length);
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
       },
       getmoreviewacts:function(){

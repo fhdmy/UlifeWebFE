@@ -76,7 +76,8 @@
         }).then((res) => {
           this.acts.splice(i, 1);
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
       },
       getmorecollectacts: function () {

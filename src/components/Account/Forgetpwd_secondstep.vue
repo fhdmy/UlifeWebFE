@@ -4,6 +4,10 @@
       密码已修改！
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">忘记密码</p>
     <div class="register1-wrapper">
       <v-container>
@@ -34,6 +38,7 @@
     data: () => ({
       y: 'top',
       snackbar: false,
+      request_failed:false,
       color: '#E03636',
       mode: '',
       timeout: 2000,
@@ -71,7 +76,8 @@
               this.$router.push('/login');
             }, 2000);
         }).catch(function (error) {
-          alert("网络传输故障!");
+          console.log(error.response);
+          this.request_failed=true;
         });
       },
       clearsession:function(){

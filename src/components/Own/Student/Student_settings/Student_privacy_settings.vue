@@ -91,7 +91,8 @@
         }).then((res) => {
           this.snackbar=true;
         }).catch(function (error) {
-          alert("网络传输故障!");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
       }
     }

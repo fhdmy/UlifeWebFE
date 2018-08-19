@@ -1,5 +1,9 @@
 <template>
   <v-content style="background: #f3f4f5;" v-scroll="onScroll">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Visitor-toolbar v-if="usertype=='none'"></Visitor-toolbar>
       <Student-toolbar v-if="usertype=='user'" :avatar="avatarurl"></Student-toolbar>
@@ -14,9 +18,9 @@
           </v-avatar>
         </a>
         <p class="act-title display-1" v-if="!fixed">{{title}}</p>
-        <Activity-toolbar :org="org" :launchdate="launchdate" :isfinished="is_ended" :stars="stars" :fixed="fixed" :title="title" :collected="collected"
-          :participation="participation" :routerid="routerid" :acturl="opt" :collecturl="collecturl" :participationurl="participationurl"
-          :requires="requires" :is_ended="is_ended" :usertype="usertype"></Activity-toolbar>
+        <Activity-toolbar :org="org" :launchdate="launchdate" :isfinished="is_ended" :stars="stars" :fixed="fixed" :title="title"
+          :collected="collected" :participation="participation" :routerid="routerid" :acturl="opt" :collecturl="collecturl"
+          :participationurl="participationurl" :requires="requires" :is_ended="is_ended" :usertype="usertype"></Activity-toolbar>
       </div>
     </div>
     <div v-if="fixed" style="height:70px;"></div>
@@ -37,6 +41,11 @@
   export default {
     props: ['opt'],
     data: () => ({
+      request_failed: false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       collecturl: '',
       routerid: 0,
       participation: false,
@@ -60,7 +69,7 @@
       type: '',
       interest: '',
       lists: [],
-      is_ended:false,
+      is_ended: false,
       customlists: [{
           name: 'Xnick',
           img: '/src/assets/xnick.jpg',
@@ -117,14 +126,14 @@
         var computedstart = res.data.start_at.split('T');
         var comutedstarttime = computedstart[1].split(':');
         this.parallaxpath = res.data.head_img;
-        if(res.data.owner.avatar!=null){
+        if (res.data.owner.avatar != null) {
           this.img = "http://222.186.36.156:8000" + res.data.owner.avatar;
         }
         this.org = res.data.owner.org_name;
         this.title = res.data.heading;
         var orgurl = res.data.owner.url;
-        orgurl=orgurl.split("/");
-        this.org_id=orgurl[5];
+        orgurl = orgurl.split("/");
+        this.org_id = orgurl[5];
         this.launchdate = computeddate[0];
         this.introduction = res.data.description;
         this.date = computedstart[0];
@@ -134,9 +143,12 @@
         this.interest = res.data.hobby;
         this.lists = JSON.parse(res.data.demonstration);
         this.requires = JSON.parse(res.data.requirement);
-        this.is_ended=res.data.is_ended;
+        this.is_ended = res.data.is_ended;
       }).catch(function (error) {
-        alert("网络传输故障！");
+        console.log(error.response);
+        if (!this.request_failed) {
+          this.request_failed = true;
+        }
       });
 
       // 添加历史浏览
@@ -147,19 +159,22 @@
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           },
-          data:{
-            watcher:parseInt(this.routerid),
-            target:parseInt(this.opt)
+          data: {
+            watcher: parseInt(this.routerid),
+            target: parseInt(this.opt)
           }
         }).then((res) => {
-          
+
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       }
 
       // 是否报名
-      if (this.usertype=='user') {
+      if (this.usertype == 'user') {
         this.$http({
           method: 'get',
           url: 'activity/participation-actdemo/?student=' + this.routerid + '&activity=' + this.opt,
@@ -171,7 +186,10 @@
           if (this.participation)
             this.participationurl = res.data[0].url;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
         // 是否收藏
         this.$http({
@@ -185,10 +203,13 @@
           if (this.collected)
             this.collecturl = res.data[0].url;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       }
-      if(this.usertype=='org'){
+      if (this.usertype == 'org') {
         this.participation = false;
         this.collected = false;
       }
@@ -221,8 +242,14 @@
       onScroll(e) {
         this.offsetTop = window.pageYOffset || document.documentElement.scrollTop;
       },
-      openorg:function(org_id){
-        let routeData = this.$router.resolve({name:'org_display',params:{opt:'abstract',org_id:org_id}});
+      openorg: function (org_id) {
+        let routeData = this.$router.resolve({
+          name: 'org_display',
+          params: {
+            opt: 'abstract',
+            org_id: org_id
+          }
+        });
         window.open(routeData.href, '_blank');
       }
     }

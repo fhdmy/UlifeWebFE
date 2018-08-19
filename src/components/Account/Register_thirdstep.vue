@@ -1,5 +1,13 @@
 <template>
   <div class="register-bg" @keyup.13="register()">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="user_existed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      用户名已存在！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">注册Ulife</p>
     <div class="register1-wrapper">
       <v-container>
@@ -15,7 +23,7 @@
               :rules="[rules.required,rules.confirm(confirmpwd,pwd)]"></v-text-field>
             <v-select :items="items" label="来自什么组织的宣传" solo class="input3" dark v-model="select" :rules="[rules.required]"></v-select>
             <v-btn color="primary register-confirm" @click="register">注册</v-btn>
-            <Retext></Retext>
+            <Law-explaination></Law-explaination>
           </v-flex>
         </v-layout>
       </v-container>
@@ -43,6 +51,12 @@
       pwd: '',
       confirmpwd: '',
       select: '',
+      request_failed:false,
+      user_existed:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       rules: {
         required: value => !!value || '不能为空！',
         username: value => {
@@ -73,14 +87,13 @@
     }),
     created: function () {
       this.$http.get('/account/orgs/', {
-        
+  
       }).then((res) => {
         for (let k = 0; k < res.data.length; k++) {
           this.$set(this.items, k, res.data[k].org_name);
         }
       }).catch(function (error) {
-        alert(
-          "传输故障，注册失败！");
+        this.request_failed=true;
       });
     },
     methods: {
@@ -106,13 +119,11 @@
             this.$router.push('/');
           }).catch(function (error) {
             if(error.response.data == "Nickname already exists") {
-              alert("用户名已存在！");
+              this.user_existed=true;
             }
-            //if (error.response.data == "Phone number already exists") {
-            // alert("手机号已被注册！"); 
-            //} 
             else {
-              alert("网络传输故障!");
+              console.log(error.response);
+              this.request_failed=true;
             }
           })
         }

@@ -1,5 +1,25 @@
 <template>
   <v-content style="background: #f3f4f5;" v-scroll="onScroll">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="no_more_acts" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+      已经没有更多活动啦
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="org_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+      组织用户不能关注其他组织！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="not_login" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+      请先登录账号！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="reedit_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+      不能修改已结束的活动！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Org-toolbar :avatar="img"></Org-toolbar>
     </div>
@@ -14,13 +34,17 @@
     </div>
     <div v-if="fixed" style="height:64px;"></div>
     <div class="stuown-mainwrapper">
-      <Org-information :class="{'informfixed':fixed}" :name="name" :attention="watcher_count" :stars="stars" :acts="activity_count" :visits="visits"
-        :mine="mine" :orgurl="orgurl" :list="lists" :bg_img="parallaxpath"></Org-information>
+      <Org-information :class="{'informfixed':fixed}" :name="name" :attention="watcher_count" :stars="stars" :acts="activity_count"
+        :visits="visits" :mine="mine" :orgurl="orgurl" :list="lists" :bg_img="parallaxpath" @getrequest_failed="getrequest_failed"
+        @getnot_login="getnot_login" @getorg_rejected="getorg_rejected"  
+      ></Org-information>
       <div class="asinform" v-if="fixed"></div>
       <Org-abstract v-show="item=='abstract'" :mine="mine" :lists="lists"></Org-abstract>
-      <Org-draft v-show="item=='draft'" :acts="draft" @getmoredraftacts="getmoredraftacts" :org_name="name"></Org-draft>
+      <Org-draft v-show="item=='draft'" :acts="draft" @getmoredraftacts="getmoredraftacts" :org_name="name" @getrequest_failed="getrequest_failed"></Org-draft>
       <Org-create-activity v-show="item=='create_activities'" :org_name="name"></Org-create-activity>
-      <Org-my-activities v-show="item=='my_activities'" :acts="myacts" @getmoremyacts="getmoremyacts" :org_name="name"></Org-my-activities>
+      <Org-my-activities v-show="item=='my_activities'" :acts="myacts" @getmoremyacts="getmoremyacts" :org_name="name"
+       @getrequest_failed="getrequest_failed" @getreedit_rejected="getreedit_rejected"
+       ></Org-my-activities>
       <Org-signup v-show="item=='org_signup'" :acts="signup" @getmoresignup="getmoresignup"></Org-signup>
       <Org-msg v-show="item=='org_msg'"></Org-msg>
       <div style="clear:both;"></div>
@@ -36,6 +60,15 @@
   export default {
     props: ['opt'],
     data: () => ({
+      request_failed: false,
+      no_more_acts: false,
+      org_rejected:false,
+      not_login:false,
+      reedit_rejected:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       parallaxpath: '/src/assets/createdefault.jpg',
       img: '',
       name: '',
@@ -60,8 +93,8 @@
       signupmax: 0,
       presentsignup: 0,
       org_id: 0,
-      watcher_count:0,
-      activity_count:0
+      watcher_count: 0,
+      activity_count: 0
     }),
     created: function () {
       this.img = sessionStorage.getItem("avatar");
@@ -100,12 +133,11 @@
           "Authorization": "Token " + localStorage.getItem("token")
         }
       }).then((res) => {
-        this.watcher_count=res.data.watcher_count;
-        this.activity_count=res.data.activity_count;
-        if(res.data.bg_img!=null){
-          this.parallaxpath = "http://222.186.36.156:8000"+res.data.bg_img;
-        }
-        else{
+        this.watcher_count = res.data.watcher_count;
+        this.activity_count = res.data.activity_count;
+        if (res.data.bg_img != null) {
+          this.parallaxpath = "http://222.186.36.156:8000" + res.data.bg_img;
+        } else {
           this.parallaxpath = '/src/assets/stuownbg.jpg';
         }
         this.name = res.data.org_name;
@@ -128,29 +160,35 @@
             // 是学生
             if (res.data[k].watcher.student != null) {
               this.$set(this.visits, k, {
-                avatar: "http://222.186.36.156:8000"+res.data[k].watcher.student.avatar,
+                avatar: "http://222.186.36.156:8000" + res.data[k].watcher.student.avatar,
                 name: res.data[k].watcher.student.nickname,
                 url: res.data[k].watcher.student.url,
                 number: k,
-                type:'student'
+                type: 'student'
               });
             }
             // 是组织
             if (res.data[k].watcher.org != null) {
               this.$set(this.visits, k, {
-                avatar: "http://222.186.36.156:8000"+res.data[k].watcher.org.avatar,
+                avatar: "http://222.186.36.156:8000" + res.data[k].watcher.org.avatar,
                 name: res.data[k].watcher.org.org_name,
                 url: res.data[k].watcher.org.url,
                 number: k,
-                type:'org'
+                type: 'org'
               });
             }
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       }).catch(function (error) {
-        alert("网络传输故障！");
+        console.log(error.response);
+        if (!this.request_failed) {
+          this.request_failed = true;
+        }
       });
       // 我的活动
       this.axiosmyacts(this.org_id);
@@ -226,7 +264,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar:  "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5]
             });
@@ -235,7 +273,10 @@
           this.presentdraft = res.data.results.length;
           this.draftmax = res.data.count;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       },
       axiosmyacts: function (id) {
@@ -255,7 +296,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
               is_ended: res.data.results[k].is_ended,
@@ -265,7 +306,10 @@
           this.presentmyacts = res.data.results.length;
           this.myactsmax = res.data.count;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       },
       axiossignup: function (id) {
@@ -285,7 +329,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5],
             });
@@ -294,12 +338,15 @@
           this.presentsignup = res.data.results.length;
           this.signupmax = res.data.count;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       },
       getmoredraftacts: function () {
         if (this.draftmax == this.presentdraft) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts = true;
           return;
         }
         this.$http({
@@ -319,7 +366,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5]
             });
@@ -327,12 +374,15 @@
           this.moredraft = res.data.next;
           this.presentdraft += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       },
       getmoremyacts: function () {
         if (this.myactsmax == this.presentmyacts) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts = true;
           return;
         }
         this.$http({
@@ -352,7 +402,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5]
             });
@@ -360,12 +410,15 @@
           this.moremyacts = res.data.next;
           this.presentmyacts += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       },
       getmoresignup: function () {
         if (this.signupmax == this.presentsignup) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts = true;
           return;
         }
         this.$http({
@@ -385,7 +438,7 @@
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
               isover: false,
               acturl: actid[5]
             });
@@ -393,8 +446,25 @@
           this.moresignup = res.data.next;
           this.presentsignup += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
+      },
+      getrequest_failed(d) {
+        if (!this.request_failed) {
+          this.request_failed = true;
+        }
+      },
+      getnot_login(){
+        this.not_login=true;
+      },
+      getorg_rejected(){
+        this.org_rejected=true;
+      },
+      getgetreedit_rejected(){
+        this.getreedit_rejected=true;
       },
       onScroll(e) {
         this.offsetTop = window.pageYOffset || document.documentElement.scrollTop;

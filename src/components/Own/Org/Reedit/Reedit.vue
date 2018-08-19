@@ -8,6 +8,30 @@
       发表成功！
       <v-btn color="pink" flat @click="snackbar2 = false">关闭</v-btn>
     </v-snackbar>
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="openfile_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      打开文件失败！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="overwrite" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      超过字数啦！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="information_valid" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      信息未填写完整！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="head_img_valid" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      活动封面未设置！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="heading_valid" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      请填写标题！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper">
       <Org-toolbar :avatar="avatar"></Org-toolbar>
     </div>
@@ -28,13 +52,12 @@
     <div class="main-wrapper">
       <Reedit-body :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted"
         :imglocaldisplay="imglocaldisplay" :draftflag="draftflag"></Reedit-body>
-      <Reedit-options ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
-        @senttext="gettext" @reeditparse="getreeditfromright" :brieftext="brieftext" :brieftext0="brieftext" :selectedinterest="selectedinterest"
-        :selectedinterest0="selectedinterest" :place="place" :place0="place" :date="date" :date0="date" :time="time" :time0="time"
-        :selectedform="selectedform" :selectedform0="selectedform" :opts="requires" :imgparam="imgparam"
-        :imglocaldisplay="imglocaldisplay" :head_imgparam="head_imgparam"
-        :class="{'isfixed':fixed}"
-        ></Reedit-options>
+      <Reedit-options ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg"
+        @senttopimg="gettopimg" @senttext="gettext" @reeditparse="getreeditfromright" :brieftext="brieftext" :brieftext0="brieftext"
+        :selectedinterest="selectedinterest" :selectedinterest0="selectedinterest" :place="place" :place0="place" :date="date"
+        :date0="date" :time="time" :time0="time" :selectedform="selectedform" :selectedform0="selectedform" :opts="requires"
+        :imgparam="imgparam" :imglocaldisplay="imglocaldisplay" :head_imgparam="head_imgparam" :class="{'isfixed':fixed}" @getopenfile_failed="getopenfile_failed"
+        @getoverwrite="getoverwrite"></Reedit-options>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -84,6 +107,12 @@
       y: 'top',
       snackbar1: false,
       snackbar2: false,
+      request_failed: false,
+      openfile_failed: false,
+      overwrite: false,
+      information_valid: false,
+      head_img_valid: false,
+      heading_valid: false,
       color: '#E03636',
       mode: '',
       timeout: 2000,
@@ -126,7 +155,7 @@
       imglocaldisplay: [],
       head_imgparam: null,
       acturl: '',
-      draftflag:false
+      draftflag: false
     }),
     computed: {
       havetopimg: function () {
@@ -191,11 +220,14 @@
         this.time = comutedstarttime[0] + ':' + comutedstarttime[1];
         this.selectedform = res.data._type;
         this.requires = JSON.parse(res.data.requirement);
-        this.draftflag=!this.draftflag;//reeditleft初始化text
+        this.draftflag = !this.draftflag; //reeditleft初始化text
         this.cal = this.computeddata.length;
-        this.key = this.cal;//巨重要！
+        this.key = this.cal; //巨重要！
       }).catch(function (error) {
-        alert("网络传输故障！");
+        console.log(error.response);
+        if (!this.request_failed) {
+          this.request_failed = true;
+        }
       });
     },
     methods: {
@@ -209,7 +241,7 @@
         var file = e.target.files[0];
         this.head_imgparam.set('file', file); //通过append向form对象添加数据
         if (!this.head_imgparam.get('file')) {
-          alert("打开文件失败！");
+          this.openfile_failed = true;
           return;
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         var head_img = window.URL.createObjectURL(e.target.files[0]); //本地预览;
@@ -372,12 +404,12 @@
       },
       savetodraft: function () {
         if (this.title == '') {
-          alert("请填写标题！");
+          this.heading_valid = true;
           return;
         }
         // 头图
         if (this.parallaxpath == "/src/assets/createdefault.jpg") {
-          alert("活动头图未设置！");
+          this.head_img_valid = true;
           return;
         }
         if (this.head_imgparam.get("file") == "img") {
@@ -396,7 +428,10 @@
             head_img_url = "http://222.186.36.156:8000" + res.data.bg_img;
             this.save_mainrequest(head_img_url);
           }).catch(function (error) {
-            alert("传输故障，注册失败！");
+            console.log(error.response);
+            if (!this.request_failed) {
+              this.request_failed = true;
+            }
           });
         }
       },
@@ -404,11 +439,11 @@
         if (this.title == '' || this.date == '' || this.time == '' || this.place == '' || this.selectedform ==
           '' ||
           this.selectedinterest == '' || this.brieftext == '') {
-          alert("信息未填写完整！");
+          this.information_valid = true;
           return;
         }
         if (this.parallaxpath == "/src/assets/createdefault.jpg") {
-          alert("活动封面未设置！");
+          this.head_img_valid = true;
           return;
         }
         if (this.head_imgparam.get("file") == "img") {
@@ -427,7 +462,10 @@
             head_img_url = "http://222.186.36.156:8000" + res.data.bg_img;
             this.public_mainrequest(head_img_url);
           }).catch(function (error) {
-            alert("传输故障，注册失败！");
+            console.log(error.response);
+            if (!this.request_failed) {
+              this.request_failed = true;
+            }
           });
         }
       },
@@ -470,10 +508,16 @@
           }).then((res) => {
             this.snackbar1 = true;
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if (!this.request_failed) {
+              this.request_failed = true;
+            }
           });
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       },
       public_mainrequest(head_img_url) {
@@ -525,10 +569,16 @@
               });
             }, 2000);
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if (!this.request_failed) {
+              this.request_failed = true;
+            }
           });
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          if (!this.request_failed) {
+            this.request_failed = true;
+          }
         });
       },
       openpreview: function () {
@@ -877,4 +927,5 @@
     margin-left: 796.59px;
     width: 100%;
   }
+
 </style>

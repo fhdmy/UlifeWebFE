@@ -57,7 +57,8 @@
             this.myattention = true;
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
       }
       // 组织
@@ -80,11 +81,11 @@
         var url0 = localStorage.getItem("user_url");
         var url1 = localStorage.getItem("org_url");
         if (url1 != null) {
-          alert("组织用户不能关注其他组织！");
+          this.$emit("getorg_rejected");
           return;
         }
         if (localStorage.getItem("token") == null) {
-          alert("请先登录账号！");
+          this.$emit("getnot_login");
           return;
         }
         // 如果关注了
@@ -99,7 +100,8 @@
           }).then((res) => {
             this.myattention = false;
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            this.$emit("getrequest_failed");
           });
         }
         // 如果没有关注
@@ -121,7 +123,8 @@
             this.attentionurl = res.data.url;
             this.myattention = true;
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            this.$emit("getrequest_failed");
           });
         }
       }

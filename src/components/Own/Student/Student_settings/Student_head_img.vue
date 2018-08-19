@@ -42,7 +42,7 @@
         var param = new FormData(); //创建form对象
         param.append('file', file); //通过append向form对象添加数据
         if (!param.get('file')) {
-          alert("打开文件失败！");
+          this.$emit("getopenfile_failed");
           return;
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         var winurl=window.URL.createObjectURL(e.target.files[0]);//本地预览
@@ -58,7 +58,8 @@
           this.imgsrc=winurl;
           this.snackbar = true;
         }).catch(function (error) {
-          alert("传输故障，注册失败！");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
       }
     }

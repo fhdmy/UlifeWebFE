@@ -64,7 +64,7 @@
 
 <script>
   export default {
-    props: ['avatar0','imgparam','imglocaldisplay'], //用于展示
+    props: ['avatar0', 'imgparam', 'imglocaldisplay'], //用于展示
     data: () => ({
       avatar: '', //用于展示
       requestavatar: null, //用于发送请求
@@ -133,7 +133,7 @@
       },
       sendparsetoparent: function () {
         if (this.selectedparsetext.length > 20) {
-          alert("超过字数啦！");
+          this.$emit("getoverwrite");
           return;
         }
         if (this.selectedparsetext != '') {
@@ -150,7 +150,7 @@
         this.insertphase = false;
       },
       sendavatartoparent: function () {
-        if(this.avatar0=='/src/assets/defaultavatar.png'){
+        if (this.avatar0 == '/src/assets/defaultavatar.png') {
           return;
         }
         this.$http({
@@ -165,43 +165,43 @@
           this.avatar = this.avatar0;
           this.$emit("sentavatar", this.avatar);
         }).catch(function (error) {
-          alert("传输故障，注册失败！");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
       },
       imgchange: function (e) {
         var files = e.target.files;
-        var len=this.imglocaldisplay.length;
-        for(let k=0;k<files.length;k++){
-          this.imgparam.set('file'+(k+len), files[files.length-k-1]); //通过append向form对象添加数据//神tm反向顺序！！
-          if (!this.imgparam.get('file'+(k+len))) {
-            alert("打开文件失败！");
+        var len = this.imglocaldisplay.length;
+        for (let k = 0; k < files.length; k++) {
+          this.imgparam.set('file' + (k + len), files[files.length - k - 1]); //通过append向form对象添加数据//神tm反向顺序！！
+          if (!this.imgparam.get('file' + (k + len))) {
+            this.$emit("getopenfile_failed");
             return;
           } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
-          this.$set(this.imglocaldisplay,len+k,window.URL.createObjectURL(files[files.length-k-1]));//本地预览;//神tm反向顺序！！
-          this.$emit("sentimg",k);
-          for(let k=0;k<5;k++){
+          this.$set(this.imglocaldisplay, len + k, window.URL.createObjectURL(files[files.length - k - 1])); //本地预览;//神tm反向顺序！！
+          this.$emit("sentimg", k);
+          for (let k = 0; k < 5; k++) {}
         }
-        }
-        e.target.value=null;//解决change无效
+        e.target.value = null; //解决change无效
       },
       avatarchange: function (e) {
         var file = e.target.files[0];
         var param = new FormData(); //创建form对象
         param.set('file', file); //通过append向form对象添加数据
         if (!param.get('file')) {
-          alert("打开文件失败！");
+          this.$emit("getopenfile_failed");
           return;
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         this.avatar0 = window.URL.createObjectURL(e.target.files[0]); //本地预览;
         this.requestavatar = param;
-        e.target.value=null;//解决change无效
+        e.target.value = null; //解决change无效
       },
       topimgchange: function (e) {
         var file = e.target.files[0];
         var param = new FormData(); //创建form对象
         param.set('file', file); //通过append向form对象添加数据
         if (!param.get('file')) {
-          alert("打开文件失败！");
+          this.$emit("getopenfile_failed");
           return;
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         var head_img = window.URL.createObjectURL(e.target.files[0]); //本地预览;
@@ -216,9 +216,10 @@
         }).then((res) => {
           this.$emit("senttopimg", head_img);
         }).catch(function (error) {
-          alert("传输故障，注册失败！");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
-        e.target.value=null;//解决change无效
+        e.target.value = null; //解决change无效
       },
       addtext: function () {
         this.$emit("senttext", true);

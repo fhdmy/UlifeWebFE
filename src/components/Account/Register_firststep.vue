@@ -1,5 +1,17 @@
 <template>
   <div class="register-bg" @keyup.13="confirm()">
+    <v-snackbar v-model="sno_existed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      学号已被注册！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="sno_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      学号或密码错误，验证失败！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">注册Ulife</p>
     <div class="register1-wrapper">
       <v-container>
@@ -35,6 +47,13 @@
     data: () => ({
       number: '',
       pwd: '',
+      sno_existed:false,
+      sno_failed:false,
+      request_failed:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       rules: {
         required: value => !!value || '不能为空！',
         number: value => {
@@ -62,6 +81,7 @@
           true && this.rules.required(this.pwd) == true) {
           // var n=SHA256(this.number);
           // 检查是否重复
+          this.loading=true;
           this.$http({
             method: 'post',
             url: '/account/sno-check/',
@@ -70,7 +90,7 @@
             }
           }).then((res) => {
             if (res.data == 'SNO already exists') {
-              alert("学号已被注册！");
+              this.sno_existed=true;
               return;
             } else {
               // 模拟登录教务处
@@ -82,18 +102,22 @@
                   j_password: this.pwd
                 }
               }).then((res) => {
+                if (res.data == 'SNO verification failed') {
+                  this.sno_failed=true;
+                  return;
+                }
                 sessionStorage.setItem("number", this.number);
                 this.$router.push('/register_secondstep');
               }).catch(function (error) {
-                console.log(error);
-                if (error == 'SNO verification failed') {
-                  alert("学号或密码错误，验证失败！");
-                } else
-                  alert("网络传输故障！");
+                console.log(error.response);
+                this.request_failed=true;
               });
             }
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
             return;
           });
         }

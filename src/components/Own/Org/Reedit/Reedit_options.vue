@@ -223,7 +223,7 @@
       },
       sendparsetoparent:function(){
         if(this.selectedparsetext.length>20){
-          alert("超过字数啦！");
+          this.$emit("getoverwrite");
           return;
         }
         if(this.selectedparsetext!=''){
@@ -245,7 +245,7 @@
         for(let k=0;k<files.length;k++){
           this.imgparam.set('file'+(k+len), files[files.length-k-1]); //通过append向form对象添加数据//神tm反向顺序！！
           if (!this.imgparam.get('file'+(k+len))) {
-            alert("打开文件失败！");
+            this.$emit("getopenfile_failed");
             return;
           } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
           this.$set(this.imglocaldisplay,len+k,window.URL.createObjectURL(files[files.length-k-1]));//本地预览;//神tm反向顺序！！
@@ -257,7 +257,7 @@
         var file = e.target.files[0];
         this.head_imgparam.set('file', file); //通过append向form对象添加数据
         if (!this.head_imgparam.get('file')) {
-          alert("打开文件失败！");
+          this.$emit("getopenfile_failed");
           return;
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         var head_img = window.URL.createObjectURL(e.target.files[0]); //本地预览;

@@ -1,5 +1,13 @@
 <template>
   <v-content style="background: #f3f4f5;" v-scroll="onScroll">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="no_more_acts" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      已经没有更多活动啦！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Visitor-toolbar v-if="usertype=='none'"></Visitor-toolbar>
       <Student-toolbar v-if="usertype=='user'" :avatar="avatarurl"></Student-toolbar>
@@ -34,6 +42,12 @@
   export default {
     props: ['opt', 'org_id'],
     data: () => ({
+      request_failed:false,
+      no_more_acts:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       usertype: 'none',
       avatarurl: '',
       org_img: '',
@@ -124,7 +138,10 @@
             }
           }
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
         //记录访客
         if (this.targetid != localStorage.getItem("uid") && localStorage.getItem("uid") != null) { //如果不是自己访问自己或者未登录访问
@@ -141,11 +158,17 @@
           }).then((res) => {
    
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
         }
       }).catch(function (error) {
-        alert("网络传输故障！");
+        console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
       });
     },
     watch: {
@@ -215,12 +238,15 @@
           this.presentmyacts = res.data.results.length;
           this.myactsmax = res.data.count;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       getmoretrends: function () {
         if (this.myactsmax == this.presentmyacts) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts=true;
           return;
         }
         this.$http({
@@ -248,7 +274,10 @@
           this.moremyacts = res.data.next;
           this.presentmyacts += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       onScroll(e) {

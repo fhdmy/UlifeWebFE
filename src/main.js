@@ -221,12 +221,9 @@ const router = new VueRouter({
   mode: 'history',
   routes, // (缩写) 相当于 routes: routes
 })
-// router.beforeEach((to,from,next)=>{
-  
-//   next();
-// })
 Vue.prototype.GLOBAL = global_
 axios.defaults.baseURL=global_.BASE_URL
+
 Vue.prototype.$http = axios
 // Vue.prototype.$http.interceptors.response.use(config => {
 //   alert("1");

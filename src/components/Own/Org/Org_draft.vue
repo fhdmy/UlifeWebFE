@@ -10,7 +10,7 @@
             <v-card-text>你确定要删除它？</v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" flat="flat" @click="dialog = false">点错了</v-btn> 
+              <v-btn color="green darken-1" flat="flat" @click="dialog = false">点错了</v-btn>
               <v-btn color="green darken-1" flat="flat" @click="dialog = false,deleteitem(i)">删除</v-btn>
             </v-card-actions>
           </v-card>
@@ -19,7 +19,9 @@
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
         <div class="act-cardd-media">
-          <a @click="edit(act.acturl)"><img v-lazy="act.head_img" class="anim" :class="{'v-imglarger':act.isover}"/></a>
+          <a @click="edit(act.acturl)">
+            <img v-lazy="act.head_img" class="anim" :class="{'v-imglarger':act.isover}" />
+          </a>
         </div>
         <v-card-title primary-title class="pb-2">
           <a @click="edit(act.acturl)">
@@ -44,41 +46,47 @@
 
 <script>
   export default {
-    props:['acts','org_name'],
+    props: ['acts', 'org_name'],
     data: () => ({
-      dialog:false,
-      i:0,
-      hover:[]
+      dialog: false,
+      i: 0,
+      hover: []
     }),
     methods: {
       largerimg: function (i) {
-        this.acts[i].isover=true;
-        this.hover[i]=true;
+        this.acts[i].isover = true;
+        this.hover[i] = true;
       },
       smallerimg: function (i) {
-        this.acts[i].isover=false;
-        this.hover[i]=false;
+        this.acts[i].isover = false;
+        this.hover[i] = false;
       },
-      deleteitem:function(i){
+      deleteitem: function (i) {
         this.$http({
           method: 'delete',
-          url: '/activity/activities/'+this.acts[i].acturl+'/',
+          url: '/activity/activities/' + this.acts[i].acturl + '/',
           headers: {
             "Authorization": "Token " + localStorage.getItem("token")
           }
         }).then((res) => {
-          this.acts.splice(i,1);
+          this.acts.splice(i, 1);
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+          this.$emit("getrequest_failed");
         });
       },
-      getmoredraftacts:function(){
-        this.$emit("getmoredraftacts",true);
+      getmoredraftacts: function () {
+        this.$emit("getmoredraftacts", true);
       },
-      edit:function(url){
-       sessionStorage.setItem("editactorigin",this.org_name);
-       this.$router.push({name:'reedit',params:{opt:url}});
-     }
+      edit: function (url) {
+        sessionStorage.setItem("editactorigin", this.org_name);
+        this.$router.push({
+          name: 'reedit',
+          params: {
+            opt: url
+          }
+        });
+      }
     }
   }
 
@@ -115,6 +123,7 @@
     margin-left: 25px;
     margin-top: 25px;
   }
+
   .Homemaincontent-mainwrapper {
     margin-top: 25px;
     margin-bottom: 25px;
@@ -135,10 +144,10 @@
     font-family: Arial, Helvetica, sans-serif !important;
     height: 20px;
     width: 270px;
-    display:block;
-    white-space:nowrap;
-    overflow:hidden; 
-    text-overflow:ellipsis;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .v-avatar {
@@ -153,6 +162,7 @@
     opacity: 0.9;
     margin-top: 12px;
   }
+
   .signup-wrapper {
     float: left;
     width: 771.5px;
@@ -160,20 +170,24 @@
     background: white;
     margin-top: 25px;
   }
-  .close-div{
+
+  .close-div {
     position: absolute;
     z-index: 2;
     right: 0;
-    width:24px;
+    width: 24px;
     height: 24px;
-    background: rgba(2,2,2,0.1);
+    background: rgba(2, 2, 2, 0.1);
   }
-  .close-icon{
+
+  .close-icon {
     color: white;
   }
-  .v-dialog__content>>>.v-dialog .v-card{
+
+  .v-dialog__content>>>.v-dialog .v-card {
     width: 100%;
     height: 100%;
     margin: 0;
   }
+
 </style>

@@ -4,6 +4,18 @@
       保存成功！
       <v-btn color="pink" flat @click="snackbar1 = false">关闭</v-btn>
     </v-snackbar>
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="openfile_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      打开文件失败！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="overwrite" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      超过字数啦！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper">
       <Org-toolbar :avatar="avatar"></Org-toolbar>
     </div>
@@ -25,7 +37,7 @@
         :imglocaldisplay="imglocaldisplay" :draftflag="true"></Org-edit-body>
       <Org-edit-options ref="rightchild" @sentavatar="getavatar" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
         @senttext="gettext" @reeditparse="getreeditfromright" :avatar0="avatar" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"
-        :class="{'isfixed':fixed}"
+        :class="{'isfixed':fixed}" @getrequest_failed="getrequest_failed" @getopenfile_failed="getopenfile_failed" @getoverwrite="getoverwrite"
         ></Org-edit-options>
       <div style="clear:both;"></div>
     </div>
@@ -74,6 +86,9 @@
       y: 'top',
       snackbar1: false,
       snackbar2: false,
+      request_failed:false,
+      openfile_failed:false,
+      overwrite:false,
       color: '#E03636',
       mode: '',
       timeout: 2000,
@@ -157,7 +172,7 @@
         var param = new FormData(); //创建form对象
         param.append('file', file); //通过append向form对象添加数据
         if (!param.get('file')) {
-          alert("打开文件失败！");
+          this.openfile_failed=true;
           return;
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         var head_img = window.URL.createObjectURL(e.target.files[0]); //本地预览;
@@ -172,7 +187,10 @@
         }).then((res) => {
           this.parallaxpath = head_img;
         }).catch(function (error) {
-          alert("传输故障，注册失败！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       },
       moveleft: function () {
@@ -362,11 +380,26 @@
               });
             }, 2000);
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
+      },
+      getrequest_failed(){
+        this.request_failed=true;
+      },
+      getoverwrite() {
+        this.overwrite = true;
+      },
+      getopenfile_failed() {
+        this.openfile_failed = true;
       }
     }
   }

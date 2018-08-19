@@ -1,5 +1,13 @@
 <template>
   <div class="register-bg" @keyup.13="login()">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="account_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      账号或密码错误！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <p class="text-md-center text-lg-center text-xl-center title register-ulife">Ulife欢迎您</p>
     <div class="register1-wrapper">
       <v-container>
@@ -33,6 +41,12 @@
     data: () => ({
       number: "",
       pwd: "",
+      request_failed:false,
+      account_failed:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       rules: {
         required: value => !!value || '不能为空！',
         pwd: value => {
@@ -63,9 +77,10 @@
             }).catch(function (error) {
               // console.log(error.response.data.non_field_errors[0]);
               if (error.response.data.non_field_errors[0] == "Unable to log in with provided credentials.") {
-                alert("账号或密码错误！");
+                this.account_failed=true;
               } else {
-                alert("网络传输故障!");
+                console.log(error.response);
+                this.request_failed=true;
               }
             });
           } else {
@@ -81,9 +96,10 @@
             }).catch(function (error) {
               // console.log(error.response.data.non_field_errors[0]);
               if (error.response.data.non_field_errors[0] == "Unable to log in with provided credentials.") {
-                alert("账号或密码错误！");
+                this.account_failed=true;
               } else {
-                alert("网络传输故障!");
+                console.log(error.response);
+                this.request_failed=true;
               }
             });
           }

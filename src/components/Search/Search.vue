@@ -1,5 +1,13 @@
 <template>
   <v-content style="background: #f3f4f5;">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      网络传输故障！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="no_more_acts" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      已经没有更多活动啦
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper">
       <Visitor-toolbar v-if="usertype=='none'" :content="content"></Visitor-toolbar>
       <Student-toolbar v-if="usertype=='user'" :avatar="avatarurl" :content="content"></Student-toolbar>
@@ -26,6 +34,12 @@
   export default {
     props: ['target', 'time', 'type', 'interest', 'content'],
     data: () => ({
+      request_failed:false,
+      no_more_acts:false,
+      y: 'top',
+      color: '#E03636',
+      mode: '',
+      timeout: 2000,
       usertype: 'none',
       avatarurl: '',
       rank: '综合排序',
@@ -140,7 +154,10 @@
               this.actmax = res.data.count;
             }
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
         } else if (this.target == '组织') {
           this.$http({
@@ -165,7 +182,10 @@
               // this.actmax = res.data.count;
             }
           }).catch(function (error) {
-            alert("网络传输故障！");
+            console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
           });
         }
       },
@@ -174,7 +194,7 @@
       },
       sendmoreacts: function (d) {
         if (this.actmax == this.presentacts) {
-          alert("已经没有更多活动啦！");
+          this.no_more_acts=true;
           return;
         }
         this.$http({
@@ -203,7 +223,10 @@
           this.moreacts = res.data.next;
           this.presentacts += res.data.results.length;
         }).catch(function (error) {
-          alert("网络传输故障！");
+          console.log(error.response);
+            if(!this.request_failed){
+              this.request_failed=true;
+            }
         });
       }
     }
