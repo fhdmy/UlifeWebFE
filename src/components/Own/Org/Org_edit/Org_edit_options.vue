@@ -194,6 +194,7 @@
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         this.avatar0 = window.URL.createObjectURL(e.target.files[0]); //本地预览;
         this.requestavatar = param;
+        e.target.value=null;//解决change无效
       },
       topimgchange: function (e) {
         var file = e.target.files[0];
@@ -217,6 +218,7 @@
         }).catch(function (error) {
           alert("传输故障，注册失败！");
         });
+        e.target.value=null;//解决change无效
       },
       addtext: function () {
         this.$emit("senttext", true);

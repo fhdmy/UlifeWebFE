@@ -262,6 +262,7 @@
         } //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         var head_img = window.URL.createObjectURL(e.target.files[0]); //本地预览;
         this.$emit("senttopimg", head_img);
+        e.target.value=null;//解决change无效
       },
       addtext:function(){
         this.$emit("senttext",true);
