@@ -57,7 +57,7 @@
         }).then((res) => {
           this.imgsrc=winurl;
           this.snackbar = true;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           this.$emit("getrequest_failed");
         });

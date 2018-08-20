@@ -60,7 +60,7 @@
           this.imgsrc=winurl;
           this.snackbar = true;
           sessionStorage.setItem("avatar",this.imgsrc);
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           this.$emit("getrequest_failed");
         });

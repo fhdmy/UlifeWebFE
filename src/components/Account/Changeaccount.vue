@@ -75,7 +75,7 @@
               localStorage.setItem("user_url", res.data.profile_url);
               localStorage.removeItem("org_url");
               this.$router.push('/');
-            }).catch(function (error) {
+            }).catch((error)=>{
               // console.log(error.response.data.non_field_errors[0]);
               if (error.response.data.non_field_errors[0] == "Unable to log in with provided credentials.") {
                 this.account_failed=true;
@@ -94,7 +94,7 @@
               localStorage.setItem("org_url", res.data.profile_url);
               localStorage.removeItem("user_url");
               this.$router.push('/');
-            }).catch(function (error) {
+            }).catch((error)=>{
               // console.log(error.response.data.non_field_errors[0]);
               if (error.response.data.non_field_errors[0] == "Unable to log in with provided credentials.") {
                 this.account_failed=true;

@@ -73,7 +73,7 @@
             setTimeout(() => {
               this.$router.push('/login');
             }, 2000);
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             this.request_failed=true;
           });

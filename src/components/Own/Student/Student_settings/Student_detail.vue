@@ -83,7 +83,7 @@
           }
         }).then((res) => {
           this.snackbar = true;
-        }).catch(function (error) {
+        }).catch((error)=>{
           var err = error.response.data;
           var bool = false;
           for (let e in err) {

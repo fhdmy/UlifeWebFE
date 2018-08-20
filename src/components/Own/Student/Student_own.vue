@@ -168,13 +168,13 @@
               });
             }
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
             }
         });
-      }).catch(function (error) {
+      }).catch((error)=>{
          console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -203,7 +203,7 @@
         this.attention = res.data.length;
         // 动态
         this.axiostrends(this.stu_id);
-      }).catch(function (error) {
+      }).catch((error)=>{
          console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -299,7 +299,7 @@
           this.moresignupacts = res.data.next;
           this.presentsignup = res.data.results.length;
           this.signupmax = res.data.count;
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -336,7 +336,7 @@
             this.presentatt = res.data.results.length;
             this.attmax = res.data.count;
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -374,7 +374,7 @@
             this.presentview = res.data.results.length;
             this.viewmax = res.data.count;
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -413,7 +413,7 @@
             this.presentcollects = res.data.results.length;
             this.collectmax = res.data.count;
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -459,7 +459,7 @@
             this.presenttrend = res.data.results.length;
             this.trendmax = res.data.count;
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -503,7 +503,7 @@
           }
           this.moreview = res.data.next;
           this.presentview += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -544,7 +544,7 @@
           }
           this.morecollects = res.data.next;
           this.presentcollects += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -584,7 +584,7 @@
           }
           this.moreatt = res.data.next;
           this.presentatt += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -625,7 +625,7 @@
           }
           this.moresignupacts = res.data.next;
           this.presentsignup += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -666,7 +666,7 @@
           }
           this.moretrend = res.data.next;
           this.presenttrend += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;

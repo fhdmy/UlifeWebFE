@@ -82,7 +82,7 @@
         if(res.data.bg_img!=null){
           this.bg_img = "http://222.186.36.156:8000" + res.data.bg_img;
         }
-      }).catch(function (error) {
+      }).catch((error)=>{
         console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;

@@ -70,7 +70,7 @@
           }
         }).then((res) => {
           this.acts.splice(i, 1);
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           this.$emit("getrequest_failed");
         });

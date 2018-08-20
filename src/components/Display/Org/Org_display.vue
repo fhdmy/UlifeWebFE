@@ -137,7 +137,7 @@
               });
             }
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -164,7 +164,7 @@
             }
           });
         }
-      }).catch(function (error) {
+      }).catch((error)=>{
         console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -237,7 +237,7 @@
           this.moremyacts = res.data.next;
           this.presentmyacts = res.data.results.length;
           this.myactsmax = res.data.count;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -273,7 +273,7 @@
           }
           this.moremyacts = res.data.next;
           this.presentmyacts += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;

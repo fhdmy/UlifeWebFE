@@ -150,7 +150,7 @@
                 });
               }
             }
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -170,14 +170,14 @@
               'target': this.targetid
             }
           }).then((res) => {
-          }).catch(function (error) {
+          }).catch((error)=>{
            console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
             }
           });
         }
-      }).catch(function (error) {
+      }).catch((error)=>{
         console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -204,7 +204,7 @@
               orgid: org_id
             });
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -284,7 +284,7 @@
             this.presentatt = res.data.results.length;
             this.attmax = res.data.count;
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -323,7 +323,7 @@
             this.presentcollects = res.data.results.length;
             this.collectmax = res.data.count;
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -364,7 +364,7 @@
           }
           this.morecollects = res.data.next;
           this.presentcollects += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -404,7 +404,7 @@
           }
           this.moreatt = res.data.next;
           this.presentatt += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;

@@ -82,7 +82,7 @@
           }
         }).then((res) => {
           this.acts.splice(i,1);
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           this.$emit("getrequest_failed");
         });
@@ -99,7 +99,7 @@
           }
         }).then((res) => {
           this.acts[i].is_ended=true;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           this.$emit("getrequest_failed");
         });

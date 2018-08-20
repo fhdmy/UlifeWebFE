@@ -153,7 +153,7 @@
             this.collecturl=res.data.url;
             this.collected = true;
             this.collect_success=true;
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -172,7 +172,7 @@
             }
           }).then((res) => {
             this.collected = false;
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -215,7 +215,7 @@
             this.participation=true;
             this.signup_success=true;
             this.signin = false;
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -235,7 +235,7 @@
             }
           }).then((res) => {
             this.participation=false;
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;

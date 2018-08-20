@@ -164,7 +164,7 @@
         }).then((res) => {
           this.avatar = this.avatar0;
           this.$emit("sentavatar", this.avatar);
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           this.$emit("getrequest_failed");
         });
@@ -215,7 +215,7 @@
           data: param
         }).then((res) => {
           this.$emit("senttopimg", head_img);
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           this.$emit("getrequest_failed");
         });

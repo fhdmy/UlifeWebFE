@@ -87,14 +87,14 @@
             this.snackbar = true;
           }
           sessionStorage.setItem("avatar", this.avatarurl);
-        }).catch(function (error) {
+        }).catch((error)=>{
+          console.log(error.response);
           if (error.response.data.detail == "Invalid token") {
             this.type = "none";
             localStorage.removeItem("token");
             localStorage.removeItem("user_url");
             localStorage.removeItem("uid");
           } else {
-            console.log(error.response);
             if (!this.request_failed) {
               this.request_failed = true;
             }
@@ -123,14 +123,14 @@
             this.snackbar = true;
           }
           sessionStorage.setItem("avatar", this.avatarurl);
-        }).catch(function (error) {
+        }).catch((error)=>{
+          console.log(error.response);
           if (error.response.data.detail == "Invalid token") {
             this.type = "none";
             localStorage.removeItem("token");
             localStorage.removeItem("org_url");
             localStorage.removeItem("uid");
           } else {
-            console.log(error.response);
             if (!this.request_failed) {
               this.request_failed = true;
             }
@@ -169,7 +169,7 @@
           this.presentacts = res.data.results.length;
           this.actmax = res.data.count;
         }
-      }).catch(function (error) {
+      }).catch((error)=>{
         console.log(error.response);
         if (!this.request_failed) {
           this.request_failed = true;
@@ -193,7 +193,7 @@
             acturl: actid[5]
           });
         }
-      }).catch(function (error) {
+      }).catch((error)=>{
         console.log(error.response);
         if (!this.request_failed) {
           this.request_failed = true;
@@ -231,7 +231,7 @@
           }
           this.moreacts = res.data.next;
           this.presentacts += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;

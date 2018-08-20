@@ -408,7 +408,7 @@
               }).then((res) => {
                 this.acturl = res.data.url;
                 this.snackbar1 = true;
-              }).catch(function (error) {
+              }).catch((error)=>{
                 console.log(error.response);
                 if (!this.request_failed) {
                   this.request_failed = true;
@@ -436,20 +436,20 @@
                 }
               }).then((res) => {
                 this.snackbar1 = true;
-              }).catch(function (error) {
+              }).catch((error)=>{
                 console.log(error.response);
                 if (!this.request_failed) {
                   this.request_failed = true;
                 }
               });
             }
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if (!this.request_failed) {
               this.request_failed = true;
             }
           });
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
@@ -525,7 +525,7 @@
                     }
                   });
                 }, 2000);
-              }).catch(function (error) {
+              }).catch((error)=>{
                 console.log(error.response);
                 if (!this.request_failed) {
                   this.request_failed = true;
@@ -562,20 +562,20 @@
                     }
                   });
                 }, 2000);
-              }).catch(function (error) {
+              }).catch((error)=>{
                 console.log(error.response);
                 if (!this.request_failed) {
                   this.request_failed = true;
                 }
               });
             }
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if (!this.request_failed) {
               this.request_failed = true;
             }
           });
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;

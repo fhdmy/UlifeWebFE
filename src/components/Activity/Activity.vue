@@ -144,7 +144,7 @@
         this.lists = JSON.parse(res.data.demonstration);
         this.requires = JSON.parse(res.data.requirement);
         this.is_ended = res.data.is_ended;
-      }).catch(function (error) {
+      }).catch((error)=>{
         console.log(error.response);
         if (!this.request_failed) {
           this.request_failed = true;
@@ -165,7 +165,7 @@
           }
         }).then((res) => {
 
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
@@ -185,7 +185,7 @@
           this.participation = res.data.length == 0 ? false : true;
           if (this.participation)
             this.participationurl = res.data[0].url;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
@@ -202,7 +202,7 @@
           this.collected = res.data.length == 0 ? false : true;
           if (this.collected)
             this.collecturl = res.data[0].url;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;

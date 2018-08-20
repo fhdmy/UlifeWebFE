@@ -56,7 +56,7 @@
             this.attentionurl = res.data[0].url;
             this.myattention = true;
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           this.$emit("getrequest_failed");
         });
@@ -99,7 +99,7 @@
             }
           }).then((res) => {
             this.myattention = false;
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             this.$emit("getrequest_failed");
           });
@@ -122,7 +122,7 @@
           }).then((res) => {
             this.attentionurl = res.data.url;
             this.myattention = true;
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             this.$emit("getrequest_failed");
           });

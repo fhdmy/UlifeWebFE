@@ -153,7 +153,7 @@
               this.presentacts = res.data.results.length;
               this.actmax = res.data.count;
             }
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -181,7 +181,7 @@
               // this.presentacts = res.data.length;
               // this.actmax = res.data.count;
             }
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
@@ -222,7 +222,7 @@
           }
           this.moreacts = res.data.next;
           this.presentacts += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;

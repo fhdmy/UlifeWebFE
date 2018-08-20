@@ -223,7 +223,7 @@
         this.draftflag = !this.draftflag; //reeditleft初始化text
         this.cal = this.computeddata.length;
         this.key = this.cal; //巨重要！
-      }).catch(function (error) {
+      }).catch((error)=>{
         console.log(error.response);
         if (!this.request_failed) {
           this.request_failed = true;
@@ -427,7 +427,7 @@
           }).then((res) => {
             head_img_url = "http://222.186.36.156:8000" + res.data.bg_img;
             this.save_mainrequest(head_img_url);
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if (!this.request_failed) {
               this.request_failed = true;
@@ -461,7 +461,7 @@
           }).then((res) => {
             head_img_url = "http://222.186.36.156:8000" + res.data.bg_img;
             this.public_mainrequest(head_img_url);
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if (!this.request_failed) {
               this.request_failed = true;
@@ -505,7 +505,7 @@
               demonstration: JSON.stringify(this.computeddata),
               head_img: head_img_url
             }
-          }).then((res) => {
+          }).catch((error)=>{
             this.snackbar1 = true;
           }).catch(function (error) {
             console.log(error.response);
@@ -513,7 +513,7 @@
               this.request_failed = true;
             }
           });
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
@@ -568,13 +568,13 @@
                 }
               });
             }, 2000);
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if (!this.request_failed) {
               this.request_failed = true;
             }
           });
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;

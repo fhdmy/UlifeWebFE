@@ -117,7 +117,7 @@
             localStorage.setItem("token", res.data.token);
             // localStorage.setItem("username",this.username); 
             this.$router.push('/');
-          }).catch(function (error) {
+          }).catch((error)=>{
             if(error.response.data == "Nickname already exists") {
               this.user_existed=true;
             }

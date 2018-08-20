@@ -178,13 +178,13 @@
               });
             }
           }
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
           }
         });
-      }).catch(function (error) {
+      }).catch((error)=>{
         console.log(error.response);
         if (!this.request_failed) {
           this.request_failed = true;
@@ -272,7 +272,7 @@
           this.moredraft = res.data.next;
           this.presentdraft = res.data.results.length;
           this.draftmax = res.data.count;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
@@ -305,7 +305,7 @@
           this.moremyacts = res.data.next;
           this.presentmyacts = res.data.results.length;
           this.myactsmax = res.data.count;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
@@ -337,7 +337,7 @@
           this.moresignup = res.data.next;
           this.presentsignup = res.data.results.length;
           this.signupmax = res.data.count;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
@@ -373,7 +373,7 @@
           }
           this.moredraft = res.data.next;
           this.presentdraft += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
@@ -409,7 +409,7 @@
           }
           this.moremyacts = res.data.next;
           this.presentmyacts += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;
@@ -445,7 +445,7 @@
           }
           this.moresignup = res.data.next;
           this.presentsignup += res.data.results.length;
-        }).catch(function (error) {
+        }).catch((error)=>{
           console.log(error.response);
           if (!this.request_failed) {
             this.request_failed = true;

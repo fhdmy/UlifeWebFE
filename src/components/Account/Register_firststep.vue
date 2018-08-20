@@ -108,12 +108,12 @@
                 }
                 sessionStorage.setItem("number", this.number);
                 this.$router.push('/register_secondstep');
-              }).catch(function (error) {
+              }).catch((error)=>{
                 console.log(error.response);
                 this.request_failed=true;
               });
             }
-          }).catch(function (error) {
+          }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
               this.request_failed=true;
