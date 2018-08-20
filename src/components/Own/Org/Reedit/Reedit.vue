@@ -133,7 +133,10 @@
       brieftext: '',
       selectedparsetext: '',
       date: '2018-08-05',
-      requires: [],
+      requires: [{
+        type: 'text',
+        inner: ''
+      }],
       parse: '',
       text: '',
       cal: 0,
@@ -505,7 +508,7 @@
               demonstration: JSON.stringify(this.computeddata),
               head_img: head_img_url
             }
-          }).catch((error)=>{
+          }).then((res) => {
             this.snackbar1 = true;
           }).catch(function (error) {
             console.log(error.response);
@@ -521,7 +524,6 @@
         });
       },
       public_mainrequest(head_img_url) {
-        console.log("1");
         // 正文、需求、简介
         this.$http({
           method: 'post',
@@ -604,6 +606,12 @@
           path: '/activity_preview'
         });
         window.open(routeData.href, '_blank');
+      },
+      getoverwrite:function(){
+        this.overwrite=true;
+      },
+      getopenfile_failed(){
+        this.openfile_failed=true;
       }
     }
   }

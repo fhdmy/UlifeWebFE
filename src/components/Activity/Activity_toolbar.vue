@@ -54,7 +54,10 @@
             <span class="headline">活动报名</span>
           </v-card-title>
           <v-card-text class="px-4 pt-0">
-            <v-text-field :label="require" required v-model="answers[i]" v-for="(require,i) in requires" :key="i"></v-text-field>
+            <div v-for="(require,i) in requires" :key="i">
+              <v-text-field :label="require.inner" required v-model="answers[i]" v-if="require.type=='text'"></v-text-field>
+              <v-select :items="require.inner" :label="require.title" required v-if="require.type=='select'" v-model="answers[i]"></v-select>
+            </div>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>

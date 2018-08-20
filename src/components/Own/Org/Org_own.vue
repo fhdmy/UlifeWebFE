@@ -1,22 +1,22 @@
 <template>
   <v-content style="background: #f3f4f5;" v-scroll="onScroll">
-    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
       网络传输故障！
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
-    <v-snackbar v-model="no_more_acts" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+    <v-snackbar v-model="no_more_acts" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
       已经没有更多活动啦
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
-    <v-snackbar v-model="org_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+    <v-snackbar v-model="org_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
       组织用户不能关注其他组织！
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
-    <v-snackbar v-model="not_login" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+    <v-snackbar v-model="not_login" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
       请先登录账号！
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
-    <v-snackbar v-model="reedit_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout0" :top="y === 'top'" :vertical="mode === 'vertical'">
+    <v-snackbar v-model="reedit_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
       不能修改已结束的活动！
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
@@ -463,7 +463,7 @@
       getorg_rejected(){
         this.org_rejected=true;
       },
-      getgetreedit_rejected(){
+      getreedit_rejected(){
         this.getreedit_rejected=true;
       },
       onScroll(e) {
