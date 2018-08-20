@@ -4,8 +4,7 @@
     <span class="title">我的活动</span>
     <p v-if="acts.length==0" style="color:#FE9246;margin:200px 0 0 290px;font-size:30px;">这里空空哒！</p>
     <div class="Homemaincontent-mainwrapper">
-      <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
-        <v-dialog v-model="dialog" max-width="290">
+      <v-dialog v-model="dialog" max-width="290">
           <v-card>
             <v-card-text>你确定要删除它？</v-card-text>
             <v-card-actions>
@@ -15,6 +14,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+      <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <v-dialog v-model="actstop" max-width="290" v-if="!acts[i].is_ended">
           <v-card>
             <v-card-text>你确定要结束这个活动？</v-card-text>
@@ -31,7 +31,7 @@
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
         <div class="act-cardd-media">
-          <a @click="openact(act.acturl)"><img v-lazy="act.head_img" class="anim headimg" :class="{'v-imglarger':act.isover}"/></a>
+          <a @click="openact(act.acturl)"><img :src="act.head_img" class="anim headimg" :class="{'v-imglarger':act.isover}"/></a>
         </div>
         <v-card-title primary-title class="pb-2">
           <a @click="openact(act.acturl)">
@@ -43,7 +43,7 @@
           </a>
           <img src="/src/assets/finished.png" class="finishedimg" v-if="act.is_ended"/>
           <v-avatar color="grey lighten-4 ml-3" size="60">
-            <img v-lazy="act.orgavatar" >
+            <img :src="act.orgavatar" >
           </v-avatar>
         </v-card-title>
       </v-card>

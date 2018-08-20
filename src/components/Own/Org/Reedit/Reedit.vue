@@ -36,7 +36,6 @@
       <Org-toolbar :avatar="avatar"></Org-toolbar>
     </div>
     <img :src="parallaxpath" class="large-img" ref="topimgreader" />
-    <!-- <div :style="{'background':'url('+parallaxpath+')'}" class="large-img" ref="topimgreader"/></div> -->
     <div class="add-topimg-wrapper">
       <div class="add-topimg-inner">
         <v-icon size="64" color="secondary" class="add-icon" @click="addimg" :class="{'hidden':havetopimg}">photo</v-icon>
@@ -50,14 +49,15 @@
       <v-text-field v-model="title" :rules="rules" counter="25" box label="填写活动标题" class="add-acttitle"></v-text-field>
     </div>
     <div class="main-wrapper">
-      <Reedit-body :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted"
-        :imglocaldisplay="imglocaldisplay" :draftflag="draftflag"></Reedit-body>
+      <Reedit-body :gotdata="computeddata" @sentdeletetext="getdeletetext" @sentreedit="getreedit" @sentreedittext="sentreedittext" 
+        :imglocaldisplay="imglocaldisplay"></Reedit-body>
       <Reedit-options ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg"
-        @senttopimg="gettopimg" @senttext="gettext" @reeditparse="getreeditfromright" :brieftext="brieftext" :brieftext0="brieftext"
+        @senttopimg="gettopimg" @reeditparse="getreeditfromright" :brieftext="brieftext" :brieftext0="brieftext"
         :selectedinterest="selectedinterest" :selectedinterest0="selectedinterest" :place="place" :place0="place" :date="date"
         :date0="date" :time="time" :time0="time" :selectedform="selectedform" :selectedform0="selectedform" :opts="requires"
         :imgparam="imgparam" :imglocaldisplay="imglocaldisplay" :head_imgparam="head_imgparam" :class="{'isfixed':fixed}" @getopenfile_failed="getopenfile_failed"
-        @getoverwrite="getoverwrite"></Reedit-options>
+        @getoverwrite="getoverwrite" @textsave="textsave" @reedittextsave="reedittextsave"
+        ></Reedit-options>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -83,7 +83,6 @@
           <div style="clear:both;"></div>
         </div>
         <div class="slide-show">
-          <!-- <div class="slide-showbox" :class="{'slide-showbox-active':mouseoverbox}"> -->
           <div class="slide-showbox">
             <p class="slideshow-textbox" v-if="slidetype=='text'">{{slideinner}}</p>
             <img :src="slideinner" class="slideshow-img" v-if="slidetype=='img'" />
@@ -100,7 +99,6 @@
 </template>
 
 <script>
-  // import Vue from 'vue'
   export default {
     props: ['opt'],
     data: () => ({
@@ -144,21 +142,19 @@
       img: [],
       computeddata: [],
       reedititem: 0,
-      // slide
       slidetype: '',
       slideinner: '',
       disX: 0,
       disY: 0,
       slidebtn: [],
       mousemoveflag: false,
-      deleted: false,
       org: '',
       actid: 0,
       imgparam: null,
       imglocaldisplay: [],
       head_imgparam: null,
       acturl: '',
-      draftflag: false
+      textinput:'',
     }),
     computed: {
       havetopimg: function () {
@@ -196,7 +192,7 @@
         var computedstart = res.data.start_at.split('T');
         var comutedstarttime = computedstart[1].split(':');
         if (res.data.head_img != null) {
-          this.parallaxpath = res.data.head_img + '.thumbnail.2.jpg';
+          this.parallaxpath = res.data.head_img;
         }
         this.head_imgparam.set("file", "img");
         if (res.data.demonstration != null) {
@@ -213,6 +209,8 @@
               this.imgparam.append("file" + k, 'img');
               this.$set(this.imglocaldisplay, k, this.computeddata[k].inner);
             }
+            this.computeddata[k].key=k;
+            this.key++;
           }
         }
         this.brieftext = res.data.description;
@@ -223,9 +221,7 @@
         this.time = comutedstarttime[0] + ':' + comutedstarttime[1];
         this.selectedform = res.data._type;
         this.requires = JSON.parse(res.data.requirement);
-        this.draftflag = !this.draftflag; //reeditleft初始化text
         this.cal = this.computeddata.length;
-        this.key = this.cal; //巨重要！
       }).catch((error)=>{
         console.log(error.response);
         if (!this.request_failed) {
@@ -286,19 +282,6 @@
         this.cal++;
         this.key++;
       },
-      gettext: function (d) {
-        this.$set(this.computeddata, this.cal, {
-          type: 'text',
-          inner: '',
-          number: this.cal,
-          key: this.key
-        });
-        var len = this.imglocaldisplay.length;
-        this.imgparam.set("file" + len, 'text');
-        this.$set(this.imglocaldisplay, len, 'text'); //本地预览;
-        this.cal++;
-        this.key++;
-      },
       getimg: function (d) {
         this.$set(this.computeddata, this.cal, {
           type: 'img',
@@ -311,14 +294,6 @@
       },
       gettopimg: function (d) {
         this.parallaxpath = d;
-      },
-      getoldtext: function (d, i, k) {
-        this.$set(this.computeddata, i, {
-          type: 'text',
-          inner: d,
-          number: i,
-          key: k
-        });
       },
       mouseoverbox: function (i) {
         var target = this.computeddata[i];
@@ -396,7 +371,6 @@
           this.imgparam.set("file" + k, temp);
         } //因为imgparam无法彻底删除key
         this.cal--;
-        this.deleted = !this.deleted;
       },
       getreedit: function (d) {
         this.reedititem = d;
@@ -506,7 +480,8 @@
               requirement: JSON.stringify(this.requires),
               head_img: this.parallaxpath,
               demonstration: JSON.stringify(this.computeddata),
-              head_img: head_img_url
+              head_img: head_img_url,
+              key:this.key
             }
           }).then((res) => {
             this.snackbar1 = true;
@@ -558,6 +533,7 @@
               demonstration: JSON.stringify(this.computeddata),
               head_img: head_img_url,
               want_to_be_allowed_to_publish: true,
+              key:this.key,
               is_published: true //开挂  以后删除
             }
           }).then((res) => {
@@ -606,6 +582,26 @@
           path: '/activity_preview'
         });
         window.open(routeData.href, '_blank');
+      },
+      textsave:function(d){
+        this.$set(this.computeddata, this.cal, {
+          type: 'text',
+          inner: d,
+          number: this.cal,
+          key: this.key
+        });
+        var len = this.imglocaldisplay.length;
+        this.imgparam.set("file" + len, 'text');
+        this.$set(this.imglocaldisplay, len, 'text'); //本地预览;
+        this.cal++;
+        this.key++;
+      },
+      sentreedittext:function(d){
+        this.reedititem = d;
+        this.$refs.rightchild.clickaddtext(this.computeddata[d].inner);
+      },
+      reedittextsave:function(d){
+        this.computeddata[this.reedititem].inner = d;
       },
       getoverwrite:function(){
         this.overwrite=true;
@@ -791,22 +787,6 @@
     margin-top: 30px;
     margin-right: 60px;
   }
-
-  /* .slide-cancel{
-    background: #eee!important;
-    color: #666;
-  }
-  .slide-cancel:hover{
-    background: #FE9246!important;
-    color: white;
-  }
-  .slide-save{
-    background: #FE9246!important;
-    color: white;
-  }
-  .slide-save:hover{
-    background: #E03636!important;
-  } */
 
   .slide-sortwrapper {
     width: 100%;

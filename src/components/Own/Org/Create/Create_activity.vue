@@ -36,7 +36,6 @@
       <Org-toolbar :avatar="avatar"></Org-toolbar>
     </div>
     <img :src="parallaxpath" class="large-img" ref="topimgreader" />
-    <!-- <div :style="{'background':'url('+parallaxpath+')'}" class="large-img" ref="topimgreader"/></div> -->
     <div class="add-topimg-wrapper">
       <div class="add-topimg-inner">
         <v-icon size="64" color="secondary" class="add-icon" @click="addimg" :class="{'hidden':havetopimg}">photo</v-icon>
@@ -50,10 +49,12 @@
       <v-text-field v-model="title" :rules="rules" counter="25" box label="填写活动标题" class="add-acttitle"></v-text-field>
     </div>
     <div class="main-wrapper">
-      <Create-body :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :imglocaldisplay="imglocaldisplay"></Create-body>
+      <Create-body :gotdata="computeddata" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :imglocaldisplay="imglocaldisplay" @sentreedittext="sentreedittext"></Create-body>
       <Create-options ref="rightchild" @sentbrief="getbrief" @sentrequire="getrequire" @sentparse="getparse" @sentimg="getimg"
-        @senttopimg="gettopimg" @senttext="gettext" @reeditparse="getreeditfromright" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"
-        :head_imgparam="head_imgparam" :class="{'isfixed':fixed}" @getopenfile_failed="getopenfile_failed" @getoverwrite="getoverwrite"></Create-options>
+        @senttopimg="gettopimg" @reeditparse="getreeditfromright" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"
+        :head_imgparam="head_imgparam" :class="{'isfixed':fixed}" @getopenfile_failed="getopenfile_failed" @getoverwrite="getoverwrite"
+        @textsave="textsave" @reedittextsave="reedittextsave"
+        ></Create-options>
       <div style="clear:both;"></div>
     </div>
     <div class="previeworsubmit">
@@ -68,11 +69,6 @@
       </v-btn>
       <div class="slide-content">
         <div class="explain-text">拖拽调整照片或文字顺序</div>
-        <!-- <div class="slide-btn">
-          <v-btn flat class="slide-cancel">取消</v-btn>
-          <v-btn flat class="slide-save">保存</v-btn>
-          <div style="clear:both;"></div>
-        </div> -->
         <div class="slide-sortwrapper">
           <div class="box-wrapper" v-for="(box,i) in computeddata" :key="i" @mouseover="mouseoverbox(i)" @mouseout="mouseoutbox(i)">
             <div class="slide-left-btn" @click="slideleftchange(i)" v-if="slidebtn[i]"></div>
@@ -84,7 +80,6 @@
           <div style="clear:both;"></div>
         </div>
         <div class="slide-show">
-          <!-- <div class="slide-showbox" :class="{'slide-showbox-active':mouseoverbox}"> -->
           <div class="slide-showbox">
             <p class="slideshow-textbox" v-if="slidetype=='text'">{{slideinner}}</p>
             <img :src="slideinner" class="slideshow-img" v-if="slidetype=='img'" />
@@ -94,14 +89,13 @@
       </div>
     </div>
     <v-btn fixed dark fab bottom right color="primary" class="mr-5 mb-5" @click="$vuetify.goTo(0)">
-      <i class="iconfont icon-jiantou-copy-copy-copy">{{offsetTop}}</i>
+      <i class="iconfont icon-jiantou-copy-copy-copy"></i>
     </v-btn>
     <Footer></Footer>
   </v-content>
 </template>
 
 <script>
-  // import Vue from 'vue'
   export default {
     data: () => ({
       y: 'top',
@@ -142,7 +136,6 @@
       img: [],
       computeddata: [],
       reedititem: 0,
-      // slide
       slidetype: '',
       slideinner: '',
       disX: 0,
@@ -152,7 +145,8 @@
       org: '',
       imgparam: null,
       imglocaldisplay: [],
-      head_imgparam: null
+      head_imgparam: null,
+      textinput:'',
     }),
     computed: {
       havetopimg: function () {
@@ -229,19 +223,6 @@
         this.cal++;
         this.key++;
       },
-      gettext: function (d) {
-        this.$set(this.computeddata, this.cal, {
-          type: 'text',
-          inner: '',
-          number: this.cal,
-          key: this.key
-        });
-        var len = this.imglocaldisplay.length;
-        this.imgparam.set("file" + len, 'text');
-        this.$set(this.imglocaldisplay, len, 'text'); //本地预览;
-        this.cal++;
-        this.key++;
-      },
       getimg: function (d) {
         this.$set(this.computeddata, this.cal, {
           type: 'img',
@@ -254,14 +235,6 @@
       },
       gettopimg: function (d) {
         this.parallaxpath = d;
-      },
-      getoldtext: function (d, i, k) {
-        this.$set(this.computeddata, i, {
-          type: 'text',
-          inner: d,
-          number: i,
-          key: k
-        });
       },
       mouseoverbox: function (i) {
         var target = this.computeddata[i];
@@ -403,7 +376,8 @@
                   heading: this.title,
                   requirement: JSON.stringify(this.requires),
                   demonstration: JSON.stringify(this.computeddata),
-                  head_img: head_img_url
+                  head_img: head_img_url,
+                  key:this.key
                 }
               }).then((res) => {
                 this.acturl = res.data.url;
@@ -432,7 +406,8 @@
                   requirement: JSON.stringify(this.requires),
                   head_img: this.parallaxpath,
                   demonstration: JSON.stringify(this.computeddata),
-                  head_img: head_img_url
+                  head_img: head_img_url,
+                  key:this.key
                 }
               }).then((res) => {
                 this.snackbar1 = true;
@@ -513,6 +488,7 @@
                   demonstration: JSON.stringify(this.computeddata),
                   head_img: head_img_url,
                   want_to_be_allowed_to_publish: true,
+                  key:this.key,
                   is_published: true //开挂  以后删除
                 }
               }).then((res) => {
@@ -550,6 +526,7 @@
                   demonstration: JSON.stringify(this.computeddata),
                   head_img: head_img_url,
                   want_to_be_allowed_to_publish: true,
+                  key:this.key,
                   is_published: true //开挂  以后删除
                 }
               }).then((res) => {
@@ -606,12 +583,32 @@
         });
         window.open(routeData.href, '_blank');
       },
+      textsave:function(d){
+        this.$set(this.computeddata, this.cal, {
+          type: 'text',
+          inner: d,
+          number: this.cal,
+          key: this.key
+        });
+        var len = this.imglocaldisplay.length;
+        this.imgparam.set("file" + len, 'text');
+        this.$set(this.imglocaldisplay, len, 'text'); //本地预览;
+        this.cal++;
+        this.key++;
+      },
+      sentreedittext:function(d){
+        this.reedititem = d;
+        this.$refs.rightchild.clickaddtext(this.computeddata[d].inner);
+      },
+      reedittextsave:function(d){
+        this.computeddata[this.reedititem].inner = d;
+      },
       getoverwrite() {
         this.overwrite = true;
       },
       getopenfile_failed() {
         this.openfile_failed = true;
-      }
+      },
     }
   }
 
@@ -790,22 +787,6 @@
     margin-top: 30px;
     margin-right: 60px;
   }
-
-  /* .slide-cancel{
-    background: #eee!important;
-    color: #666;
-  }
-  .slide-cancel:hover{
-    background: #FE9246!important;
-    color: white;
-  }
-  .slide-save{
-    background: #FE9246!important;
-    color: white;
-  }
-  .slide-save:hover{
-    background: #E03636!important;
-  } */
 
   .slide-sortwrapper {
     width: 100%;

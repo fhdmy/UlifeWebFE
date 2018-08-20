@@ -3,8 +3,7 @@
     <v-icon color="primary" class="mr-2 today-icon">mail_outline</v-icon>
     <span class="title">我的消息</span>
     <div class="Homemaincontent-mainwrapper">
-      <div v-for="(item,i) in items" :key="i" class="msg-content">
-        <v-dialog v-model="dialog" max-width="290">
+      <v-dialog v-model="dialog" max-width="290">
           <v-card>
             <v-card-text>你确定要删除它？</v-card-text>
             <v-card-actions>
@@ -14,9 +13,10 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+      <div v-for="(item,i) in items" :key="i" class="msg-content">
         <router-link :to="{name:'org_display',params:{opt:'abstract',org_id:'1'}}">
           <v-avatar size="50">
-            <img v-lazy="item.avatar" />
+            <img :src="item.avatar" />
           </v-avatar>
         </router-link>
         <div class="msg-right">

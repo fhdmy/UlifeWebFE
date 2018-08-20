@@ -55,10 +55,25 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <div class="menu-addimg menu-div" slot="activator" @click="addtext">
-      <v-icon>{{items[4].iconname}}</v-icon>
-      <span>{{items[4].text}}</span>
-    </div>
+    <v-dialog v-model="textdialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+      <div class="menu-div" slot="activator" ref="inserttext">
+        <v-icon>{{items[4].iconname}}</v-icon>
+        <span>{{items[4].text}}</span>
+      </div>
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="deletetext()">
+            <v-icon>close</v-icon>
+          </v-btn>
+          <v-toolbar-title>文本编辑</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn dark flat @click="textsave()">保存</v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <textarea class="text-textarea" :style="{'height':calheight}" v-model="textinput" placeholder="从这里开始你的活动正文"></textarea>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -71,6 +86,8 @@
       openavatar: false,
       insertphase: false,
       selectedparsetext: '',
+      textdialog: false,
+      textinput: '',
       reedit: false,
       forms: ['比赛', '分享', '互动'],
       interests: ['游戏', '影视', '棋牌', '文化艺术', '运动/户外', '学术科技', '社会科学', '公益', '实践'],
@@ -101,6 +118,12 @@
     }),
     created: function () {
       this.avatar = this.avatar0;
+    },
+    computed: {
+      calheight: function () {
+        var screenheight = document.documentElement.clientHeight;
+        return (screenheight - 90) + 'px!important';
+      },
     },
     methods: {
       changeavatar: function () {
@@ -164,7 +187,7 @@
         }).then((res) => {
           this.avatar = this.avatar0;
           this.$emit("sentavatar", this.avatar);
-        }).catch((error)=>{
+        }).catch((error) => {
           console.log(error.response);
           this.$emit("getrequest_failed");
         });
@@ -215,20 +238,38 @@
           data: param
         }).then((res) => {
           this.$emit("senttopimg", head_img);
-        }).catch((error)=>{
+        }).catch((error) => {
           console.log(error.response);
           this.$emit("getrequest_failed");
         });
         e.target.value = null; //解决change无效
       },
-      addtext: function () {
-        this.$emit("senttext", true);
-      },
       clickaddparse: function (title) {
         this.selectedparsetext = title;
         this.$refs.inserttitle.click();
         this.reedit = true;
-      }
+      },
+      textsave: function () {
+        if (this.textinput != "") {
+          if (this.reedit)
+            this.$emit("reedittextsave", this.textinput);
+          else
+            this.$emit("textsave", this.textinput);
+        }
+        this.textinput = "";
+        this.reedit = false;
+        this.textdialog = false;
+      },
+      deletetext: function () {
+        this.textdialog = false;
+        this.reedit = false;
+        this.textinput = "";
+      },
+      clickaddtext: function (text) {
+        this.textinput = text;
+        this.$refs.inserttext.click();
+        this.reedit = true;
+      },
     }
   }
 
@@ -331,6 +372,15 @@
   .text-wrapper>>>.v-input {
     width: 300px;
     display: inline-block;
+  }
+
+  .text-textarea {
+    width: 100%;
+    margin-top: 0 !important;
+    border: solid 0px;
+    outline: none;
+    font-size: 16px;
+    word-break: break-all;
   }
 
 </style>

@@ -20,7 +20,6 @@
       <Org-toolbar :avatar="avatar"></Org-toolbar>
     </div>
     <img :src="parallaxpath" class="large-img" ref="topimgreader" />
-    <!-- <div :style="{'background':'url('+parallaxpath+')'}" class="large-img" ref="topimgreader"/></div> -->
     <div class="add-topimg-wrapper">
       <div class="add-topimg-inner">
         <v-icon size="64" color="secondary" class="add-icon" @click="addimg" :class="{'hidden':havetopimg}">photo</v-icon>
@@ -33,11 +32,12 @@
       </div>
     </div>
     <div class="main-wrapper">
-      <Org-edit-body :gotdata="computeddata" @sentoldtext="getoldtext" @sentdeletetext="getdeletetext" @sentreedit="getreedit" :deleted="deleted"
-        :imglocaldisplay="imglocaldisplay" :draftflag="true"></Org-edit-body>
+      <Org-edit-body :gotdata="computeddata" @sentdeletetext="getdeletetext" @sentreedit="getreedit" @sentreedittext="sentreedittext"
+        :imglocaldisplay="imglocaldisplay"></Org-edit-body>
       <Org-edit-options ref="rightchild" @sentavatar="getavatar" @sentparse="getparse" @sentimg="getimg" @senttopimg="gettopimg"
-        @senttext="gettext" @reeditparse="getreeditfromright" :avatar0="avatar" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"
+        @reeditparse="getreeditfromright" :avatar0="avatar" :imgparam="imgparam" :imglocaldisplay="imglocaldisplay"
         :class="{'isfixed':fixed}" @getrequest_failed="getrequest_failed" @getopenfile_failed="getopenfile_failed" @getoverwrite="getoverwrite"
+        @textsave="textsave" @reedittextsave="reedittextsave"
         ></Org-edit-options>
       <div style="clear:both;"></div>
     </div>
@@ -62,7 +62,6 @@
           <div style="clear:both;"></div>
         </div>
         <div class="slide-show">
-          <!-- <div class="slide-showbox" :class="{'slide-showbox-active':mouseoverbox}"> -->
           <div class="slide-showbox">
             <p class="slideshow-textbox" v-if="slidetype=='text'">{{slideinner}}</p>
             <img v-lazy="slideinner" class="slideshow-img" v-if="slidetype=='img'" />
@@ -79,7 +78,6 @@
 </template>
 
 <script>
-  // import Vue from 'vue'
   export default {
     props: ['opt'],
     data: () => ({
@@ -107,16 +105,15 @@
       img: [],
       computeddata: [],
       reedititem: 0,
-      // slide
       slideinner: '',
       slidetype: '',
       disX: 0,
       disY: 0,
       slidebtn: [],
       mousemoveflag: false,
-      deleted: false,
       imgparam: null,
-      imglocaldisplay: []
+      imglocaldisplay: [],
+      textinput:'',
     }),
     computed: {
       havetopimg: function () {
@@ -152,13 +149,14 @@
             this.imgparam.append("file" + k, 'img');
             this.$set(this.imglocaldisplay, k,this.computeddata[k].inner);
           }
+          this.computeddata[k].key=k;
+          this.key++;
         }
       }
       if (sessionStorage.getItem("bg_img") != null) {
         this.parallaxpath = sessionStorage.getItem("bg_img");
       }
       this.cal = this.computeddata.length;
-      this.key = this.cal;
     },
     methods: {
       onScroll(e) {
@@ -218,19 +216,6 @@
         this.cal++;
         this.key++;
       },
-      gettext: function (d) {
-        this.$set(this.computeddata, this.cal, {
-          type: 'text',
-          inner: '',
-          number: this.cal,
-          key: this.key
-        });
-        var len = this.imglocaldisplay.length;
-        this.imgparam.set("file" + len, 'text');
-        this.$set(this.imglocaldisplay, len, 'text'); //本地预览;
-        this.cal++;
-        this.key++;
-      },
       getimg: function (d) {
         this.$set(this.computeddata, this.cal, {
           type: 'img',
@@ -246,14 +231,6 @@
       },
       gettopimg: function (d) {
         this.parallaxpath = d;
-      },
-      getoldtext: function (d, i, k) {
-        this.$set(this.computeddata, i, {
-          type: 'text',
-          inner: d,
-          number: i,
-          key: k
-        });
       },
       mouseoverbox: function (i) {
         var target = this.computeddata[i];
@@ -331,7 +308,6 @@
           this.imgparam.set("file"+k,temp);
         }//因为imgparam无法彻底删除key
         this.cal--;
-        this.deleted = !this.deleted;
       },
       getreedit: function (d) {
         this.reedititem = d;
@@ -364,7 +340,8 @@
               "Authorization": "Token " + localStorage.getItem("token")
             },
             data:{
-              demonstration:JSON.stringify(this.computeddata)
+              demonstration:JSON.stringify(this.computeddata),
+              key:this.key
             }
           }).then((res) => {
             this.snackbar1 = true;
@@ -391,6 +368,26 @@
               this.request_failed=true;
             }
         });
+      },
+      textsave:function(d){
+        this.$set(this.computeddata, this.cal, {
+          type: 'text',
+          inner: d,
+          number: this.cal,
+          key: this.key
+        });
+        var len = this.imglocaldisplay.length;
+        this.imgparam.set("file" + len, 'text');
+        this.$set(this.imglocaldisplay, len, 'text'); //本地预览;
+        this.cal++;
+        this.key++;
+      },
+      sentreedittext:function(d){
+        this.reedititem = d;
+        this.$refs.rightchild.clickaddtext(this.computeddata[d].inner);
+      },
+      reedittextsave:function(d){
+        this.computeddata[this.reedititem].inner = d;
       },
       getrequest_failed(){
         this.request_failed=true;

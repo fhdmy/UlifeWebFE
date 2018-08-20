@@ -4,12 +4,13 @@
       <div class="textarea-inner" v-for="(d,i) in gotdata" :key="d.key" @mouseover="mouseoverbox(i)" @mouseout="mouseoutbox(i)">
         <v-icon class="reediticon iconfont icon-bianji" v-if="texticon[i] && d.type=='title'" @click="sentreedit(i)"></v-icon>
         <v-icon class="clearicon iconfont icon-shanchu" v-if="texticon[i] && d.type=='title'" @click="sentdeletetext(i)"></v-icon>
+        <v-icon class="reedittexticon iconfont icon-bianji" v-if="texticon[i] && d.type=='text'" @click="reedittext(i)"></v-icon>
         <v-icon class="textclearicon iconfont icon-shanchu" v-if="texticon[i] && d.type=='text'" @click="sentdeletetext(i)"></v-icon>
         <div class="imgeidtdiv" v-if="texticon[i] && d.type=='img'">
           <v-icon class="imgreediticon" @click="rotateimg(i)">refresh</v-icon>
           <v-icon class="imgclearicon iconfont icon-shanchu" @click="sentdeletetext(i)"></v-icon>
         </div>
-        <div class="text-box" contenteditable="true" @input="oldhandleInput($event,i,d.key)" v-if="d.type=='text'" placeholder="从这里开始你的活动正文"></div>
+        <p class="text-box" v-if="d.type=='text'">{{d.inner}}</p>
         <img v-lazy="imglocaldisplay[i]" class="img" v-if="d.type=='img'"/>
         <p class="title" v-if="d.type=='title'">{{d.inner}}</p>
       </div>
@@ -21,19 +22,9 @@
   export default {
     props:['gotdata','imglocaldisplay'],
     data: () => ({
-      oldcontent:'',
       texticon:[]
-      // content:''
     }),
     methods: {
-      handleInput($event) {
-        this.content = $event.target.innerText;
-        // this.$emit("senttext",this.content);
-      },
-      oldhandleInput($event,i,k) {
-        this.oldcontent=$event.target.innerText;
-        this.$emit("sentoldtext",this.oldcontent,i,k);
-      },
       mouseoverbox:function(i){
         this.$set(this.texticon,i,true);
       },
@@ -45,6 +36,9 @@
       },
       sentreedit:function(i){
         this.$emit("sentreedit",i);
+      },
+      reedittext:function(i){
+        this.$emit("sentreedittext",i);
       },
       rotateimg:function(i){
         
@@ -82,24 +76,24 @@
     color:#777;
     font-size: 26px;
   }
+  .reedittexticon{
+    position: absolute;
+    bottom: 0px;
+    right:40px;
+    cursor: pointer;
+    color:#777;
+    font-size: 26px;
+  }
+
   .text-box {
     width: 100%;
-    outline: none;
     line-height: 1.8;
     font-size: 15px;
     color: #444;
-    overflow: hidden;
     padding: 0 0 25px 0;
+    margin: 0;
   }
 
-  div[contenteditable]:empty:before {
-    content: attr(placeholder);
-    color: #aaa;
-  }
-
-  div[contenteditable]:focus {
-    content: none;
-  }
   .textarea-wrapper{
     width: 100%;
     height: auto;

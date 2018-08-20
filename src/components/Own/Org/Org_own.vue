@@ -83,7 +83,7 @@
       presentsignup: 0,
       org_id: 0,
       watcher_count: 0,
-      activity_count: 0
+      activity_count: 0,
     }),
     created: function () {
       this.img = sessionStorage.getItem("avatar");

@@ -3,6 +3,7 @@
     <v-icon color="primary" class="mr-2 today-icon">mail_outline</v-icon>
     <span class="title">我的消息</span>
     <div class="Homemaincontent-mainwrapper">
+      
       <div v-for="(item,i) in items" :key="i" class="msg-content">
         <v-dialog v-model="dialog" max-width="290">
           <v-card>
@@ -16,7 +17,7 @@
         </v-dialog>
         <router-link :to="{name:'org_display',params:{opt:'abstract',org_id:'1'}}">
           <v-avatar size="50">
-            <img v-lazy="item.avatar" />
+            <img :src="item.avatar" />
           </v-avatar>
         </router-link>
         <div class="msg-right">
@@ -67,7 +68,7 @@
     }),
     methods: {
       deleteitem:function(i){
-        this.items.splice(i,1);
+        this.items.splice(i,1);//视图没更新会导致看似好像删错了
       }
     }
   }

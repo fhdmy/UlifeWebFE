@@ -4,6 +4,26 @@
       网络传输故障！
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
+    <v-snackbar v-model="not_login" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      请先登录账号！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="org_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      组织用户不能进行此操作！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="collect_success" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      收藏成功！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="signup_valid" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      报名信息不完整！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="signup_success" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      报名成功！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Visitor-toolbar v-if="usertype=='none'"></Visitor-toolbar>
       <Student-toolbar v-if="usertype=='user'" :avatar="avatarurl"></Student-toolbar>
@@ -19,8 +39,11 @@
         </a>
         <p class="act-title display-1" v-if="!fixed">{{title}}</p>
         <Activity-toolbar :org="org" :launchdate="launchdate" :isfinished="is_ended" :stars="stars" :fixed="fixed" :title="title"
-          :collected="collected" :participation="participation" :routerid="routerid" :acturl="opt" :collecturl="collecturl"
-          :participationurl="participationurl" :requires="requires" :is_ended="is_ended" :usertype="usertype"></Activity-toolbar>
+          :collected.sync="collected" :participation.sync="participation" :routerid="routerid" :acturl="opt" :collecturl.sync="collecturl"
+          :participationurl.sync="participationurl" :requires="requires" :is_ended="is_ended" :usertype="usertype"
+          @getnot_login="getnot_login" @getorg_rejected="getorg_rejected" @getcollect_success="getcollect_success" @getsignup_valid="getsignup_valid" @getsignup_success="getsignup_success"
+          @getrequest_failed="getrequest_failed" :request_failed="request_failed"
+          ></Activity-toolbar>
       </div>
     </div>
     <div v-if="fixed" style="height:70px;"></div>
@@ -42,6 +65,11 @@
     props: ['opt'],
     data: () => ({
       request_failed: false,
+      not_login:false,
+      org_rejected:false,
+      collect_success:false,
+      signup_valid:false,
+      signup_success:false,
       y: 'top',
       color: '#E03636',
       mode: '',
@@ -251,6 +279,24 @@
           }
         });
         window.open(routeData.href, '_blank');
+      },
+      getrequest_failed:function(){
+        this.request_failed=true;
+      },
+      getnot_login:function(){
+        this.not_login=true;
+      },
+      getorg_rejected:function(){
+        this.org_rejected=true;
+      },
+      getcollect_success:function(){
+        this.collect_success=true;
+      },
+      getsignup_valid:function(){
+        this.signup_valid=true;
+      },
+      getsignup_success:function(){
+        this.signup_success=true;
       }
     }
   }

@@ -4,8 +4,7 @@
     <span class="title">我的草稿箱</span>
     <p v-if="acts.length==0" style="color:#FE9246;margin:200px 0 0 290px;font-size:30px;">这里空空哒！</p>
     <div class="Homemaincontent-mainwrapper">
-      <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
-        <v-dialog v-model="dialog" max-width="290">
+      <v-dialog v-model="dialog" max-width="290">
           <v-card>
             <v-card-text>你确定要删除它？</v-card-text>
             <v-card-actions>
@@ -15,12 +14,13 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+      <v-card class="elevation-1" v-for="(act,index) in acts" :key="index" @mouseover="largerimg(index)" @mouseout="smallerimg(index)">
         <div class="close-div" v-if="hover[index]">
           <v-icon class="close-icon" @click.stop="dialog = true,i=index">close</v-icon>
         </div>
         <div class="act-cardd-media">
           <a @click="edit(act.acturl)">
-            <img v-lazy="act.head_img" class="anim" :class="{'v-imglarger':act.isover}" />
+            <img :src="act.head_img" class="anim" :class="{'v-imglarger':act.isover}" />
           </a>
         </div>
         <v-card-title primary-title class="pb-2">
@@ -32,7 +32,7 @@
             </div>
           </a>
           <v-avatar color="grey lighten-4 ml-3" size="60">
-            <img v-lazy="act.orgavatar">
+            <img :src="act.orgavatar">
           </v-avatar>
         </v-card-title>
       </v-card>

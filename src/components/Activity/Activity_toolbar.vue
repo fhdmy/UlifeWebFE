@@ -1,29 +1,5 @@
 <template>
   <v-toolbar color="white elevation-0" height="70">
-    <v-snackbar v-model="request_failed" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-      网络传输故障！
-      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
-    </v-snackbar>
-    <v-snackbar v-model="not_login" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-      请先登录账号！
-      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
-    </v-snackbar>
-    <v-snackbar v-model="org_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-      组织用户不能进行此操作！
-      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
-    </v-snackbar>
-    <v-snackbar v-model="collect_success" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-      收藏成功！
-      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
-    </v-snackbar>
-    <v-snackbar v-model="signup_valid" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-      报名信息不完整！
-      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
-    </v-snackbar>
-    <v-snackbar v-model="signup_success" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-      报名成功！
-      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
-    </v-snackbar>
     <v-dialog v-model="dialog" max-width="290" v-if="!is_ended">
       <v-card>
         <v-card-text>你确定要取消报名？</v-card-text>
@@ -56,7 +32,7 @@
           <v-card-text class="px-4 pt-0">
             <div v-for="(require,i) in requires" :key="i">
               <v-text-field :label="require.inner" required v-model="answers[i]" v-if="require.type=='text'"></v-text-field>
-              <v-select :items="require.inner" :label="require.title" required v-if="require.type=='select'" v-model="answers[i]"></v-select>
+              <v-select :items="require.inner" :label="require.title" required v-if="require.type=='select' && require.inner.length!=0" v-model="answers[i]"></v-select>
             </div>
           </v-card-text>
           <v-card-actions>
@@ -90,22 +66,12 @@
 <script>
   export default {
     props: ['org', 'launchdate', 'isfinished', 'stars', 'fixed', 'title', 'participation', 'collected', 'routerid',
-      'acturl', 'collecturl','requires','participationurl','is_ended','usertype'
+      'acturl', 'collecturl','requires','participationurl','is_ended','usertype','request_failed'
     ],
     data: () => ({
       dialog: false,
       signin: false,
       answers: [],
-      request_failed:false,
-      not_login:false,
-      org_rejected:false,
-      collect_success:false,
-      signup_valid:false,
-      signup_success:false,
-      y: 'top',
-      color: '#E03636',
-      mode: '',
-      timeout: 2000,
       items: [{
           name: 'icon-weibo',
           color: 'rgb(249, 110, 118)'
@@ -134,11 +100,11 @@
     methods: {
       collect: function () {
         if(this.usertype=='none'){
-          this.not_login=true;
+          this.$emit("getnot_login");
           return;
         }
         if(this.usertype=='org'){
-          this.org_rejected=true;
+          this.$emit("getorg_rejected");
           return;
         }
         if (!this.collected) {
@@ -153,13 +119,13 @@
               target: parseInt(this.acturl)
             }
           }).then((res) => {
-            this.collecturl=res.data.url;
-            this.collected = true;
-            this.collect_success=true;
+            this.$emit("update:collecturl",res.data.url);
+            this.$emit("update:collected",true);
+            this.$emit("getcollect_success");
           }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
-              this.request_failed=true;
+              this.$emit("getrequest_failed");
             }
           });
         } else {
@@ -174,31 +140,31 @@
               target: parseInt(this.acturl)
             }
           }).then((res) => {
-            this.collected = false;
+            this.$emit("update:collected",false);
           }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
-              this.request_failed=true;
+              this.$emit("getrequest_failed");
             }
           });
         }
       },
       signup: function () {
         if(this.usertype=='none'){
-          this.not_login=true;
+          this.$emit("getnot_login");
           return;
         }
         if(this.usertype=='org'){
-          this.org_rejected=true;
+          this.$emit("getorg_rejected");
           return;
         }
         if(this.answers.length!=this.requires.length){
-          this.signup_valid=true;
+          this.$emit("getsignup_valid");
           return;
         }
         for(let k=0;k<this.requires.length;k++){
           if(this.answers[k]==""){
-            this.signup_valid=true;
+            this.$emit("getsignup_valid");
             return;
           }
         }
@@ -214,14 +180,14 @@
               forms:JSON.stringify(this.answers) 
             }
           }).then((res) => {
-            this.participationurl=res.data.url;
-            this.participation=true;
-            this.signup_success=true;
+            this.$emit("update:participationurl",res.data.url);
+            this.$emit("update:participation",true);
+            this.$emit("getsignup_success");
             this.signin = false;
           }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
-              this.request_failed=true;
+              this.$emit("getrequest_failed");
             }
           });
       },
@@ -237,11 +203,11 @@
               student:parseInt(this.routerid)
             }
           }).then((res) => {
-            this.participation=false;
+            this.$emit("update:participation",false);
           }).catch((error)=>{
             console.log(error.response);
             if(!this.request_failed){
-              this.request_failed=true;
+              this.$emit("getrequest_failed");
             }
           });
       },
