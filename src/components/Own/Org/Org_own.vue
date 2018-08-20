@@ -8,14 +8,6 @@
       已经没有更多活动啦
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
-    <v-snackbar v-model="org_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-      组织用户不能关注其他组织！
-      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
-    </v-snackbar>
-    <v-snackbar v-model="not_login" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
-      请先登录账号！
-      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
-    </v-snackbar>
     <v-snackbar v-model="reedit_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
       不能修改已结束的活动！
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
@@ -36,7 +28,6 @@
     <div class="stuown-mainwrapper">
       <Org-information :class="{'informfixed':fixed}" :name="name" :attention="watcher_count" :stars="stars" :acts="activity_count"
         :visits="visits" :mine="mine" :orgurl="orgurl" :list="lists" :bg_img="parallaxpath" @getrequest_failed="getrequest_failed"
-        @getnot_login="getnot_login" @getorg_rejected="getorg_rejected"  
       ></Org-information>
       <div class="asinform" v-if="fixed"></div>
       <Org-abstract v-show="item=='abstract'" :mine="mine" :lists="lists"></Org-abstract>
@@ -62,8 +53,6 @@
     data: () => ({
       request_failed: false,
       no_more_acts: false,
-      org_rejected:false,
-      not_login:false,
       reedit_rejected:false,
       y: 'top',
       color: '#E03636',
@@ -136,7 +125,7 @@
         this.watcher_count = res.data.watcher_count;
         this.activity_count = res.data.activity_count;
         if (res.data.bg_img != null) {
-          this.parallaxpath = "http://222.186.36.156:8000" + res.data.bg_img;
+          this.parallaxpath = "http://222.186.36.156:8000" + res.data.bg_img + '.thumbnail.2.jpg';
         } else {
           this.parallaxpath = '/src/assets/stuownbg.jpg';
         }
@@ -160,7 +149,7 @@
             // 是学生
             if (res.data[k].watcher.student != null) {
               this.$set(this.visits, k, {
-                avatar: "http://222.186.36.156:8000" + res.data[k].watcher.student.avatar,
+                avatar: "http://222.186.36.156:8000" + res.data[k].watcher.student.avatar + '.thumbnail.1.jpg',
                 name: res.data[k].watcher.student.nickname,
                 url: res.data[k].watcher.student.url,
                 number: k,
@@ -170,7 +159,7 @@
             // 是组织
             if (res.data[k].watcher.org != null) {
               this.$set(this.visits, k, {
-                avatar: "http://222.186.36.156:8000" + res.data[k].watcher.org.avatar,
+                avatar: "http://222.186.36.156:8000" + res.data[k].watcher.org.avatar + '.thumbnail.1.jpg',
                 name: res.data[k].watcher.org.org_name,
                 url: res.data[k].watcher.org.url,
                 number: k,
@@ -260,11 +249,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.draft, k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5]
             });
@@ -292,11 +281,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.myacts, k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5],
               is_ended: res.data.results[k].is_ended,
@@ -325,11 +314,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.signup, k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5],
             });
@@ -362,11 +351,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.draft, this.presentdraft + k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5]
             });
@@ -398,11 +387,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.myacts, this.presentmyacts + k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5]
             });
@@ -434,11 +423,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.signup, this.presentsignup + k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5]
             });
@@ -456,12 +445,6 @@
         if (!this.request_failed) {
           this.request_failed = true;
         }
-      },
-      getnot_login(){
-        this.not_login=true;
-      },
-      getorg_rejected(){
-        this.org_rejected=true;
       },
       getreedit_rejected(){
         this.getreedit_rejected=true;

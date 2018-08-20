@@ -80,7 +80,7 @@
         this.is_history_public = res.data.is_history_public;
         this.is_watched_orgs_public = res.data.is_watched_orgs_public;
         if(res.data.bg_img!=null){
-          this.bg_img = "http://222.186.36.156:8000" + res.data.bg_img;
+          this.bg_img = "http://222.186.36.156:8000" + res.data.bg_img + '.thumbnail.1.jpg';
         }
       }).catch((error)=>{
         console.log(error.response);

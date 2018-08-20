@@ -196,7 +196,7 @@
         var computedstart = res.data.start_at.split('T');
         var comutedstarttime = computedstart[1].split(':');
         if (res.data.head_img != null) {
-          this.parallaxpath = res.data.head_img;
+          this.parallaxpath = res.data.head_img + '.thumbnail.2.jpg';
         }
         this.head_imgparam.set("file", "img");
         if (res.data.demonstration != null) {
@@ -486,7 +486,7 @@
           var j = 0;
           for (let k = 0; k < this.computeddata.length; k++) {
             if (this.computeddata[k].type == "img" && this.computeddata[k].inner.length == 0) {
-              this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++];
+              this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++] + '.thumbnail.0.jpg';
             }
           }
           this.$http({
@@ -537,7 +537,7 @@
           var j = 0;
           for (let k = 0; k < this.computeddata.length; k++) {
             if (this.computeddata[k].type == "img" && this.computeddata[k].inner.length == 0) {
-              this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++];
+              this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++] + '.thumbnail.0.jpg';
             }
           }
           this.$http({

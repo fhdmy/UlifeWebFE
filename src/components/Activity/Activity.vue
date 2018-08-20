@@ -125,9 +125,9 @@
         var computeddate = res.data.created_at.split('T');
         var computedstart = res.data.start_at.split('T');
         var comutedstarttime = computedstart[1].split(':');
-        this.parallaxpath = res.data.head_img;
+        this.parallaxpath = res.data.head_img + '.thumbnail.2.jpg';
         if (res.data.owner.avatar != null) {
-          this.img = "http://222.186.36.156:8000" + res.data.owner.avatar;
+          this.img = "http://222.186.36.156:8000" + res.data.owner.avatar +'.thumbnail.3.jpg';
         }
         this.org = res.data.owner.org_name;
         this.title = res.data.heading;

@@ -382,7 +382,7 @@
             var j = 0;
             for (let k = 0; k < this.computeddata.length; k++) {
               if (this.computeddata[k].type == "img" && this.computeddata[k].inner.length == 0) {
-                this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++];
+                this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++] + '.thumbnail.0.jpg';
               }
             }
             if (this.acturl == '') { //如果创建新活动
@@ -490,7 +490,7 @@
             var j = 0;
             for (let k = 0; k < this.computeddata.length; k++) {
               if (this.computeddata[k].type == "img" && this.computeddata[k].inner.length == 0) {
-                this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++];
+                this.computeddata[k].inner = "http://222.186.36.156:8000" + res.data.l_img[j++] + '.thumbnail.0.jpg';
               }
             }
             if (this.acturl == '') { //如果创建新活动

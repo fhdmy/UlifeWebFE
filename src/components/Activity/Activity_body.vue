@@ -11,7 +11,7 @@
       <div v-for="i in lists" :key="i.number">
         <p v-if="i.type=='title'" class="content-title">{{i.inner}}</p>
         <p v-if="i.type=='text'" class="content-text">{{i.inner}}</p>
-        <img v-if="i.type=='img'" :src="i.inner" class="content-img"/>
+        <img v-if="i.type=='img'" v-lazy="i.inner" class="content-img"/>
       </div>
       <v-divider></v-divider>
       <router-link to="/"><p class="mt-3 report">举报</p></router-link>

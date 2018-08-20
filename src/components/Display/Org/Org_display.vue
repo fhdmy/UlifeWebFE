@@ -8,6 +8,14 @@
       已经没有更多活动啦！
       <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
     </v-snackbar>
+    <v-snackbar v-model="org_rejected" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      组织用户不能关注其他组织！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="not_login" :multi-line="mode === 'multi-line'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      请先登录账号！
+      <v-btn color="pink" flat @click="snackbar = false">关闭</v-btn>
+    </v-snackbar>
     <div class="elevation-1 white home-toolbar-wrapper" :style="{'opacity':toolbaropacity,'display':display}">
       <Visitor-toolbar v-if="usertype=='none'"></Visitor-toolbar>
       <Student-toolbar v-if="usertype=='user'" :avatar="avatarurl"></Student-toolbar>
@@ -25,7 +33,7 @@
     <div v-if="fixed" style="height:64px;"></div>
     <div class="stuown-mainwrapper">
       <Org-information :class="{'informfixed':fixed}" :name="name" :attention="attention" :stars="stars" :acts="activity_count" :visits="visits"
-        :mine="false" :org_id="org_id"></Org-information>
+        :mine="false" :org_id="org_id" @getnot_login="getnot_login" @getorg_rejected="getorg_rejected"></Org-information>
       <div class="asinform" v-if="fixed"></div>
       <Org-abstract v-show="item=='abstract'" :mine="mine" :lists="lists"></Org-abstract>
       <Org-dynamic v-show="item=='dynamatic'" :acts="myacts" @getmoretrends="getmoretrends"></Org-dynamic>
@@ -44,6 +52,8 @@
     data: () => ({
       request_failed:false,
       no_more_acts:false,
+      org_rejected:false,
+      not_login:false,
       y: 'top',
       color: '#E03636',
       mode: '',
@@ -97,8 +107,8 @@
           "Authorization": "Token " + localStorage.getItem("token")
         }
       }).then((res) => {
-        this.parallaxpath = "http://222.186.36.156:8000"+res.data.bg_img;
-        this.org_img = "http://222.186.36.156:8000"+res.data.avatar;
+        this.parallaxpath = "http://222.186.36.156:8000"+res.data.bg_img + '.thumbnail.2.jpg';
+        this.org_img = "http://222.186.36.156:8000"+res.data.avatar + '.thumbnail.3.jpg';
         this.attention = res.data.watcher_count;
         this.name = res.data.org_name;
         this.stars = res.data.stars;
@@ -119,7 +129,7 @@
             // 是学生
             if (res.data[k].watcher.student != null) {
               this.$set(this.visits, k, {
-                avatar: "http://222.186.36.156:8000"+res.data[k].watcher.student.avatar,
+                avatar: "http://222.186.36.156:8000"+res.data[k].watcher.student.avatar + '.thumbnail.1.jpg',
                 name: res.data[k].watcher.student.nickname,
                 url: res.data[k].watcher.student.url,
                 number: k,
@@ -129,7 +139,7 @@
             // 是组织
             if (res.data[k].watcher.org != null) {
               this.$set(this.visits, k, {
-                avatar: "http://222.186.36.156:8000"+res.data[k].watcher.org.avatar,
+                avatar: "http://222.186.36.156:8000"+res.data[k].watcher.org.avatar + '.thumbnail.1.jpg',
                 name: res.data[k].watcher.org.org_name,
                 url: res.data[k].watcher.org.url,
                 number: k,
@@ -224,11 +234,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.myacts, k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5],
               is_ended: res.data.results[k].is_ended,
@@ -262,11 +272,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.myacts, this.presentmyacts + k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: res.data.results[k].owner.avatar,
+              orgavatar: res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5]
             });
@@ -282,7 +292,13 @@
       },
       onScroll(e) {
         this.offsetTop = window.pageYOffset || document.documentElement.scrollTop;
-      }
+      },
+      getnot_login(){
+        this.not_login=true;
+      },
+      getorg_rejected(){
+        this.org_rejected=true;
+      },
     }
   }
 

@@ -139,11 +139,11 @@
               var org_id = orgurl[5];
               var computeddate = res.data.results[k].start_at.split('T');
               this.$set(this.searchacts, k, {
-                head_img: res.data.results[k].head_img,
+                head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
                 heading: res.data.results[k].heading,
                 date: computeddate[0],
                 location: res.data.results[k].location,
-                orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+                orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
                 isover: false,
                 acturl: actid[5],
                 org_id: org_id,
@@ -210,11 +210,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.searchacts, this.presentacts + k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5],
               is_ended: res.data.results[k].is_ended,

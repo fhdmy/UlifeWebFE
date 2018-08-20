@@ -78,7 +78,7 @@
           userurl = userurl.split("/");
           localStorage.setItem("uid", userurl[5]);
           if (res.data.avatar != null) {
-            this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar;
+            this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar + '.thumbnail.3.jpg';
           } else {
             this.avatarurl = "/src/assets/defaultavatar.png";
           }
@@ -114,7 +114,7 @@
           userurl = userurl.split("/");
           localStorage.setItem("uid", userurl[5]);
           if (res.data.avatar != null) {
-            this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar;
+            this.avatarurl = "http://222.186.36.156:8000" + res.data.avatar + '.thumbnail.3.jpg';
           } else {
             this.avatarurl = "/src/assets/defaultavatar.png";
           }
@@ -155,11 +155,11 @@
           var org_id = orgurl[5];
           var computeddate = res.data.results[k].start_at.split('T');
           this.$set(this.actcontainer, k, {
-            head_img: res.data.results[k].head_img,
+            head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
             heading: res.data.results[k].heading,
             date: computeddate[0],
             location: res.data.results[k].location,
-            orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
+            orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar  + '.thumbnail.2.jpg',
             isover: false,
             acturl: actid[5],
             org_id: org_id,
@@ -188,7 +188,7 @@
           var actid = res.data[k].url;
           actid = actid.split("/");
           this.$set(this.carouselcontainer, k, {
-            head_img: res.data[k].head_img,
+            head_img: res.data[k].head_img + '.thumbnail.1.jpg',
             number: k,
             acturl: actid[5]
           });
@@ -219,11 +219,11 @@
             actid = actid.split("/");
             var computeddate = res.data.results[k].start_at.split('T');
             this.$set(this.actcontainer, this.presentacts + k, {
-              head_img: res.data.results[k].head_img,
+              head_img: res.data.results[k].head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].heading,
               date: computeddate[0],
               location: res.data.results[k].location,
-              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar,
+              orgavatar: "http://222.186.36.156:8000" + res.data.results[k].owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5],
               is_ended: res.data.results[k].is_ended,

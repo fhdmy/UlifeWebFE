@@ -111,12 +111,12 @@
         var targeturl = res.data.user;
         targeturl = targeturl.split("/");
         this.targetid = targeturl[5];
-        this.parallaxpath ="http://222.186.36.156:8000"+ res.data.bg_img;
+        this.parallaxpath ="http://222.186.36.156:8000"+ res.data.bg_img + '.thumbnail.2.jpg';
         this.watching_count = res.data.watching_count;
         this.participation_count = res.data.participation_count;
         this.name = res.data.nickname;
         this.trust = res.data.credit;
-        this.img = "http://222.186.36.156:8000"+res.data.avatar;
+        this.img = "http://222.186.36.156:8000"+res.data.avatar + '.thumbnail.3.jpg';
         this.is_visitor_public = res.data.is_visitor_public;
         this.is_fav_public = res.data.is_fav_public;
         this.is_history_public = res.data.is_history_public;
@@ -134,7 +134,7 @@
               // 是学生
               if (res.data[k].watcher.student != null) {
                 this.$set(this.visits, k, {
-                  avatar: "http://222.186.36.156:8000"+res.data[k].watcher.student.avatar,
+                  avatar: "http://222.186.36.156:8000"+res.data[k].watcher.student.avatar + '.thumbnail.1.jpg',
                   name: res.data[k].watcher.student.nickname,
                   url: res.data[k].watcher.student.url,
                   number: k
@@ -143,7 +143,7 @@
               // 是组织
               if (res.data[k].watcher.org != null) {
                 this.$set(this.visits, k, {
-                  avatar:"http://222.186.36.156:8000"+ res.data[k].watcher.org.avatar,
+                  avatar:"http://222.186.36.156:8000"+ res.data[k].watcher.org.avatar + '.thumbnail.1.jpg',
                   name: res.data[k].watcher.org.org_name,
                   url: res.data[k].watcher.org.url,
                   number: k
@@ -197,7 +197,7 @@
             var org_id = org_url.split("/");
             org_id = org_id[5];
             this.$set(this.watcher, k, {
-              orgavatar: "http://222.186.36.156:8000"+res.data[k].target.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data[k].target.avatar + '.thumbnail.1.jpg',
               orgname: res.data[k].target.org_name,
               orgurl: org_url,
               number: k,
@@ -271,11 +271,11 @@
             var org_id=orgurl[5];
             var computeddate = res.data.results[k].activity.start_at.split('T');
             this.$set(this.historyatt, k, {
-              head_img: res.data.results[k].activity.head_img,
+              head_img: res.data.results[k].activity.head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].activity.heading,
               date: computeddate[0],
               location: res.data.results[k].activity.location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].activity.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].activity.owner.avatar +'.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5],
               org_id:org_id
@@ -308,11 +308,11 @@
             var org_id=orgurl[5];
             var computeddate = res.data.results[k].target.start_at.split('T');
             this.$set(this.collects, k, {
-              head_img: res.data.results[k].target.head_img,
+              head_img: res.data.results[k].target.head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].target.heading,
               date: computeddate[0],
               location: res.data.results[k].target.location,
-              orgavatar:"http://222.186.36.156:8000"+ res.data.results[k].target.owner.avatar,
+              orgavatar:"http://222.186.36.156:8000"+ res.data.results[k].target.owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5],
               org_id:org_id,
@@ -351,11 +351,11 @@
             var org_id=orgurl[5];
             var computeddate = res.data.results[k].target.start_at.split('T');
             this.$set(this.collects, this.presentcollects + k, {
-              head_img: res.data.results[k].target.head_img,
+              head_img: res.data.results[k].target.head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].target.heading,
               date: computeddate[0],
               location: res.data.results[k].target.location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].target.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].target.owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5],
               org_id:org_id,
@@ -392,11 +392,11 @@
             var org_id=orgurl[5];
             var computeddate = res.data.results[k].activity.start_at.split('T');
             this.$set(this.historyatt, this.presentatt + k, {
-              head_img: res.data.results[k].activity.head_img,
+              head_img: res.data.results[k].activity.head_img + '.thumbnail.0.jpg',
               heading: res.data.results[k].activity.heading,
               date: computeddate[0],
               location: res.data.results[k].activity.location,
-              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].activity.owner.avatar,
+              orgavatar: "http://222.186.36.156:8000"+res.data.results[k].activity.owner.avatar + '.thumbnail.2.jpg',
               isover: false,
               acturl: actid[5],
               org_id:org_id
